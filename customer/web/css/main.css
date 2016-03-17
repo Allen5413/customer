@@ -1,0 +1,96 @@
+html,body,div,table,span,thead,tbody,tfoot,th,tr,td,img,form,h1,h2,h3,h4,h5,h6,p,q,ul,dl,li,dt,dd,ol,a,label,hr{
+margin:0;
+padding:0;
+border:none;
+outline:none;
+}
+body{
+font-family:\5fae\8f6f\96c5\9ed1;
+text-align:center;
+font-size:12px;
+margin:0 auto;
+color:#333;
+}
+#main_body{
+	background:#076FA8 !important;
+}
+h1,h2,h3,h4,h5,h6{
+font-weight:normal;
+font-size:12px;
+}
+select{
+font-size:14px;
+}
+a{
+text-decoration:none;
+color:#333;
+}
+ul li{
+list-style:none;
+}
+em{
+	font-style:normal;
+	font-weight:normal;
+	font-family:\5b8b\4f53;
+}
+
+.clear{
+clear:both;
+}
+
+
+#page{
+text-align:left;
+margin:0 auto;
+min-width:960px;
+}
+/*--header 头部--*/
+#header{
+}
+
+
+#center{
+margin:0 auto;
+min-width:960px;
+padding:0 5px;
+min-height:800px;
+}
+
+#footer{
+width:100%;
+text-align:center;
+padding:25px 0;
+color:#666;
+line-height:22px;
+}
+#footer a{
+color:#666;
+margin:5px;
+}
+#footAdmin{
+	background:url(../images/footer_bg.png) 0 0 repeat-x;
+	padding:6px 0 0;
+	height:20px;
+	width:100%;
+	position:fixed;
+	_position:absolute;
+	bottom:0px;
+	bottom:-1px;
+	z-index:1000;
+}
+#footAdmin p{
+	padding:0 8px;
+}
+#footAdmin a{
+	color:#93D2EF;
+}
+
+#centerAdmin{
+	width: auto;
+	height: auto;
+	position: absolute;
+	top: 75px;
+	left: 0px;
+	right: 0px;
+	bottom: 20px;
+}

@@ -1,0 +1,330 @@
+.left{
+float:left !important;
+}
+.right{
+float:right !important;
+}
+.alignLeft{
+text-align:left !important;
+}
+.alignCenter{
+text-align:center !important;
+}
+.alignRight{
+text-align:right !important;
+}
+.relative{
+position:relative;
+}
+.absolute{
+position:absolute;
+}
+.top_2{
+position:relative;
+top:2px;
+*top:1px;
+}
+.bottom_6{
+position:relative;
+bottom:6px;
+*bottom:4px;
+}
+.border_no{
+border:none 0 !important;
+}
+
+
+
+
+.display_none{
+display:none;
+}
+.display_block{
+display:block;
+}
+
+.underline{
+text-decoration:underline;
+}
+
+/*text color*/
+.Blue_1{
+color:#0099FF;
+}
+.Blue_2{
+color:#5F8EAD !important;
+}
+.Red_1{
+color:#FA2A00;
+}
+.Grey{
+color:#888 !important;
+}
+.Gray{
+color:#8f8f8f !important;
+}
+.Red_2{
+color:#FF3300;
+}
+.Red_3{
+color:#FF0000;
+}
+.Red{
+color:#ff0000 !important;
+}
+.Green{
+color:#009933 !important;
+}
+.black{
+color:#444 !important;
+}
+.change{
+color:#3399FF !important;
+font-size:12px !important;
+text-decoration:underline;
+}
+.add{
+color:#3399FF !important;
+}
+
+
+/*font*/
+.font_14{
+font-size:14px;
+}
+.bold{
+font-weight:bold;
+}
+.noborder{
+border:none 0 !important;
+}
+
+.search_pager{
+padding:15px 5px 5px 0;
+}
+.search_pager a{
+color:#6633FF !important;
+}
+.search_pager a:hover{
+text-decoration:underline;
+}
+.search_pager a.ontab{
+font-weight:bold;
+text-decoration:underline;
+font-size:13px;
+}
+
+.date{
+font-size:12px;
+color:#888;
+position:relative;
+bottom:-5px;
+right:0;
+text-align:right;
+float:right;
+}
+
+.select_1,.select_2{
+width:80px;
+height:18px;
+line-height:18px;
+font-size:12px;
+}
+.select_2{
+width:50px;
+}
+
+.com_btn_b,.com_btn_red{
+background-image:url(../images/btn.png);
+background-position:0 0;
+background-repeat:no-repeat;
+height:24px;
+padding-left:1px;
+display:inline-block;
+color:#fff !important;
+font-size:12px;
+text-decoration:none !important;
+font-family:\5b8b\4f53;
+}
+.com_btn_grey{
+background-image:url(../images/btn.png);
+background-position:0 -144px;
+color:#73797c !important;
+background-repeat:no-repeat;
+display:inline-block;
+height:24px;
+font-size:12px;
+padding-left:1px;
+text-decoration:none !important;
+font-family:\5b8b\4f53;
+}
+.com_btn_red{
+	background-position:0 -721px;
+	height:24px;
+}
+.com_btn_grey:hover{
+background-position:0 -96px;
+}
+.com_btn_grey span{
+background-image:url(../images/btn.png);
+background-position:right -24px;
+background-repeat:no-repeat;
+display:inline-block;
+height:16px;
+line-height:18px !important;
+padding:4px 10px;
+}
+.com_btn_grey span{
+background-position:right -168px
+}
+.com_btn_grey:hover span{
+background-position:right -120px
+}
+.com_btn_b span,.com_btn_red span{
+display:block;
+height:16px;
+line-height:18px !important;
+vertical-align:middle;
+padding:4px 10px;
+background-image:url(../images/btn.png);
+background-position:right -24px;
+background-repeat:no-repeat;
+}
+.com_btn_b span{
+	color:#fff !important;
+}
+.com_btn_red span{
+	background-position:right -749px;
+	height:18px;
+}
+.com_btn_b:hover{
+background-position:0 -48px;
+}
+.com_btn_b:hover span{
+background-position:right -72px;
+}
+.com_btn_red:hover{
+background-position:0 -777px;
+}
+.com_btn_red:hover span{
+background-position:right -805px;
+}
+
+.serachPhoto {
+	/*width:112px;*/
+	height:24px;
+	display:inline-block;
+	cursor:pointer;
+	position:relative;
+	text-align:center;
+}
+.uploadFile {
+	position:absolute;
+	z-index:100;
+	margin-left:-180px;
+	font-size:30px;
+	opacity:0;
+	filter:alpha(opacity=0);
+	margin-top:-5px;
+	cursor:pointer;
+	color:#333333 !important;
+}
+
+.serachPhoto input {
+	cursor:pointer;
+	width:112px;
+	border:none;
+	height:28px;
+	padding:0px;
+	margin:0px;
+	position:absolute;
+	opacity:0;
+	filter:alpha(opacity=0);
+	left:-12px !important;
+	left:-5px;
+	left/**/:-3px;
+}
+
+.ico_crown,.ico_crown_s{
+	background:url(../images/ico_crown.png) 0 -20px no-repeat;
+	display:inline-block;
+	width:20px;
+	height:25px;
+}
+.ico_crown_s{
+	background-position:0 5px;
+}
+
+/*--pop 提示--*/
+.sign_ask,.sign_warn{
+background-image:url(../images/ico_warn.png);
+background-position:-50px -150px;
+background-repeat:no-repeat;
+width:16px;
+height:16px;
+overflow:hidden;
+position:relative;
+top:3px;
+}
+.sign_warn{
+background-position:-100px -200px;
+width:28px;
+height:25px;
+top:7px;
+}
+
+/*--上传进度条--*/
+.upload_rate{
+background:url(../images/rate_bar_out.gif) 0 0 no-repeat;
+width:199px;
+padding:1px;
+height:10px;
+display:inline-block;
+margin:0 5px;
+}
+/*--进度条--*/
+dl.rate_bar{
+text-align:left;}
+dl.rate_bar dt,dl.rate_bar dd{
+float:left;
+}
+dl.rate_bar dd{
+width:210px;
+}
+dl.rate_bar .rate_border{
+border:solid #aaa 1px;
+background-color:#f5f5f5;
+width:200px;
+height:12px;
+}
+dl.rate_bar .rate_color{
+width:200px;
+height:12px;
+background-color:#66CCFF;
+}
+
+.goUp,.goDown{
+display:inline-block;
+width:15px;
+height:20px;
+background:url(../images/icon/ascending.gif) center center no-repeat;
+}
+.goDown{
+background:url(../images/icon/descending.gif) center center no-repeat;
+margin-left:5px;
+}
+.goUp:hover{
+background:url(../images/icon/ascending_on.gif) center center no-repeat;
+}
+.goDown:hover{
+background:url(../images/icon/descending_on.gif) center center no-repeat;
+}
+.addNext{
+display:inline-block;
+width:14px;
+height:14px;
+background:url(../images/icon/addNext.png) no-repeat;
+}
+.addNext:hover{
+background:url(../images/icon/addNext_on.png) no-repeat;
+}
