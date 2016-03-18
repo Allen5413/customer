@@ -21,7 +21,7 @@ public class EditCustomerStateServiceImpl extends EntityServiceImpl<CustomerStat
     private FindCustomerStateByNameDAO findCustomerStateByNameDAO;
 
     @Override
-    public void edit(long id, String name, String remark, String zzCode) throws Exception {
+    public void edit(long id, String name, int state, String remark, String zzCode) throws Exception {
         CustomerState customerState = super.get(id);
         if(null == customerState){
             throw new BusinessException("没有找到客户状态");
@@ -33,6 +33,7 @@ public class EditCustomerStateServiceImpl extends EntityServiceImpl<CustomerStat
             }
         }
         customerState.setName(name);
+        customerState.setState(state);
         customerState.setRemark(remark);
         customerState.setOperator(zzCode);
         customerState.setOperateTime(DateTools.getLongNowTime());

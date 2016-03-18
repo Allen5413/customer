@@ -13,8 +13,12 @@ import java.util.Date;
 @Table(name = "customer_state")
 public class CustomerState extends AbstractEntity {
 
+    public static final int STATE_YES = 0;  //启用
+    public static final int STATE_NOT = 1;  //停用
+
     private Long id;                            //主键
     private String name;                        //名称
+    private int state;                          //状态[0:启用；1：停用]
     private String remark;                      //说明
     private String creator;                     //创建人
     private Date createTime = new Date();       //创建时间
@@ -87,5 +91,13 @@ public class CustomerState extends AbstractEntity {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

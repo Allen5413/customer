@@ -22,7 +22,6 @@
       <div class="title-btn">
         <a href="#" onclick="add()">新增</a>
         <a href="#" onclick="edit()">编辑</a>
-        <a href="#" onclick="del()">删除</a>
       </div>
       <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
         <tr>
@@ -30,8 +29,9 @@
             <a href="#" onclick="checkAll('cb')" style="color: #0092DC">全选</a> |
             <a href="#" onclick="checkNall('cb')" style="color: #0092DC">反选</a>
           </th>
-          <th width="20%">客户类型</th>
-          <th width="70%">备注</th>
+          <th width="20%">客户状态</th>
+          <th width="10%">状态</th>
+          <th width="60%">备注</th>
         </tr>
         <c:if test="${empty stateList}">
           <tr>
@@ -42,6 +42,7 @@
           <tr onclick="changeTR(this)">
             <td align="center"><input type="checkbox" name="cb" value="${state.id}"></td>
             <td>${state.name}</td>
+            <td>${state.state == 0 ? "启用" : "停用"}</td>
             <td>${state.remark}</td>
           </tr>
         </c:forEach>

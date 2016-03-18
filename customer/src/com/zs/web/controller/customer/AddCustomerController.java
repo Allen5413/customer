@@ -4,7 +4,7 @@ import com.zs.domain.customer.Customer;
 import com.zs.service.basic.area.FindAreaForProvinceService;
 import com.zs.service.basic.school.FindSchoolForNotExistsService;
 import com.zs.service.customer.AddCustomerService;
-import com.zs.service.customerstate.FindCustomerStateService;
+import com.zs.service.customerstate.FindCustomerStateForStateYesService;
 import com.zs.service.customertype.FindCustomerTypeForStateYesService;
 import com.zs.web.controller.LoggerController;
 import net.sf.json.JSONObject;
@@ -33,7 +33,7 @@ public class AddCustomerController extends
     @Resource
     private FindAreaForProvinceService findAreaForProvinceService;
     @Resource
-    private FindCustomerStateService findCustomerStateService;
+    private FindCustomerStateForStateYesService findCustomerStateForStateYesService;
     @Resource
     private FindCustomerTypeForStateYesService findCustomerTypeForStateYesService;
 
@@ -46,7 +46,7 @@ public class AddCustomerController extends
         try {
             request.setAttribute("schoolList", findSchoolForNotExistsService.find());
             request.setAttribute("provinceList", findAreaForProvinceService.find());
-            request.setAttribute("stateList", findCustomerStateService.findAll());
+            request.setAttribute("stateList", findCustomerStateForStateYesService.find());
             request.setAttribute("typeList", findCustomerTypeForStateYesService.find());
         } catch (Exception e) {
             return "error";
