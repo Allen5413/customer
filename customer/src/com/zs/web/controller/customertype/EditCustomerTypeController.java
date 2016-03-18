@@ -48,10 +48,11 @@ public class EditCustomerTypeController extends
     public JSONObject editor(HttpServletRequest request,
                              @RequestParam("id") long id,
                              @RequestParam("name") String name,
+                             @RequestParam("state") int state,
                              @RequestParam(value = "remark", required = false, defaultValue = "") String remark){
         JSONObject jsonObject = new JSONObject();
         try{
-            editCustomerTypeService.edit(id, name, remark, UserTools.getLoginUserForZzCode(request));
+            editCustomerTypeService.edit(id, name, state, remark, UserTools.getLoginUserForZzCode(request));
             jsonObject.put("state", 0);
         }catch(Exception e){
             String msg = super.outputException(request, e, log, "编辑客户类型");

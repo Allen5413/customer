@@ -25,6 +25,7 @@ public class FindCustomerByWhereDAOImpl extends BaseQueryDao
         String typeId = paramsMap.get("typeId");
         String stateId = paramsMap.get("stateId");
         String name = paramsMap.get("name");
+        String provinceCode = paramsMap.get("provinceCode");
 
         String field = "c.id, c.name cname, u.name uname, a.name aname, c.address, c.scale, c.code, c.no, ct.name ctname, cs.name csname, tt.name lname, tt.phone, tt.post, tt.remark, c.user_id";
         String sql = "FROM customer c LEFT JOIN user u ON c.user_id = u.id " +
@@ -46,6 +47,10 @@ public class FindCustomerByWhereDAOImpl extends BaseQueryDao
         if(!StringUtils.isEmpty(stateId)){
             sql += "and cs.id = ? ";
             param.add(Long.parseLong(stateId));
+        }
+        if(!StringUtils.isEmpty(provinceCode)){
+            sql += "and c.province_code = ? ";
+            param.add(provinceCode);
         }
         if(!StringUtils.isEmpty(name)){
             sql += "and c.name like ? ";

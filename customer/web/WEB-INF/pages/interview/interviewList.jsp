@@ -13,6 +13,13 @@
       <input type="hidden" id="currentPage" name="page" value="${pageInfo.currentPage}"/>
       <div class="search_title">
         <div class="search_bar">
+          客户名称：
+          <select id="customerId" name="customerId">
+            <option value="">--请选择--</option>
+            <c:forEach var="customer" items="${customerList}">
+              <option value="${customer.id}" <c:if test="${customer.id == param.customerId}">selected="selected" </c:if> >${customer.name}</option>
+            </c:forEach>
+          </select>
           客户经理：
           <select id="userId" name="userId">
             <option value="">--请选择--</option>
@@ -64,8 +71,12 @@
           </tr>
         </c:if>
         <c:forEach var="interview" items="${pageInfo.pageResults}" varStatus="status">
-          <tr>
-            <td align="center"><input type="checkbox" name="cb" value="${interview.id}"></td>
+          <tr onclick="changeTR(this)">
+            <td align="center">
+              <c:if test="${nowDate eq fn:substring(interview.operateTime, 0, 10)}">
+                <input type="checkbox" name="cb" value="${interview.id}">
+              </c:if>
+            </td>
             <td>${interview.uName}</td>
             <td>${interview.cName}</td>
             <td>${interview.clName}</td>

@@ -21,7 +21,7 @@ public class EditCustomerTypeServiceImpl extends EntityServiceImpl<CustomerType,
     private FindCustomerTypeByNameDAO findCustomerTypeByNameDAO;
 
     @Override
-    public void edit(long id, String name, String remark, String zzCode) throws Exception {
+    public void edit(long id, String name, int state, String remark, String zzCode) throws Exception {
         CustomerType customerType = super.get(id);
         if(null == customerType){
             throw new BusinessException("没有找到客户类型");
@@ -33,6 +33,7 @@ public class EditCustomerTypeServiceImpl extends EntityServiceImpl<CustomerType,
             }
         }
         customerType.setName(name);
+        customerType.setState(state);
         customerType.setRemark(remark);
         customerType.setOperator(zzCode);
         customerType.setOperateTime(DateTools.getLongNowTime());

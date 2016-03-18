@@ -37,7 +37,7 @@
           </tr>
         </c:if>
         <c:forEach var="userGroup" items="${pageInfo.pageResults}" varStatus="status">
-          <tr>
+          <tr onclick="changeTR(this)">
             <td align="center"><input type="checkbox" name="cb" value="${userGroup.id}"></td>
             <td>${userGroup.name}</td>
             <td>${userGroup.remark}</td>

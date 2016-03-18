@@ -39,7 +39,7 @@
           </tr>
         </c:if>
         <c:forEach var="state" items="${stateList}" varStatus="status">
-          <tr>
+          <tr onclick="changeTR(this)">
             <td align="center"><input type="checkbox" name="cb" value="${state.id}"></td>
             <td>${state.name}</td>
             <td>${state.remark}</td>

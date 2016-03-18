@@ -21,6 +21,7 @@ public class FindInterviewByWhereDAOImpl extends BaseQueryDao
     public PageInfo findPageByWhere(PageInfo pageInfo, Map<String, String> paramsMap, Map<String, Boolean> sortMap) {
 
         List<Object> param = new ArrayList<Object>();
+        String customerId = paramsMap.get("customerId");
         String userId = paramsMap.get("userId");
         String typeId = paramsMap.get("typeId");
         String stateId = paramsMap.get("stateId");
@@ -31,6 +32,10 @@ public class FindInterviewByWhereDAOImpl extends BaseQueryDao
         String sql = "from interview i, customer c, customer_lankman cl, user u, customer_state cs, customer_type ct ";
         sql += "where i.customer_id = c.id and i.customer_lankman_id = cl.id and i.creator = u.zz_code and c.customer_state_id = cs.id and c.customer_type_id = ct.id ";
 
+        if(!StringUtils.isEmpty(customerId)){
+            sql += "and i.customer_id = ? ";
+            param.add(Long.parseLong(customerId));
+        }
         if(!StringUtils.isEmpty(userId)){
             sql += "and u.id = ? ";
             param.add(Long.parseLong(userId));
@@ -51,7 +56,7 @@ public class FindInterviewByWhereDAOImpl extends BaseQueryDao
             sql += "and i.operate_time <= ? ";
             param.add(endDate+" 23:59:59");
         }
-        sql += "order by i.creator, i.customer_id, i.operate_time desc";
+        sql += "order by i.operate_time desc";
 
         super.pageSqlQueryByNativeSql(pageInfo, sql.toString(), field, param.toArray());
         return pageInfo;

@@ -7,5 +7,5 @@ import com.zs.domain.customer.CustomerType;
  * Created by Allen on 2016/3/9.
  */
 public interface EditCustomerTypeService extends EntityService<CustomerType> {
-    public void edit(long id, String name, String remark, String zzCode)throws Exception;
+    public void edit(long id, String name, int state, String remark, String zzCode)throws Exception;
 }

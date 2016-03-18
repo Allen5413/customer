@@ -56,7 +56,7 @@
           </tr>
         </c:if>
         <c:forEach var="user" items="${pageInfo.pageResults}" varStatus="status">
-          <tr>
+          <tr onclick="changeTR(this)">
             <td align="center"><input type="checkbox" name="cb" value="${user.id}"></td>
             <td>${user.zzCode}</td>
             <td>${user.name}</td>

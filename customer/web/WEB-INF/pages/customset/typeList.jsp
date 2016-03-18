@@ -23,7 +23,6 @@
       <div class="title-btn">
         <a href="#" onclick="add()">新增</a>
         <a href="#" onclick="edit()">编辑</a>
-        <a href="#" onclick="del()">删除</a>
       </div>
       <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
         <tr>
@@ -32,7 +31,8 @@
             <a href="#" onclick="checkNall('cb')" style="color: #0092DC">反选</a>
           </th>
           <th width="20%">客户类型</th>
-          <th width="70%">备注</th>
+          <th width="10%">状态</th>
+          <th width="60%">备注</th>
         </tr>
         <c:if test="${empty typeList}">
           <tr>
@@ -40,9 +40,10 @@
           </tr>
         </c:if>
         <c:forEach var="type" items="${typeList}" varStatus="status">
-          <tr>
+          <tr onclick="changeTR(this)">
             <td align="center"><input type="checkbox" name="cb" value="${type.id}"></td>
             <td>${type.name}</td>
+            <td>${type.state == 0 ? "启用" : "停用"}</td>
             <td>${type.remark}</td>
           </tr>
         </c:forEach>
@@ -63,7 +64,7 @@
       dialog.innerFrame.contentWindow.sub($("#pageForm"));
     };
     dialog.Width = getWindowWidthSize() * 0.3;
-    dialog.Height = getWindowHeightSize() * 0.2;
+    dialog.Height = getWindowHeightSize() * 0.3;
     dialog.Title = "添加类型";
     dialog.URL = "${pageContext.request.contextPath}/addCustomerType/open.htm";
     dialog.show();
@@ -93,10 +94,10 @@
     var dialog = new Dialog();
     dialog.ShowButtonRow=true;
     dialog.OKEvent = function(){
-      dialog.innerFrame.contentWindow.sub($("#subBut"));
+      dialog.innerFrame.contentWindow.sub($("#pageForm"));
     };
     dialog.Width = getWindowWidthSize() * 0.3;
-    dialog.Height = getWindowHeightSize() * 0.4;
+    dialog.Height = getWindowHeightSize() * 0.3;
     dialog.Title = "编辑客户类型";
     dialog.URL = "${pageContext.request.contextPath}/editCustomerType/open.htm?id="+id;
     dialog.show();

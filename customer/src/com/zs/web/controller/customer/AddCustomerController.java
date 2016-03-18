@@ -2,11 +2,10 @@ package com.zs.web.controller.customer;
 
 import com.zs.domain.customer.Customer;
 import com.zs.service.basic.area.FindAreaForProvinceService;
-import com.zs.service.basic.school.FindSchoolService;
+import com.zs.service.basic.school.FindSchoolForNotExistsService;
 import com.zs.service.customer.AddCustomerService;
 import com.zs.service.customerstate.FindCustomerStateService;
-import com.zs.service.customertype.FindCustomerTypeService;
-import com.zs.tools.UserTools;
+import com.zs.service.customertype.FindCustomerTypeForStateYesService;
 import com.zs.web.controller.LoggerController;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
@@ -30,13 +29,13 @@ public class AddCustomerController extends
     @Resource
     private AddCustomerService addCustomerService;
     @Resource
-    private FindSchoolService findSchoolService;
+    private FindSchoolForNotExistsService findSchoolForNotExistsService;
     @Resource
     private FindAreaForProvinceService findAreaForProvinceService;
     @Resource
     private FindCustomerStateService findCustomerStateService;
     @Resource
-    private FindCustomerTypeService findCustomerTypeService;
+    private FindCustomerTypeForStateYesService findCustomerTypeForStateYesService;
 
     /**
      * 打开新增页面
@@ -45,10 +44,10 @@ public class AddCustomerController extends
     @RequestMapping(value = "open")
     public String open(HttpServletRequest request){
         try {
-            request.setAttribute("schoolList", findSchoolService.getAll());
+            request.setAttribute("schoolList", findSchoolForNotExistsService.find());
             request.setAttribute("provinceList", findAreaForProvinceService.find());
             request.setAttribute("stateList", findCustomerStateService.findAll());
-            request.setAttribute("typeList", findCustomerTypeService.findAll());
+            request.setAttribute("typeList", findCustomerTypeForStateYesService.find());
         } catch (Exception e) {
             return "error";
         }

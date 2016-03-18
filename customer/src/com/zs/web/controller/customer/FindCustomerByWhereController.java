@@ -1,10 +1,12 @@
 package com.zs.web.controller.customer;
 
 import com.feinno.framework.common.dao.support.PageInfo;
+import com.zs.domain.basic.Area;
 import com.zs.domain.basic.User;
 import com.zs.domain.basic.UserGroupResource;
 import com.zs.domain.customer.CustomerState;
 import com.zs.domain.customer.CustomerType;
+import com.zs.service.basic.area.FindAreaForProvinceService;
 import com.zs.service.basic.user.ValidateLoginService;
 import com.zs.service.customer.FindCustomerByWhereService;
 import com.zs.service.customerstate.FindCustomerStateService;
@@ -40,6 +42,8 @@ public class FindCustomerByWhereController extends LoggerController {
     private FindCustomerStateService findCustomerStateService;
     @Resource
     private ValidateLoginService validateLoginService;
+    @Resource
+    private FindAreaForProvinceService findAreaForProvinceService;
 
 
     @RequestMapping(value = "find")
@@ -47,6 +51,7 @@ public class FindCustomerByWhereController extends LoggerController {
                        @RequestParam(value="typeId", required=false, defaultValue="") String typeId,
                        @RequestParam(value="stateId", required=false, defaultValue="") String stateId,
                        @RequestParam(value="name", required=false, defaultValue="") String name,
+                       @RequestParam(value = "provinceCode", required = false, defaultValue = "") String provinceCode,
                        HttpServletRequest request){
         try{
             //得到当前登录用户的客户资料管理权限
@@ -68,11 +73,14 @@ public class FindCustomerByWhereController extends LoggerController {
             List<CustomerType> customerTypeList = findCustomerTypeService.findAll();
             //获取客户状态
             List<CustomerState> customerStateList = findCustomerStateService.findAll();
+            //获取省份
+            List<Area> areaList = findAreaForProvinceService.find();
 
             Map<String, String> params = new HashMap<String, String>();
             params.put("userId", userId);
             params.put("typeId", typeId);
             params.put("stateId", stateId);
+            params.put("provinceCode", provinceCode);
             params.put("name", name);
             PageInfo pageInfo = getPageInfo(request);
             pageInfo = findCustomerByWhereService.findPageByWhere(pageInfo, params);
@@ -85,6 +93,7 @@ public class FindCustomerByWhereController extends LoggerController {
             request.setAttribute("userList", userList);
             request.setAttribute("typeList", customerTypeList);
             request.setAttribute("stateList", customerStateList);
+            request.setAttribute("areaList", areaList);
             return "customer/customerList";
         }
         catch(Exception e){

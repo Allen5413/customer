@@ -14,6 +14,13 @@
         <label>类型名称：</label>
         <input type="text" id="name" name="name" />
       </li>
+      <li>
+        <label>状态：</label>
+        <select id="state" name="state">
+          <option value="0">启用</option>
+          <option value="1">停用</option>
+        </select>
+      </li>
       <li><label class="left">备注：</label><textarea class="pText_280" name="remark" id="remark"></textarea></li>
     </ul>
   </form>

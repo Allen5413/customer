@@ -39,6 +39,13 @@
               <option value="${state.id}" <c:if test="${state.id == param.stateId}">selected="selected" </c:if> >${state.name}</option>
             </c:forEach>
           </select>
+          所在省份：
+          <select id="provinceCode" name="provinceCode">
+            <option value="">--请选择--</option>
+            <c:forEach var="area" items="${areaList}">
+              <option value="${area.code}" <c:if test="${area.code == param.provinceCode}">selected="selected" </c:if> >${area.name}</option>
+            </c:forEach>
+          </select>
           客户名称：<input type="text" class="input_100" name="name" value="${param.name}" />
           <input id="subBut" class="btnImg" type="image" src="${pageContext.request.contextPath}/images/btn_search.png" onclick="pageForm.submit();" />
         </div>
@@ -48,7 +55,6 @@
         <c:if test="${!empty isAdmin}">
           <a href="#" onclick="add()">添加客户</a>
           <a href="#" onclick="edit()">编辑</a>
-          <a href="#" onclick="del()">删除</a>
         </c:if>
         <c:if test="${isAssign == 1}">
           <a href="#" onclick="assign()">指派</a>

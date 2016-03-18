@@ -55,7 +55,7 @@ public class DateTools {
         Calendar cldCurrent = Calendar.getInstance();
         // 获得年月日
         String strMonth = String.valueOf((cldCurrent.get(Calendar.MONTH)+1));
-        return strMonth;
+        return Integer.parseInt(strMonth) < 10 ? "0"+strMonth : strMonth;
     }
     public static String getThisDay() {
         // 获得当前日期

@@ -15,6 +15,13 @@
         <label>类型名称：</label>
         <input type="text" id="name" name="name" value="${customerType.name}" />
       </li>
+      <li>
+        <label>状态：</label>
+        <select id="state" name="state">
+          <option value="0" <c:if test="${customerType.state == 0}">selected="selected"</c:if> >启用</option>
+          <option value="1" <c:if test="${customerType.state == 1}">selected="selected"</c:if> >停用</option>
+        </select>
+      </li>
       <li><label class="left">备注：</label><textarea class="pText_280" name="remark" id="remark">${customerType.remark}</textarea></li>
     </ul>
   </form>
@@ -35,7 +42,7 @@
       async: false,
       success: function(data) {
         if(data.state == 0){
-          $(obj).click();
+          $(obj).submit();
           alert("提交成功！");
           Dialog.close();
         }else{
