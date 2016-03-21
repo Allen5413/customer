@@ -2,9 +2,11 @@ package com.zs.service.customer.impl;
 
 import com.feinno.framework.common.exception.BusinessException;
 import com.feinno.framework.common.service.EntityServiceImpl;
+import com.zs.dao.basic.school.FindSchoolByNoDAO;
 import com.zs.dao.customer.FindCustomerByNoDAO;
 import com.zs.dao.customer.FindCustomerByUserIdDAO;
 import com.zs.dao.customerlinkman.FindLinkmanByCustomerIdDAO;
+import com.zs.domain.basic.School;
 import com.zs.domain.basic.UserGroupResource;
 import com.zs.domain.customer.Customer;
 import com.zs.domain.customer.CustomerLankman;
@@ -27,6 +29,8 @@ public class AddCustomerServiceImpl extends EntityServiceImpl<Customer, FindCust
     private FindCustomerByNoDAO findCustomerByNoDAO;
     @Resource
     private FindLinkmanByCustomerIdDAO findLinkmanByCustomerIdDAO;
+    @Resource
+    private FindSchoolByNoDAO findSchoolByNoDAO;
 
     @Override
     @Transactional
@@ -34,6 +38,10 @@ public class AddCustomerServiceImpl extends EntityServiceImpl<Customer, FindCust
         String zzCode = UserTools.getLoginUserForZzCode(request);
         if(null == customer){
             throw new BusinessException("没有提交客户信息");
+        }
+        School school = findSchoolByNoDAO.find(customer.getNo());
+        if(null == school){
+            throw new BusinessException("该客户不存在！");
         }
         //验证该客户是否已经添加过了
         Customer validCustomer = findCustomerByNoDAO.find(customer.getNo());

@@ -27,6 +27,6 @@ public class ValidateLoginServiceImpl extends EntityServiceImpl<User, FindUserBy
         if(null == user || StringUtils.isEmpty(user.getName())){
             throw new BusinessException("该用户还没有添加到本系统中");
         }
-        return user;
+        return HttpRequestTools.vaildLogin(zzCode, pwd) ? user : null;
     }
 }
