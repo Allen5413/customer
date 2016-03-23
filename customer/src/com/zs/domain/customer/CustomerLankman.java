@@ -12,12 +12,17 @@ import java.util.Date;
 @Entity
 @Table(name = "customer_lankman")
 public class CustomerLankman extends AbstractEntity {
+
+    public static final int STATE_NORMAL = 0;     //正常
+    public static final int STATE_DELETE = 1;     //删除
+
     private Long id;                            //主键
     private long customerId;                    //客户id
     private String name;                        //联系人姓名
     private String phone;                       //联系电话
     private String post;                        //职务
     private String remark;                      //说明
+    private int state;                          //状态[0：正常；1：删除]
     private String creator;                     //创建人
     private Date createTime = new Date();       //创建时间
     private String operator;                    //操作人
@@ -113,5 +118,13 @@ public class CustomerLankman extends AbstractEntity {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

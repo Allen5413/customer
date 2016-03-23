@@ -72,10 +72,11 @@ public class EditCustomerController extends
     @RequestMapping(value = "editor")
     @ResponseBody
     public JSONObject editor(HttpServletRequest request, Customer customer,
-                          @RequestParam(value = "linkmanInfo", required = false, defaultValue = "")String linkmanInfo){
+                          @RequestParam(value = "linkmanInfo", required = false, defaultValue = "")String linkmanInfo,
+                          @RequestParam(value = "delLinkman", required = false, defaultValue = "")String delLinkman){
         JSONObject jsonObject = new JSONObject();
         try{
-            editCustomerService.edit(customer, linkmanInfo, UserTools.getLoginUserForZzCode(request));
+            editCustomerService.edit(customer, linkmanInfo, delLinkman, UserTools.getLoginUserForZzCode(request));
             jsonObject.put("state", 0);
         }
         catch(Exception e){

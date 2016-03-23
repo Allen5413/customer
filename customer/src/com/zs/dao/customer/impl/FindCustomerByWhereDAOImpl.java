@@ -32,8 +32,8 @@ public class FindCustomerByWhereDAOImpl extends BaseQueryDao
                 "LEFT JOIN area a ON c.province_code = a.code " +
                 "INNER JOIN customer_type ct ON c.customer_type_id = ct.id " +
                 "INNER JOIN customer_state cs ON c.customer_state_id = cs.id " +
-                "LEFT JOIN (select cl.* from customer_lankman cl, (select min(cl.id) as id, cl.customer_id from customer_lankman cl group by cl.customer_id)t " +
-                "where cl.id = t.id and cl.customer_id = t.customer_id) tt ON c.id = tt.customer_id ";
+                "LEFT JOIN (select cl.* from customer_lankman cl, (select min(cl.id) as id, cl.customer_id from customer_lankman cl where cl.state = 0 group by cl.customer_id) t " +
+                "where cl.id = t.id and cl.state = 0 and cl.customer_id = t.customer_id) tt ON c.id = tt.customer_id ";
         sql += "where 1=1 ";
 
         if(!StringUtils.isEmpty(userId)){

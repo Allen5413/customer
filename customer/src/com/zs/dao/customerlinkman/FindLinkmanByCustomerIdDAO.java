@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface FindLinkmanByCustomerIdDAO extends EntityJpaDao<CustomerLankman, Long> {
 
-    @Query("FROM CustomerLankman WHERE customerId = ?1 ORDER BY createTime")
+    @Query("FROM CustomerLankman WHERE customerId = ?1 AND state = 0 ORDER BY createTime")
     public List<CustomerLankman> find(long customerId);
 }

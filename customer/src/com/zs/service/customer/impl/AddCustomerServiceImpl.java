@@ -93,6 +93,7 @@ public class AddCustomerServiceImpl extends EntityServiceImpl<Customer, FindCust
                         customerLankman.setPhone(phone);
                         customerLankman.setPost(post);
                         customerLankman.setRemark(remark);
+                        customerLankman.setState(CustomerLankman.STATE_NORMAL);
                         findLinkmanByCustomerIdDAO.save(customerLankman);
                     }
                 }

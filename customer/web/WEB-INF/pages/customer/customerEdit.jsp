@@ -61,8 +61,10 @@
     </div>
     <ul class="fill_form bg-li" id="linkmanUL">
       <input type="hidden" id="linkmanInfo" name="linkmanInfo" />
+      <input type="hidden" id="delLinkman" name="delLinkman" />
       <c:forEach var="linkman" items="${linkmanList}" varStatus="status">
         <li>
+          <input type="hidden" name="linkmanId" value="${linkman.id}" />
           <c:if test="${status.index > 0}">
             <span class="right"><a href="#" onclick="delLinkman(this)">删除</a></span>
           </c:if>
@@ -96,8 +98,11 @@
     var linkmanInfo = $("#linkmanInfo");
     $("#linkmanUL").find("li").each(function(){
       var temp = "";
-      $(this).find("[name=linkmanName]").each(function(){
+      $(this).find("[name=linkmanId]").each(function(){
         temp = $(this).val()+"*";
+      });
+      $(this).find("[name=linkmanName]").each(function(){
+        temp += $(this).val()+"*";
       });
       $(this).find("[name=linkmanPhone]").each(function(){
         temp += $(this).val()+"*";
@@ -125,6 +130,7 @@
         }else{
           alert(data.msg);
           $("#linkmanInfo").val("");
+          $("#delLinkman").val("");
         }
       }
     });
@@ -142,6 +148,7 @@
     }
     var html = $("#linkmanUL").html();
     var addHtml = "<li>";
+    addHtml += "<input type=\"hidden\" name=\"linkmanId\" value=\"new\" />";
     addHtml += "<span class=\"right\"><a href=\"#\" onclick=\"delLinkman(this)\">删除</a></span>";
     addHtml += "<p><label>联系人姓名：</label><input class=\"pInput_150\" type=\"text\" name=\"linkmanName\" />";
     addHtml += "<label>联系电话：</label><input class=\"pInput_150\" type=\"text\" name=\"linkmanPhone\" /></p>";
@@ -152,6 +159,14 @@
   }
 
   function delLinkman(obj){
+    var delLinkman = $("#delLinkman").val();
+    $(obj).parent().parent().find("[name=linkmanId]").each(function(){
+      if(delLinkman.length < 1){
+        $("#delLinkman").val($(this).val());
+      }else{
+        $("#delLinkman").val(delLinkman + "," + $(this).val());
+      }
+    });
     $(obj).parent().parent().remove();
   }
 </script>
