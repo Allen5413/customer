@@ -9,20 +9,15 @@
 <body>
 <div class="pop_content" style="width: 95%">
   <form id="addForm" name="addForm" action="${pageContext.request.contextPath}/addCustomer/add.htm" method="post">
-    <input type="hidden" id="name" name="name" />
-    <input type="hidden" id="no" name="no" />
     <div class="pop-tabs">
       <a class="on" href="#">客户基本资料</a>
     </div>
     <ul class="fill_form" id="basicInfo">
       <li>
-        <label>客户名称：</label>
-        <select id="schoolNoName" class="easyui-combobox">
-          <option value="">--请选择--</option>
-          <c:forEach var="school" items="${schoolList}">
-            <option value="${school.code}_*_${school.name}">${school.name}</option>
-          </c:forEach>
-        </select>
+        <label>学校No：</label><input class="pInput_170" type="text" name="no" />
+      </li>
+      <li>
+        <label>客户名称：</label><input class="pInput_170" type="text" id="name" name="name" />
       </li>
       <li>
         <label>办学规模：</label><input class="pInput_170" type="text" name="scale" />
@@ -83,11 +78,11 @@
 </html>
 <script>
   function sub(obj){
-    var schoolNoName = $("#schoolNoName").combobox('getValue');
+    var name = $("#name").val();
     var typeId = $("#typeId").val();
     var stateId = $("#stateId").val();
-    if(schoolNoName == ""){
-      alert("请选择客户名称");
+    if(name == ""){
+      alert("请输入客户名称");
       return false;
     }
     if(typeId == ""){
@@ -98,8 +93,6 @@
       alert("请选择客户状态");
       return false;
     }
-    $("#no").val(schoolNoName.split("_*_")[0]);
-    $("#name").val(schoolNoName.split("_*_")[1]);
 
     var linkmanInfo = $("#linkmanInfo");
     $("#linkmanUL").find("li").each(function(){

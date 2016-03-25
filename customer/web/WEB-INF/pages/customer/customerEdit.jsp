@@ -16,7 +16,10 @@
     </div>
     <ul class="fill_form" id="basicInfo">
       <li>
-        <label>客户名称：</label>${customer.name}
+        <label>学校No：</label><input class="pInput_170" type="text" name="no" value="${customer.no}" />
+      </li>
+      <li>
+        <label>客户名称：</label><input class="pInput_170" type="text" id="name" name="name" value="${customer.name}" />
       </li>
       <li>
         <label>办学规模：</label><input class="pInput_170" type="text" name="scale" value="${customer.scale}" />

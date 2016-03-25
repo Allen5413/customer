@@ -2,6 +2,8 @@ package com.zs.service.customer.impl;
 
 import com.feinno.framework.common.exception.BusinessException;
 import com.feinno.framework.common.service.EntityServiceImpl;
+import com.zs.dao.customer.FindCustomerByNameDAO;
+import com.zs.dao.customer.FindCustomerByNoDAO;
 import com.zs.dao.customer.FindCustomerByUserIdDAO;
 import com.zs.dao.customerlinkman.FindLinkmanByCustomerIdDAO;
 import com.zs.domain.customer.Customer;
@@ -22,6 +24,10 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
 
     @Resource
     private FindLinkmanByCustomerIdDAO findLinkmanByCustomerIdDAO;
+    @Resource
+    private FindCustomerByNameDAO findCustomerByNameDAO;
+    @Resource
+    private FindCustomerByNoDAO findCustomerByNoDAO;
 
     @Override
     @Transactional
@@ -29,18 +35,28 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
         if(null == customer){
             throw new BusinessException("没有提交客户信息");
         }
-        //验证该客户是否已经添加过了
-        Customer validCustomer = super.get(customer.getId());
-        if(null == validCustomer || StringUtils.isEmpty(validCustomer.getName())){
+        Customer oldCustomer = super.get(customer.getId());
+        if(null == oldCustomer || StringUtils.isEmpty(oldCustomer.getName())){
             throw new BusinessException("该客户不存在");
         }
-        //只有no、名称、创建人、创建时间是不能更改的
-        customer.setNo(validCustomer.getNo());
-        customer.setName(validCustomer.getName());
-        customer.setCreator(validCustomer.getCreator());
-        customer.setCreateTime(validCustomer.getCreateTime());
+
+        if(!StringUtils.isEmpty(customer.getNo())){
+            Customer validCustomer = findCustomerByNoDAO.find(customer.getNo().trim().toLowerCase());
+            if(null != validCustomer && !validCustomer.getNo().equals(oldCustomer.getNo())){
+                throw new BusinessException("学校No："+customer.getNo()+"，已经存在");
+            }
+        }
+        if(!StringUtils.isEmpty(customer.getName())){
+            Customer validCustomer = findCustomerByNameDAO.find(customer.getName().trim());
+            if(null != validCustomer && !validCustomer.getName().equals(oldCustomer.getName())){
+                throw new BusinessException("客户名称："+customer.getName()+"，已经存在");
+            }
+        }
 
 
+        //只有创建人、创建时间是不能更改的
+        customer.setCreator(oldCustomer.getCreator());
+        customer.setCreateTime(oldCustomer.getCreateTime());
         customer.setOperator(zzCode);
         customer.setOperateTime(DateTools.getLongNowTime());
         super.update(customer);

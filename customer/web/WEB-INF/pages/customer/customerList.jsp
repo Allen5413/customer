@@ -69,6 +69,7 @@
             <a href="#" onclick="checkAll('cb')" style="color: #0092DC">全选</a>|
             <a href="#" onclick="checkNall('cb')" style="color: #0092DC">反选</a>
           </th>
+          <th width="6%">学校No</th>
           <th width="15%">客户名称</th>
           <th width="5%">客户经理</th>
           <th width="5%">所在省份</th>
@@ -79,9 +80,9 @@
           <th width="5%">客户状态</th>
           <th width="5%">注册人数</th>
           <th width="5%">联系人姓名</th>
-          <th width="10%">联系电话</th>
+          <th width="8%">联系电话</th>
           <th width="5%">职务</th>
-          <th width="15%">备注</th>
+          <th width="11%">备注</th>
         </tr>
         <c:if test="${empty pageInfo || empty pageInfo.pageResults}">
           <tr>
@@ -99,6 +100,7 @@
                 <input type="checkbox" name="cb" value="${customer.id}">
               </c:if>
             </td>
+            <td>${customer.no}</td>
             <td><a href="#" style="color: #0092DC" onclick="searchInfo(${customer.id})">${customer.cName}</a></td>
             <td>${customer.uName}</td>
             <td>${customer.aName}</td>
@@ -125,15 +127,17 @@
   $(function(){
     <c:forEach var="customer" items="${pageInfo.pageResults}">
       var no = "${customer.no}";
-      $.ajax({
-        url:"${pageContext.request.contextPath}/findCustomerByWhere/findNoCount.htm",
-        method : 'POST',
-        async:false,
-        data:{"no":no},
-        success:function(data){
-          $("#"+no).html(data);
-        }
-      });
+      if(no != "" && no.length > 0){
+        $.ajax({
+          url:"${pageContext.request.contextPath}/findCustomerByWhere/findNoCount.htm",
+          method : 'POST',
+          async:false,
+          data:{"no":no},
+          success:function(data){
+            $("#"+no).html(data);
+          }
+        });
+      }
     </c:forEach>
   });
 

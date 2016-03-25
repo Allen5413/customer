@@ -3,6 +3,7 @@ package com.zs.service.customer.impl;
 import com.feinno.framework.common.exception.BusinessException;
 import com.feinno.framework.common.service.EntityServiceImpl;
 import com.zs.dao.basic.school.FindSchoolByNoDAO;
+import com.zs.dao.customer.FindCustomerByNameDAO;
 import com.zs.dao.customer.FindCustomerByNoDAO;
 import com.zs.dao.customer.FindCustomerByUserIdDAO;
 import com.zs.dao.customerlinkman.FindLinkmanByCustomerIdDAO;
@@ -30,7 +31,8 @@ public class AddCustomerServiceImpl extends EntityServiceImpl<Customer, FindCust
     @Resource
     private FindLinkmanByCustomerIdDAO findLinkmanByCustomerIdDAO;
     @Resource
-    private FindSchoolByNoDAO findSchoolByNoDAO;
+    private FindCustomerByNameDAO findCustomerByNameDAO;
+
 
     @Override
     @Transactional
@@ -39,15 +41,19 @@ public class AddCustomerServiceImpl extends EntityServiceImpl<Customer, FindCust
         if(null == customer){
             throw new BusinessException("没有提交客户信息");
         }
-        School school = findSchoolByNoDAO.find(customer.getNo());
-        if(null == school){
-            throw new BusinessException("该客户不存在！");
+        if(!StringUtils.isEmpty(customer.getNo())){
+            Customer validCustomer = findCustomerByNoDAO.find(customer.getNo().trim().toLowerCase());
+            if(null != validCustomer){
+                throw new BusinessException("学校No："+customer.getNo()+"，已经存在");
+            }
         }
-        //验证该客户是否已经添加过了
-        Customer validCustomer = findCustomerByNoDAO.find(customer.getNo());
-        if(null != validCustomer && !StringUtils.isEmpty(validCustomer.getName())){
-            throw new BusinessException("该客户已经添加过了");
+        if(!StringUtils.isEmpty(customer.getName())){
+            Customer validCustomer = findCustomerByNameDAO.find(customer.getName().trim());
+            if(null != validCustomer){
+                throw new BusinessException("客户名称："+customer.getName()+"，已经存在");
+            }
         }
+
         //查询当前操作用户的管理权限，如果是只能管理自身客户，那么创建后就默认指派给自己，所有客户就不指派
         if(UserTools.getLoginUserForIsAdmin(request) == UserGroupResource.ISADMIN_ME){
             customer.setUserId(UserTools.getLoginUserForId(request));
