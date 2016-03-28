@@ -69,20 +69,20 @@
             <a href="#" onclick="checkAll('cb')" style="color: #0092DC">全选</a>|
             <a href="#" onclick="checkNall('cb')" style="color: #0092DC">反选</a>
           </th>
-          <th width="6%">学校No</th>
-          <th width="15%">客户名称</th>
+          <th width="4%">学校No</th>
+          <th width="12%">客户名称</th>
           <th width="5%">客户经理</th>
           <th width="5%">所在省份</th>
           <th width="10%">地址</th>
-          <th width="5%">办学规模</th>
+          <th width="13%">办学规模</th>
           <th width="5%">客户代码</th>
           <th width="5%">客户类型</th>
           <th width="5%">客户状态</th>
           <th width="5%">注册人数</th>
           <th width="5%">联系人姓名</th>
-          <th width="8%">联系电话</th>
+          <th width="6%">联系电话</th>
           <th width="5%">职务</th>
-          <th width="11%">备注</th>
+          <th width="10%">备注</th>
         </tr>
         <c:if test="${empty pageInfo || empty pageInfo.pageResults}">
           <tr>
