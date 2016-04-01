@@ -20,7 +20,7 @@
 <link href="${pageContext.request.contextPath}/css/common.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/css/pop.css" rel="stylesheet" type="text/css" />
-<script src="${pageContext.request.contextPath}/script/main.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/script/main2.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/script/dialog.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/ajaxUpload/ajaxfileupload.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/script/vaild.js" type="text/javascript"></script>

@@ -47,11 +47,11 @@ public class FindCustomerByWhereController extends LoggerController {
 
 
     @RequestMapping(value = "find")
-    public String find(@RequestParam(value="userId", required=false, defaultValue="") String userId,
-                       @RequestParam(value="typeId", required=false, defaultValue="") String typeId,
-                       @RequestParam(value="stateId", required=false, defaultValue="") String stateId,
-                       @RequestParam(value="name", required=false, defaultValue="") String name,
-                       @RequestParam(value = "provinceCode", required = false, defaultValue = "") String provinceCode,
+    public String find(@RequestParam(value="s_userId", required=false, defaultValue="") String userId,
+                       @RequestParam(value="s_typeId", required=false, defaultValue="") String typeId,
+                       @RequestParam(value="s_stateId", required=false, defaultValue="") String stateId,
+                       @RequestParam(value="s_name", required=false, defaultValue="") String name,
+                       @RequestParam(value="s_provinceCode", required=false, defaultValue="") String provinceCode,
                        HttpServletRequest request){
         try{
             //得到当前登录用户的客户资料管理权限
@@ -94,7 +94,7 @@ public class FindCustomerByWhereController extends LoggerController {
             request.setAttribute("typeList", customerTypeList);
             request.setAttribute("stateList", customerStateList);
             request.setAttribute("areaList", areaList);
-            return "customer/customerList";
+            return "customer/customerList2";
         }
         catch(Exception e){
             super.outputException(request, e, log, "分页查询客户信息");

@@ -182,8 +182,10 @@ li.btn-li{
 	top:6px;
 }
 .bar-pop{
-	padding:20px 0 10px;
-	text-align:center;
+	padding:20px 5px 20px;
+	text-align:right;
+	background-color: #f0f0f0;
+	height: 20px;
 }
 .btnpop{
 	border-radius:4px;

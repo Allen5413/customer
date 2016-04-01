@@ -11,14 +11,14 @@
       <span>转到第 <input class="input_30" type="text" id="changePage" /> 页</span> <a class="ptrun" href="#" onclick="pageSub('change')">转</a>
     </p>
     <p class="tNum">
-      共 ${pageInfo.totalCount} 条记录，每页<input type="text" id="rows" name="rows" style="width: 30px;" value="${pageInfo.countOfCurrentPage}" />条，共${pageInfo.totalPage}页
+      共 ${pageInfo.totalCount} 条记录，每页<input type="text" id="rows_txt" style="width: 30px;" value="${pageInfo.countOfCurrentPage}" />条，共${pageInfo.totalPage}页
     </p>
   </td>
 </tr>
 <script>
   $(function(){
-    $("#rows").keyup(function(){
-      var rowsVal = $("#rows").val();
+    $("#rows_txt").keyup(function(){
+      var rowsVal = $("#rows_txt").val();
       if(isNaN(rowsVal) || 1 > rowsVal) {
         $("#rows").val(rowsVal.substring(0, rowsVal.length-1))
       }
@@ -59,7 +59,10 @@
       }
     }
     if(isSub){
-      pageForm.submit();
+      $("#rows").val($("#rows_txt").val());
+      var url = $("#pageForm").attr("action");
+      searchFormPage($('#pageForm'), url);
+      //pageForm.submit();
     }
   }
 </script>

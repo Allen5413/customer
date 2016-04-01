@@ -1,3 +1,19 @@
+function closeDialog(){
+    closeD($("#dialogDiv"));
+}
+function openDialog(title, width, height, url){
+    openD($("#dialogDiv"), title, width, height, url);
+}
+function refreshDialog(){
+    refreshD($("#dialogDiv"));
+}
+function detoryDialog(){
+    destroyD($("#dialogDiv"));
+}
+function getDialogDivHeight(){
+    return $("#dialogDiv").height();
+}
+
 /**
  * 打开弹出框,通过获取当前浏览器的宽和高，乘以比例来打开弹出框的大小
  * @param title
@@ -13,7 +29,19 @@ function openD(div, title, width, height, url){
         closed: false,
         cache: false,
         modal: true,
-        href: url
+        href: url,
+        buttons:[{
+            text:'保存',
+            handler:function(){
+                sub();
+                closeDialog();
+            }
+        },{
+            text:'关闭',
+            handler:function(){
+                detoryDialog();
+            }
+        }]
     }).dialog("open");
 }
 
