@@ -1,74 +1,53 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <%@ include file="/common/meta.jsp"%>
-  <%@ include file="/common/taglibs.jsp"%>
-</head>
-<body>
-<div id="page">
-  <div class="contain_blockBg">
-    <form id="pageForm" name="pageForm" action="${pageContext.request.contextPath}/findCustomset/find.htm" method="post">
-      <div class="search_title">
-        <div class="search_bar">
-          选择类别：
-          <select name="type" onchange="pageForm.submit();">
-            <option value="1">客户类型</option>
-            <option value="2" selected="selected">客户状态</option>
-          </select>
-        </div>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<div class="contain_blockBg">
+  <form id="pageForm" name="pageForm" action="${pageContext.request.contextPath}/findCustomset/find.htm" method="post">
+    <div class="search_title">
+      <div class="search_bar">
+        选择类别：
+        <select name="s_type" onchange="searchFormPage($('#pageForm'), '${pageContext.request.contextPath}/findCustomset/find.htm');">
+          <option value="1">客户类型</option>
+          <option value="2" selected="selected">客户状态</option>
+        </select>
       </div>
-      <div class="title-btn">
-        <a href="#" onclick="add()">新增</a>
-        <a href="#" onclick="edit()">编辑</a>
-      </div>
-      <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
+    </div>
+    <div class="title-btn">
+      <a href="#" onclick="add()">新增</a>
+      <a href="#" onclick="edit()">编辑</a>
+    </div>
+    <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <th width="10%" style="text-align: center">
+          <a href="#" onclick="checkAll('cb')" style="color: #0092DC">全选</a> |
+          <a href="#" onclick="checkNall('cb')" style="color: #0092DC">反选</a>
+        </th>
+        <th width="20%">客户状态</th>
+        <th width="10%">状态</th>
+        <th width="60%">备注</th>
+      </tr>
+      <c:if test="${empty stateList}">
         <tr>
-          <th width="10%" style="text-align: center">
-            <a href="#" onclick="checkAll('cb')" style="color: #0092DC">全选</a> |
-            <a href="#" onclick="checkNall('cb')" style="color: #0092DC">反选</a>
-          </th>
-          <th width="20%">客户状态</th>
-          <th width="10%">状态</th>
-          <th width="60%">备注</th>
+          <td colspan="99" align="center" style="color: red;">没有找到相关数据</td>
         </tr>
-        <c:if test="${empty stateList}">
-          <tr>
-            <td colspan="99" align="center" style="color: red;">没有找到相关数据</td>
-          </tr>
-        </c:if>
-        <c:forEach var="state" items="${stateList}" varStatus="status">
-          <tr onclick="changeTR(this)">
-            <td align="center"><input type="checkbox" name="cb" value="${state.id}"></td>
-            <td>${state.name}</td>
-            <td>${state.state == 0 ? "启用" : "停用"}</td>
-            <td>${state.remark}</td>
-          </tr>
-        </c:forEach>
-        <tr>
-          <td class="tbg" style="height: 15px;" colspan="20"></td>
+      </c:if>
+      <c:forEach var="state" items="${stateList}" varStatus="status">
+        <tr onclick="changeTR(this)">
+          <td align="center"><input type="checkbox" name="cb" value="${state.id}"></td>
+          <td>${state.name}</td>
+          <td>${state.state == 0 ? "启用" : "停用"}</td>
+          <td>${state.remark}</td>
         </tr>
-      </table>
-    </form>
-  </div>
+      </c:forEach>
+      <tr>
+        <td class="tbg" style="height: 15px;" colspan="20"></td>
+      </tr>
+    </table>
+  </form>
 </div>
-</body>
-</html>
 <script>
   function add(){
-    var dialog = new Dialog();
-    dialog.ShowButtonRow=true;
-    dialog.OKEvent = function(){
-      dialog.innerFrame.contentWindow.sub($("#pageForm"));
-    };
-    dialog.Width = getWindowWidthSize() * 0.3;
-    dialog.Height = getWindowHeightSize() * 0.2;
-    dialog.Title = "添加客户状态";
-    dialog.URL = "${pageContext.request.contextPath}/addCustomerState/open.htm";
-    dialog.show();
-    dialog.okButton.value=" 提 交 ";
-    dialog.cancelButton.value=" 取 消 ";
+    openDialog('添加客户状态', 0.3, 0.3, '${pageContext.request.contextPath}/addCustomerState/open.htm');
   }
 
   function edit(){
@@ -89,19 +68,7 @@
       alert("编辑客户状态不能多选");
       return false;
     }
-
-    var dialog = new Dialog();
-    dialog.ShowButtonRow=true;
-    dialog.OKEvent = function(){
-      dialog.innerFrame.contentWindow.sub($("#pageForm"));
-    };
-    dialog.Width = getWindowWidthSize() * 0.3;
-    dialog.Height = getWindowHeightSize() * 0.4;
-    dialog.Title = "编辑客户状态";
-    dialog.URL = "${pageContext.request.contextPath}/editCustomerState/open.htm?id="+id;
-    dialog.show();
-    dialog.okButton.value=" 提 交 ";
-    dialog.cancelButton.value=" 取 消 ";
+    openDialog('编辑客户状态', 0.3, 0.4, '${pageContext.request.contextPath}/editCustomerState/open.htm?id='+id);
   }
 
   function del(){
@@ -127,7 +94,7 @@
         success:function(data){
           if(data.state == 0){
             alert("删除成功！");
-            pageForm.submit();
+            searchFormPage($('#pageForm'), '${pageContext.request.contextPath}/findCustomset/find.htm');
           }else {
             alert(data.msg);
           }

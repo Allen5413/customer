@@ -29,7 +29,7 @@ public class FindUserGroupPageByWhereController extends
     public FindUserGroupPageByWhereService findUserGroupPageByWhereService;
 
     @RequestMapping(value = "findUserGroupPageByWhere")
-    public String FindPageByWhere(@RequestParam(value="name", required=false, defaultValue="") String name,
+    public String FindPageByWhere(@RequestParam(value="s_name", required=false, defaultValue="") String name,
                                   HttpServletRequest request) {
         try {
             Map<String, String> params = new HashMap<String, String>();

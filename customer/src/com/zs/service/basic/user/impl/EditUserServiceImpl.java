@@ -40,7 +40,7 @@ public class EditUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO
             if(!isExistsZZ){
                 throw new BusinessException("ZZ不存在");
             }
-            oldUser.setZzCode(user.getName());
+            oldUser.setZzCode(user.getZzCode());
             oldUser.setName(user.getName());
             oldUser.setPhone(user.getPhone());
             oldUser.setState(user.getState());

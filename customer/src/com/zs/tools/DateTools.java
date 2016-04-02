@@ -62,7 +62,7 @@ public class DateTools {
         Calendar cldCurrent = Calendar.getInstance();
         // 获得年月日
         String strDay = String.valueOf(cldCurrent.get(Calendar.DATE));
-        return strDay;
+        return Integer.parseInt(strDay) < 10 ? "0"+strDay : strDay;
     }
     public static String getThisWeek() {
         // 获得当前日期

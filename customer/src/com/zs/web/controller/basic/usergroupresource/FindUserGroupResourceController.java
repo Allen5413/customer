@@ -32,7 +32,7 @@ public class FindUserGroupResourceController extends
     private FindUserGroupResourceByGroupIdService findUserGroupResourceByGroupIdService;
 
     @RequestMapping(value = "find")
-    public String find(@RequestParam(value="groupId", required=false, defaultValue="") String groupId,
+    public String find(@RequestParam(value="s_groupId", required=false, defaultValue="") String groupId,
                                   HttpServletRequest request) {
         try {
             //查询所有角色

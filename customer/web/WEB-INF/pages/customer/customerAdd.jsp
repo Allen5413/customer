@@ -1,13 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-         pageEncoding="utf-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <%@ include file="/common/meta.jsp"%>
-  <%@ include file="/common/taglibs.jsp"%>
-</head>
-<body>
-<div class="pop_content" style="width: 95%">
+<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<div class="pop_content" style="width: 95%;">
   <form id="addForm" name="addForm" action="${pageContext.request.contextPath}/addCustomer/add.htm" method="post">
     <div class="pop-tabs">
       <a class="on" href="#">客户基本资料</a>
@@ -74,10 +67,8 @@
     <a class="btnpop" href="#" onclick="addLinkman()">添加联系人</a>
   </form>
 </div>
-</body>
-</html>
 <script>
-  function sub(obj){
+  function sub(){
     var name = $("#name").val();
     var typeId = $("#typeId").val();
     var stateId = $("#stateId").val();
@@ -120,9 +111,8 @@
       async: false,
       success: function(data) {
         if(data.state == 0){
-          $(obj).click();
           alert("提交成功！");
-          Dialog.close();
+          searchFormPage($('#pageForm'), '${pageContext.request.contextPath}/findCustomerByWhere/find.htm', 1);
         }else{
           alert(data.msg);
           $("#linkmanInfo").val("");

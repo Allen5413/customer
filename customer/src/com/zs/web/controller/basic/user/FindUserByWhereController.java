@@ -34,10 +34,10 @@ public class FindUserByWhereController extends
     private FindUserGroupService findUserGroupService;
 
     @RequestMapping(value = "find")
-    public String FindPageByWhere(@RequestParam(value="name", required=false, defaultValue="") String name,
-                                  @RequestParam(value="zzCode", required=false, defaultValue="") String zzCode,
-                                  @RequestParam(value="state", required=false, defaultValue="") String state,
-                                  @RequestParam(value="groupId", required=false, defaultValue="") String groupId,
+    public String FindPageByWhere(@RequestParam(value="s_name", required=false, defaultValue="") String name,
+                                  @RequestParam(value="s_zzCode", required=false, defaultValue="") String zzCode,
+                                  @RequestParam(value="s_state", required=false, defaultValue="") String state,
+                                  @RequestParam(value="s_groupId", required=false, defaultValue="") String groupId,
                                   HttpServletRequest request) {
         try {
             Map<String, String> params = new HashMap<String, String>();

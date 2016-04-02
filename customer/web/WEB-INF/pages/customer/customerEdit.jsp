@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<div class="pop_content" style="width: 90%; height: 90%">
+<div class="pop_content" style="width: 95%;">
   <form id="editForm" name="editForm" action="${pageContext.request.contextPath}/editCustomer/editor.htm" method="post">
     <input type="hidden" name="id" value="${customer.id}" />
     <input type="hidden" name="version" value="${customer.version}" />

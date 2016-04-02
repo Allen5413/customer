@@ -35,7 +35,7 @@ public class FindCustomsetController extends LoggerController {
      * @return
      */
     @RequestMapping(value = "find")
-    public String find(@RequestParam(value="type", required=false, defaultValue="1") String type,
+    public String find(@RequestParam(value="s_type", required=false, defaultValue="1") String type,
                        HttpServletRequest request){
         try{
             //获取客户类型

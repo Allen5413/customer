@@ -26,7 +26,9 @@ function clickResource(url, obj, name){
         $(this).attr("class", "");
     })
     $(obj).attr("class", "on");
-    $("#index_iframe").attr("src", url+"?time="+new Date().getTime());
+    //$("#index_iframe").attr("src", url+"?time="+new Date().getTime());
+    openPage(url+"?time="+new Date().getTime());
+
     //添加tab
     var isOpen =false;
     $(".mainTab").find("a").each(function () {
@@ -51,7 +53,6 @@ function clickResource(url, obj, name){
         if(num >= 10){
             oldOpenTab.attr("class", "tab_1 on");
             alert("最多只能打开10个窗口，请关闭其他窗口再打开！");
-            $("#index_iframe").attr("src", oldUrl+"?time="+new Date().getTime());
         }else {
             var mainTabHtml = $(".mainTab").html();
             var addHtml = "<a lang='" + url + "' class='tab_1 on' href='#' onclick='clickTab(this)'>" + name + "</a>";
@@ -78,7 +79,8 @@ function closeTab() {
     });
     if(isClose) {
         obj.attr("class", "tab_1 on");
-        $("#index_iframe").attr("src", obj.attr("lang")+"?time="+new Date().getTime());
+        //$("#index_iframe").attr("src", obj.attr("lang")+"?time="+new Date().getTime());
+        openPage(obj.attr("lang")+"?time="+new Date().getTime());
     }else{
         alert("首页不能关闭！");
     }
@@ -91,7 +93,8 @@ function clickTab(obj){
         }
     });
     $(obj).attr("class", "tab_1 on")
-    $("#index_iframe").attr("src", $(obj).attr("lang")+"?time="+new Date().getTime());
+    //$("#index_iframe").attr("src", $(obj).attr("lang")+"?time="+new Date().getTime());
+    openPage($(obj).attr("lang")+"?time="+new Date().getTime());
 }
 
 function prevTab(thisObj){
@@ -100,7 +103,8 @@ function prevTab(thisObj){
             if (typeof($(this).prev().attr("lang")) != "undefined") {
                 $(this).attr("class", "tab_1");
                 $(this).prev().attr("class", "tab_1 on");
-                $("#index_iframe").attr("src", $(this).prev().attr("lang")+"?time="+new Date().getTime());
+                //$("#index_iframe").attr("src", $(this).prev().attr("lang")+"?time="+new Date().getTime());
+                openPage($(this).prev().attr("lang")+"?time="+new Date().getTime());
             }
         }
     });
@@ -118,7 +122,8 @@ function nextTab(){
     });
     if (typeof(obj) != "undefined") {
         obj.next().attr("class", "tab_1 on");
-        $("#index_iframe").attr("src", obj.next().attr("lang")+"?time="+new Date().getTime());
+        //$("#index_iframe").attr("src", obj.next().attr("lang")+"?time="+new Date().getTime());
+        openPage(obj.next().attr("lang")+"?time="+new Date().getTime());
     }
 }
 
@@ -328,5 +333,37 @@ function RGBtoHEX(str)
     }
     else{
         return str;
+    }
+}
+
+function openPage(url){
+    $.ajax({
+        cache: true,
+        type: "POST",
+        url: url,
+        async: false,
+        success: function(data) {
+            $("#contentPage").html(data);
+        }
+    });
+}
+
+function searchFormPage(obj, url, flag){
+    $("#rows").val($("#rows_txt").val());
+    //这里如果是操作后的重新请求列表页面，就要先关掉窗口
+    if (1 == flag) {
+        closeDialog();
+    }
+    if(url != "") {
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: url,
+            async: false,
+            data: obj.serialize(),
+            success: function (data) {
+                $("#contentPage").html(data);
+            }
+        });
     }
 }

@@ -1,11 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-  <%@ include file="/common/meta.jsp"%>
-  <%@ include file="/common/taglibs.jsp"%>
-</head>
-<body style="background:#fff;">
-<div class="pop_content">
+<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<div class="pop_content" style="background:#fff;">
     <ul class="fill_form border-bg">
       <li>
         <label>客户名称：</label>${customer.name}
@@ -36,17 +31,15 @@
           <select class="select-140" id="userId">
             <option value="">--请选择--</option>
             <c:forEach var="user" items="${userList}">
-              <option value="${user.id}">${user.name}[${user.zzCode}]</option>
+              <option value="${user.id}" <c:if test="${user.id == customer.userId}">selected="selected"</c:if> >${user.name}[${user.zzCode}]</option>
             </c:forEach>
           </select>
         </span>
       </li>
     </ul>
 </div>
-</body>
-</html>
 <script>
-  function sub(obj){
+  function sub(){
     var userId = $("#userId").val();
     if(userId == ""){
       alert("请选择客户经理");
@@ -61,9 +54,8 @@
       async: false,
       success: function(data) {
         if(data.state == 0){
-          $(obj).click();
           alert("提交成功！");
-          Dialog.close();
+          searchFormPage($('#pageForm'), '${pageContext.request.contextPath}/findCustomerByWhere/find.htm', 1);
         }else{
           alert(data.msg);
         }

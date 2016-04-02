@@ -1,12 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-         pageEncoding="utf-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <%@ include file="/common/meta.jsp"%>
-  <%@ include file="/common/taglibs.jsp"%>
-</head>
-<body>
+<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="pop_content" style="width: 95%">
   <form id="editForm" name="editForm" action="${pageContext.request.contextPath}/editUser/editor.htm" method="post">
     <input type="hidden" name="id" value="${user.id}"/>
@@ -44,8 +37,6 @@
     </ul>
   </form>
 </div>
-</body>
-</html>
 <script>
   function sub(obj){
     if($("#zzCode").val() == ""){
@@ -69,9 +60,8 @@
       async: false,
       success: function(data) {
         if(data.state == 0){
-          $(obj).click();
           alert("提交成功！");
-          Dialog.close();
+          searchFormPage($('#pageForm'), '${pageContext.request.contextPath}/findUserByWhere/find.htm', 1);
         }else{
           alert(data.msg);
         }

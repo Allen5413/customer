@@ -94,7 +94,7 @@ public class FindCustomerByWhereController extends LoggerController {
             request.setAttribute("typeList", customerTypeList);
             request.setAttribute("stateList", customerStateList);
             request.setAttribute("areaList", areaList);
-            return "customer/customerList2";
+            return "customer/customerList";
         }
         catch(Exception e){
             super.outputException(request, e, log, "分页查询客户信息");

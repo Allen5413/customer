@@ -45,12 +45,12 @@ public class FindInterviewByWhereController extends LoggerController {
 
 
     @RequestMapping(value = "find")
-    public String find(@RequestParam(value="customerId", required=false, defaultValue="") String customerId,
-                       @RequestParam(value="userId", required=false, defaultValue="") String userId,
-                       @RequestParam(value="typeId", required=false, defaultValue="") String typeId,
-                       @RequestParam(value="stateId", required=false, defaultValue="") String stateId,
-                       @RequestParam(value="beginDate", required=false, defaultValue="") String beginDate,
-                       @RequestParam(value="endDate", required=false, defaultValue="") String endDate,
+    public String find(@RequestParam(value="s_customerId", required=false, defaultValue="") String customerId,
+                       @RequestParam(value="s_userId", required=false, defaultValue="") String userId,
+                       @RequestParam(value="s_typeId", required=false, defaultValue="") String typeId,
+                       @RequestParam(value="s_stateId", required=false, defaultValue="") String stateId,
+                       @RequestParam(value="s_beginDate", required=false, defaultValue="") String beginDate,
+                       @RequestParam(value="s_endDate", required=false, defaultValue="") String endDate,
                        HttpServletRequest request){
         try{
             //客户信息

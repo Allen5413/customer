@@ -1,8 +1,8 @@
 function closeDialog(){
     closeD($("#dialogDiv"));
 }
-function openDialog(title, width, height, url){
-    openD($("#dialogDiv"), title, width, height, url);
+function openDialog(title, width, height, url, isButton){
+    openD($("#dialogDiv"), title, width, height, url, isButton);
 }
 function refreshDialog(){
     refreshD($("#dialogDiv"));
@@ -21,7 +21,26 @@ function getDialogDivHeight(){
  * @param height
  * @param url
  */
-function openD(div, title, width, height, url){
+function openD(div, title, width, height, url, isButton){
+    var button = [{
+        text:'保存',
+            handler:function(){
+            sub();
+        }
+    },{
+        text:'关闭',
+            handler:function(){
+            closeDialog();
+        }
+    }];
+    if(isButton == 0){
+        button = [{
+            text:'关闭',
+            handler:function(){
+                closeDialog();
+            }
+        }];
+    }
     div.dialog({
         title: title,
         width: getWindowWidthSize() * width,
@@ -30,18 +49,7 @@ function openD(div, title, width, height, url){
         cache: false,
         modal: true,
         href: url,
-        buttons:[{
-            text:'保存',
-            handler:function(){
-                sub();
-                closeDialog();
-            }
-        },{
-            text:'关闭',
-            handler:function(){
-                detoryDialog();
-            }
-        }]
+        buttons: button
     }).dialog("open");
 }
 
