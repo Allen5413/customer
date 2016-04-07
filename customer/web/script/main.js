@@ -1,3 +1,6 @@
+/*用来存储每个url对应的页面html代码，用去切换tab的时候保存之前请求的结果*/
+var pageHtmlJSON = {};
+
 function clickMenu(index){
     $("dt").each(function(){
         if($(this).attr("lang") == index){
@@ -20,14 +23,11 @@ function clickMenu(index){
 }
 
 function clickResource(url, obj, name){
-    var oldUrl = $("#index_iframe").attr("src");
     var oldOpenTab;
     $("li").each(function(){
         $(this).attr("class", "");
     })
     $(obj).attr("class", "on");
-    //$("#index_iframe").attr("src", url+"?time="+new Date().getTime());
-    openPage(url+"?time="+new Date().getTime());
 
     //添加tab
     var isOpen =false;
@@ -43,6 +43,8 @@ function clickResource(url, obj, name){
             isOpen = true;
         }
     });
+    openPage(url+"?time="+new Date().getTime());
+
     if(!isOpen){
         var num = 0;
         $(".mainTab").find("a").each(function () {
@@ -59,6 +61,7 @@ function clickResource(url, obj, name){
             $(".mainTab").html(mainTabHtml + addHtml);
         }
     }
+
 }
 
 function closeTab() {
@@ -79,7 +82,6 @@ function closeTab() {
     });
     if(isClose) {
         obj.attr("class", "tab_1 on");
-        //$("#index_iframe").attr("src", obj.attr("lang")+"?time="+new Date().getTime());
         openPage(obj.attr("lang")+"?time="+new Date().getTime());
     }else{
         alert("首页不能关闭！");
@@ -92,8 +94,7 @@ function clickTab(obj){
             $(this).attr("class", "tab_1");
         }
     });
-    $(obj).attr("class", "tab_1 on")
-    //$("#index_iframe").attr("src", $(obj).attr("lang")+"?time="+new Date().getTime());
+    $(obj).attr("class", "tab_1 on");
     openPage($(obj).attr("lang")+"?time="+new Date().getTime());
 }
 
@@ -103,7 +104,6 @@ function prevTab(thisObj){
             if (typeof($(this).prev().attr("lang")) != "undefined") {
                 $(this).attr("class", "tab_1");
                 $(this).prev().attr("class", "tab_1 on");
-                //$("#index_iframe").attr("src", $(this).prev().attr("lang")+"?time="+new Date().getTime());
                 openPage($(this).prev().attr("lang")+"?time="+new Date().getTime());
             }
         }
@@ -122,8 +122,62 @@ function nextTab(){
     });
     if (typeof(obj) != "undefined") {
         obj.next().attr("class", "tab_1 on");
-        //$("#index_iframe").attr("src", obj.next().attr("lang")+"?time="+new Date().getTime());
         openPage(obj.next().attr("lang")+"?time="+new Date().getTime());
+    }
+}
+
+/**
+ * 打开一个tab
+ * @param url
+ * @param index
+ */
+function openPage(url){
+    var falg = url.substring(0, url.indexOf("?")).replace("/", "").replace("/", "").replace(".htm", "");
+    var html = pageHtmlJSON[falg];
+    /**
+     * 如果该url有之前保留的html代码，就加载之前存的，否则重新请求
+     */
+    if(typeof (html) == "undefined"){
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: url,
+            async: false,
+            success: function (data) {
+                $("#contentPage").html(data);
+                pageHtmlJSON[falg] = data
+            }
+        });
+    }else{
+        $("#contentPage").html(html);
+    }
+}
+
+/**
+ * 点击查询按钮
+ * @param obj
+ * @param url
+ * @param flag
+ */
+function searchFormPage(obj, url, flag){
+    $("#rows").val($("#rows_txt").val());
+    //这里如果是操作后的重新请求列表页面，就要先关掉窗口
+    if (1 == flag) {
+        closeDialog();
+    }
+    if(url != "") {
+        var falg = url.replace("/", "").replace("/", "").replace(".htm", "");
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: url,
+            async: false,
+            data: obj.serialize(),
+            success: function (data) {
+                $("#contentPage").html(data);
+                pageHtmlJSON[falg] = data
+            }
+        });
     }
 }
 
@@ -333,37 +387,5 @@ function RGBtoHEX(str)
     }
     else{
         return str;
-    }
-}
-
-function openPage(url){
-    $.ajax({
-        cache: true,
-        type: "POST",
-        url: url,
-        async: false,
-        success: function(data) {
-            $("#contentPage").html(data);
-        }
-    });
-}
-
-function searchFormPage(obj, url, flag){
-    $("#rows").val($("#rows_txt").val());
-    //这里如果是操作后的重新请求列表页面，就要先关掉窗口
-    if (1 == flag) {
-        closeDialog();
-    }
-    if(url != "") {
-        $.ajax({
-            cache: true,
-            type: "POST",
-            url: url,
-            async: false,
-            data: obj.serialize(),
-            success: function (data) {
-                $("#contentPage").html(data);
-            }
-        });
     }
 }

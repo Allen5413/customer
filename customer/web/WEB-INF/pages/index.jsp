@@ -56,8 +56,8 @@
             </span>
           </div>
           <div class="contain_blockBg">
-            <div class="container">
-              <iframe id="index_iframe" frameborder="no" class="iframe-noborder"  width="87%"></iframe>
+            <div class="container" id="contentPage">
+
             </div>
           </div>
         </div>
@@ -68,26 +68,11 @@
     <p><span class="right"></span>欢迎您，<a href="#">${loginName}</a> <em class="hrl_2">&nbsp;</em> 姓名：<a href="#">${name}</a></p>
   </div>
 </div>
+<div id="dialogDiv"></div>
 </body>
 </html>
 <script>
-  function closeDialog(){
-    closeD($("#dialogDiv"));
-  }
-  function openDialog(title, width, height, url){
-    openD($("#dialogDiv"), title, width, height, url);
-  }
-  function refreshDialog(){
-    refreshD($("#dialogDiv"));
-  }
-  function detoryDialog(){
-	destroyD($("#dialogDiv"));
-  }
-  function getDialogDivHeight(){
-    return $("#dialogDiv").height();
-  }
   $(function(){
-    $("#index_iframe").css("height", getWindowHeightSize()*0.7);
     $("#aa_0").find("li").first().click();
   });
 </script>

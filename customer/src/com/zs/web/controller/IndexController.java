@@ -30,6 +30,6 @@ public class IndexController extends LoggerController {
         request.setAttribute("zzCode", UserTools.getLoginUserForZzCode(request));
         request.setAttribute("name", UserTools.getLoginUserForName(request));
         request.setAttribute("menu", UserTools.getLoginUserForMenu(request));
-        return "index2";
+        return "index";
     }
 }
