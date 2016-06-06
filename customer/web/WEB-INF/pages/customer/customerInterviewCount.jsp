@@ -2,15 +2,18 @@
          pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<div class="contain_blockBg" id="content">
+<div id="content">
 
 </div>
 <script>
-  var title = [], value = [];
+  var title = [], value = [], num = 0;
   <c:forEach var="map" items="${list}">
     title.push("${map.name}<br>${fn:substring(map.date, 0, 10) }");
     value.push({y:${map.count}, id: ${map.id}});
+    num++;
   </c:forEach>
+
+  $("#content").height(num*60+"px");
 
   $('#content').highcharts({
     chart: {
@@ -40,6 +43,11 @@
       valueSuffix: ' 次'
     },
     plotOptions: {
+      bar: {
+        dataLabels: {
+          enabled: true
+        }
+      },
       series: {
         cursor: 'pointer',
         point: {
@@ -72,6 +80,6 @@
   });
 
   function openDetail(id){
-    openDialog('客户访谈记录详情', 0.8, 0.8, '${pageContext.request.contextPath}/findInterviewByCustomerId/find.htm?customerId='+id);
+    openDialog('客户访谈记录详情', 0.9, 0.8, '${pageContext.request.contextPath}/findInterviewByCustomerId/find.htm?customerId='+id);
   }
 </script>
