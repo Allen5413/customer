@@ -26,3 +26,5 @@
 <script src="${pageContext.request.contextPath}/script/vaild.js" type="text/javascript"></script>
 <!-- zDialog控件 -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/script/zDialog/zDialog.js" charset="utf-8"></script>
+<!-- Highcharts -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/script/Highcharts-4.2.5/js/highcharts.js" charset="utf-8"></script>
