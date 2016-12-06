@@ -1,7 +1,11 @@
 package com.zs.web.controller.basic.user;
 
+import com.alibaba.fastjson.JSONArray;
 import com.zs.domain.basic.User;
 import com.zs.service.basic.user.EditUserService;
+import com.zs.service.basic.user.FindUserForTreeService;
+import com.zs.service.basic.usergroup.FindUserGroupByCreatorService;
+import com.zs.service.basic.usergroup.FindUserGroupForUserNameService;
 import com.zs.service.basic.usergroup.FindUserGroupService;
 import com.zs.service.basic.usergroupuser.FindUserGroupUserByUserIdService;
 import com.zs.tools.UserTools;
@@ -30,9 +34,13 @@ public class EditUserController extends LoggerController<User, EditUserService> 
     @Resource
     private EditUserService editUserService;
     @Resource
-    private FindUserGroupService findUserGroupService;
+    private FindUserGroupForUserNameService findUserGroupForUserNameService;
+    @Resource
+    private FindUserGroupByCreatorService findUserGroupByCreatorService;
     @Resource
     private FindUserGroupUserByUserIdService findUserGroupUserByUserIdService;
+    @Resource
+    private FindUserForTreeService findUserForTreeService;
 
     /**
      * 打开编辑用户页面
@@ -40,10 +48,28 @@ public class EditUserController extends LoggerController<User, EditUserService> 
      */
     @RequestMapping(value = "open")
     public String open(@RequestParam("id") long id, HttpServletRequest request){
-        User user = editUserService.get(id);
-        request.setAttribute("user", user);
-        request.setAttribute("userGroupId", findUserGroupUserByUserIdService.find(user.getId()).getUserGroupId());
-        request.setAttribute("userGroupList", findUserGroupService.getAll());
+        try {
+            int level = UserTools.getLoginUserForLevel(request);
+            if (level == User.LEVEL_COMPANY) {
+                request.setAttribute("userGroupList", findUserGroupForUserNameService.find());
+            } else {
+                request.setAttribute("userGroupList", findUserGroupByCreatorService.find(UserTools.getLoginUserForZzCode(request)));
+            }
+            request.setAttribute("level", level);
+
+            User user = editUserService.get(id);
+            request.setAttribute("user", user);
+            request.setAttribute("userGroupId", findUserGroupUserByUserIdService.find(user.getId()).getUserGroupId());
+
+            if(id != UserTools.getLoginUserForId(request)) {
+                JSONArray jsonArray = findUserForTreeService.findForEditUser(id, UserTools.getLoginUserForId(request));
+                request.setAttribute("userTree", jsonArray);
+            }
+
+        }catch (Exception e){
+            super.outputException(request, e, log, "打开编辑账号页面");
+            return "error";
+        }
         return "user/userEdit";
     }
 
@@ -59,7 +85,7 @@ public class EditUserController extends LoggerController<User, EditUserService> 
         JSONObject jsonObject = new JSONObject();
         try{
             if(null != user) {
-                editUserService.editUser(user, userGroupId, UserTools.getLoginUserForZzCode(request));
+                editUserService.editUser(user, userGroupId, UserTools.getLoginUserForZzCode(request), UserTools.getLoginUserForId(request));
             }
             jsonObject.put("state", 0);
         }catch(Exception e){

@@ -10,5 +10,5 @@ import java.util.List;
  * Created by Allen on 2016/3/10.
  */
 public interface FindUserGroupResourceByGroupIdService extends EntityService<UserGroupResource> {
-    public List<JSONObject> find(String groupId);
+    public List<JSONObject> find(String groupId, long userId);
 }

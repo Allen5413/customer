@@ -15,5 +15,5 @@ public interface AddUserService extends EntityService<User> {
      * @param zzCode
      * @throws Exception
      */
-    public void addUser(User user, long userGroupId, String zzCode)throws Exception;
+    public void addUser(User user, long userGroupId, String zzCode, long loginId)throws Exception;
 }

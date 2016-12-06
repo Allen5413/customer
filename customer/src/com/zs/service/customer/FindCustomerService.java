@@ -9,5 +9,9 @@ import java.util.List;
  * Created by Allen on 2016/3/18.
  */
 public interface FindCustomerService extends EntityService<Customer> {
-    public List<Customer> findForOrderByName();
+    public List<Customer> find();
+
+    public List<Customer> findForChild(String zzCode);
+
+    public List<Customer> findForMe(String zzCode, long userId);
 }

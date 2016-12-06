@@ -26,8 +26,7 @@ public class FindCustomerInterviewCountController extends LoggerController {
     @RequestMapping(value = "find")
     public String find(HttpServletRequest request){
         try{
-            List<Map<String, String>> list = findCustomerInterviewCountService.find();
-
+            List<Map<String, String>> list = findCustomerInterviewCountService.find(request);
             request.setAttribute("list", list);
             return "customer/customerInterviewCount";
         }

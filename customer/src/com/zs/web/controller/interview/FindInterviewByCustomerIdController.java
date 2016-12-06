@@ -6,6 +6,7 @@ import com.zs.domain.customer.Customer;
 import com.zs.service.basic.user.FindUserPageByWhereService;
 import com.zs.service.customer.FindCustomerService;
 import com.zs.service.interview.FindInterviewByWhereService;
+import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -43,6 +44,10 @@ public class FindInterviewByCustomerIdController extends LoggerController {
 
             Map<String, String> params = new HashMap<String, String>();
             params.put("customerId", customerId);
+            params.put("loginLevel", UserTools.getLoginUserForLevel(request)+"");
+            params.put("isBrowse", UserTools.getLoginUserForIsBrowse(request)+"");
+            params.put("loginZzCode", UserTools.getLoginUserForZzCode(request));
+            params.put("loginId", UserTools.getLoginUserForId(request)+"");
             PageInfo pageInfo = getPageInfo(request);
             pageInfo.setCountOfCurrentPage(999999);
             pageInfo = findInterviewByWhereService.findPageByWhere(pageInfo, params);

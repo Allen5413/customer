@@ -26,9 +26,10 @@ public class FindUserGroupResourceByGroupIdServiceImpl extends EntityServiceImpl
 
     @Override
     @Transactional
-    public List<JSONObject> find(String groupId) {
+    public List<JSONObject> find(String groupId, long userId) {
         List<JSONObject> retureList = new ArrayList<JSONObject>();
-        Map<String, String> parmaMap = new HashMap<String, String>(1);
+        Map<String, String> parmaMap = new HashMap<String, String>(2);
+        parmaMap.put("userId", groupId);
         parmaMap.put("groupId", groupId);
         List<Object[]> resultList = findResourceByGroupIdDAO.findListByWhere(parmaMap, null);
         if(null != resultList){

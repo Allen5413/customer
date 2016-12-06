@@ -20,6 +20,23 @@
           <option value="1" <c:if test="${1 == param.s_state}">selected="selected" </c:if>>启用</option>
           <option value="2" <c:if test="${2 == param.s_state}">selected="selected" </c:if>>停用</option>
         </select>
+        等级：
+        <select id="s_level" name="s_level">
+          <option value="">--请选择--</option>
+          <c:if test="${level == 0}">
+            <option value="0" <c:if test="${'0' eq param.s_level}">selected="selected" </c:if>>公司</option>
+            <option value="1" <c:if test="${'1' eq param.s_level}">selected="selected" </c:if>>区域</option>
+            <option value="2" <c:if test="${'2' eq param.s_level}">selected="selected" </c:if>>省级</option>
+            <option value="3" <c:if test="${'3' eq param.s_level}">selected="selected" </c:if>>业务</option>
+          </c:if>
+          <c:if test="${level == 1}">
+            <option value="2" <c:if test="${'2' eq param.s_level}">selected="selected" </c:if>>省级</option>
+            <option value="3" <c:if test="${'3' eq param.s_level}">selected="selected" </c:if>>业务</option>
+          </c:if>
+          <c:if test="${level == 2}">
+            <option value="3" <c:if test="${'3' eq param.s_level}">selected="selected" </c:if>>业务</option>
+          </c:if>
+        </select>
         ZZ号：<input type="text" id="s_zzCode" name="s_zzCode" value="${param.s_zzCode}"/>
         姓名：<input type="text" id="s_name" name="s_name" value="${param.s_name}"/>
       </form>
@@ -43,7 +60,9 @@
       <th width="7%">联系电话</th>
       <th width="5%">用户角色</th>
       <th width="5%">状态</th>
-      <th width="36%">备注</th>
+      <th width="5%">等级</th>
+      <th width="5%">上级</th>
+      <th width="26%">备注</th>
     </tr>
     <c:if test="${empty pageInfo || empty pageInfo.pageResults}">
       <tr>
@@ -58,6 +77,13 @@
         <td>${user.phone}</td>
         <td>${user.ugName}</td>
         <td>${user.state}</td>
+        <td>
+          <c:if test="${user.level eq '0'}">公司</c:if>
+          <c:if test="${user.level eq '1'}">区域</c:if>
+          <c:if test="${user.level eq '2'}">省级</c:if>
+          <c:if test="${user.level eq '3'}">业务</c:if>
+        </td>
+        <td>${user.parentName}</td>
         <td>${user.remark}</td>
       </tr>
     </c:forEach>

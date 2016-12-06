@@ -1,9 +1,12 @@
 package com.zs.web.controller.basic.usergroupresource;
 
+import com.zs.domain.basic.User;
 import com.zs.domain.basic.UserGroup;
+import com.zs.service.basic.usergroup.FindUserGroupByCreatorService;
 import com.zs.service.basic.usergroup.FindUserGroupPageByWhereService;
 import com.zs.service.basic.usergroup.FindUserGroupService;
 import com.zs.service.basic.usergroupresource.FindUserGroupResourceByGroupIdService;
+import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -29,25 +32,35 @@ public class FindUserGroupResourceController extends
     @Resource
     private FindUserGroupService findUserGroupService;
     @Resource
+    private FindUserGroupByCreatorService findUserGroupByCreatorService;
+    @Resource
     private FindUserGroupResourceByGroupIdService findUserGroupResourceByGroupIdService;
 
     @RequestMapping(value = "find")
     public String find(@RequestParam(value="s_groupId", required=false, defaultValue="") String groupId,
                                   HttpServletRequest request) {
         try {
+            int loginLevel = UserTools.getLoginUserForLevel(request);
             //查询所有角色
-            List<UserGroup> userGroupList = findUserGroupService.getAll();
-            if(StringUtils.isEmpty(groupId)){
+            List<UserGroup> userGroupList = null;
+            if(loginLevel == User.LEVEL_COMPANY){
+                userGroupList = findUserGroupService.getAll();
+            }else{
+                userGroupList = findUserGroupByCreatorService.find(UserTools.getLoginUserForZzCode(request));
+            }
+            if(StringUtils.isEmpty(groupId) && null != userGroupList && 0 < userGroupList.size()){
                 groupId = userGroupList.get(0).getId()+"";
             }
-            //查询角色关联资源
-            List<JSONObject> resourceList = findUserGroupResourceByGroupIdService.find(groupId);
-            //查询角色信息
-            UserGroup userGroup = findUserGroupService.get(Long.parseLong(groupId));
+            if(!StringUtils.isEmpty(groupId)) {
+                //查询角色关联资源
+                List<JSONObject> resourceList = findUserGroupResourceByGroupIdService.find(groupId, UserTools.getLoginUserForId(request));
+                //查询角色信息
+                UserGroup userGroup = findUserGroupService.get(Long.parseLong(groupId));
+                request.setAttribute("resourceList", resourceList);
+                request.setAttribute("userGroup", userGroup);
+            }
 
             request.setAttribute("userGroupList", userGroupList);
-            request.setAttribute("resourceList", resourceList);
-            request.setAttribute("userGroup", userGroup);
 
         } catch (Exception e) {
             super.outputException(request, e, log, "查询角色使用权限");

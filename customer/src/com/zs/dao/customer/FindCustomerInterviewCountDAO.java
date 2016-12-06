@@ -16,4 +16,23 @@ public interface FindCustomerInterviewCountDAO extends EntityJpaDao<Customer, Lo
             "group by c.id, c.name " +
             "ORDER BY time desc")
     public List<Object[]> find();
+
+    @Query(nativeQuery = true, value = "select c.id, c.name, count(*) count, max(i.operate_time) time " +
+            "from (select c.* from user u, customer c where parent_sign like ?1 and u.id = c.user_id " +
+            "union " +
+            "select c.* from user u, customer c where parent_sign like ?1 and u.zz_code = c.creator " +
+            ") c, " +
+            "(SELECT i.* FROM interview i, user u WHERE i.creator = u.zz_code and u.parent_sign like ?1) i " +
+            "where c.id = i.customer_id " +
+            "group by c.id, c.name " +
+            "ORDER BY time desc")
+    public List<Object[]> findForChild(String zzCode);
+
+    @Query(nativeQuery = true, value = "select c.id, c.name, count(*) count, max(i.operate_time) time " +
+            "from (select c.* from customer c where c.creator = ?1 or c.user_id = ?2) c, " +
+            "(SELECT i.* FROM interview i WHERE i.creator = ?1) i " +
+            "where c.id = i.customer_id " +
+            "group by c.id, c.name " +
+            "ORDER BY time desc")
+    public List<Object[]> findForMe(String zzCode, long userId);
 }

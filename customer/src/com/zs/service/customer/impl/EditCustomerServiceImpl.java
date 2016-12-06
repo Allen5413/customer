@@ -54,7 +54,8 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
         }
 
 
-        //只有创建人、创建时间是不能更改的
+        //只有指派人、创建人、创建时间是不用更改的
+        customer.setUserId(oldCustomer.getUserId());
         customer.setCreator(oldCustomer.getCreator());
         customer.setCreateTime(oldCustomer.getCreateTime());
         customer.setOperator(zzCode);

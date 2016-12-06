@@ -18,11 +18,19 @@ public class User extends AbstractEntity {
     public static final int STATE_ENABLE = 1;     //启用
     public static final int STATE_DISABLE = 2;    //停用
 
+    public static final int LEVEL_COMPANY = 0;    //公司
+    public static final int LEVEL_AREA = 1;       //区域
+    public static final int LEVEL_PROV = 2;       //省级
+    public static final int LEVEL_BUSINESS = 3;   //业务员
+
     private Long id;                            //主键
     private String zzCode;                      //登录zz号
     private String name;                        //姓名
     private String phone;                       //手机
     private Integer state;                      //用户状态
+    private int level;                          //用户等级
+    private long parentId;                      //用户父id
+    private String parentSign;                  //用户等级关联
     private String remark;                      //备注
     private String creator;                     //创建人
     private Date createTime = new Date();       //创建时间
@@ -103,5 +111,29 @@ public class User extends AbstractEntity {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(long parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getParentSign() {
+        return parentSign;
+    }
+
+    public void setParentSign(String parentSign) {
+        this.parentSign = parentSign;
     }
 }

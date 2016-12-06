@@ -1,8 +1,11 @@
 package com.zs.web.controller.basic.user;
 
+import com.alibaba.fastjson.JSONArray;
 import com.zs.domain.basic.User;
 import com.zs.service.basic.user.AddUserService;
-import com.zs.service.basic.usergroup.FindUserGroupService;
+import com.zs.service.basic.user.FindUserForTreeService;
+import com.zs.service.basic.usergroup.FindUserGroupByCreatorService;
+import com.zs.service.basic.usergroup.FindUserGroupForUserNameService;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import net.sf.json.JSONObject;
@@ -28,7 +31,11 @@ public class AddUserController extends
     @Resource
     private AddUserService addUserService;
     @Resource
-    private FindUserGroupService findUserGroupService;
+    private FindUserGroupForUserNameService findUserGroupForUserNameService;
+    @Resource
+    private FindUserGroupByCreatorService findUserGroupByCreatorService;
+    @Resource
+    private FindUserForTreeService findUserForTreeService;
 
     /**
      * 打开新增用户页面
@@ -36,7 +43,22 @@ public class AddUserController extends
      */
     @RequestMapping(value = "open")
     public String open(HttpServletRequest request){
-        request.setAttribute("userGroupList", findUserGroupService.getAll());
+        try {
+            int level = UserTools.getLoginUserForLevel(request);
+            if (level == User.LEVEL_COMPANY) {
+                request.setAttribute("userGroupList", findUserGroupForUserNameService.find());
+            } else {
+                request.setAttribute("userGroupList", findUserGroupByCreatorService.find(UserTools.getLoginUserForZzCode(request)));
+            }
+            request.setAttribute("level", level);
+
+            //查询用户等级关联tree
+            JSONArray jsonArray = findUserForTreeService.find(UserTools.getLoginUserForId(request), 0);
+            request.setAttribute("userTree", jsonArray);
+        }catch (Exception e){
+            super.outputException(request, e, log, "打开新增账号页面");
+            return "error";
+        }
         return "user/userAdd";
     }
 
@@ -52,7 +74,7 @@ public class AddUserController extends
         JSONObject jsonObject = new JSONObject();
         try{
             if(null != user) {
-                addUserService.addUser(user, userGroupId, UserTools.getLoginUserForZzCode(request));
+                addUserService.addUser(user, userGroupId, UserTools.getLoginUserForZzCode(request), UserTools.getLoginUserForId(request));
             }
             jsonObject.put("state", 0);
         }

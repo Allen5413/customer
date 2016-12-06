@@ -54,6 +54,19 @@ public class UserTools {
     }
 
     /**
+     * 获取登录用户的级别
+     * @param request
+     * @return
+     */
+    public static int getLoginUserForLevel(HttpServletRequest request){
+        if(null != request.getSession().getAttribute("level")){
+            return Integer.parseInt(request.getSession().getAttribute("level").toString());
+        }else{
+            return -1;
+        }
+    }
+
+    /**
      * 获取登录用户是否能浏览的权限
      * @param request
      * @return

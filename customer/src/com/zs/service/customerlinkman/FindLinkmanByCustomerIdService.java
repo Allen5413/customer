@@ -1,5 +1,6 @@
 package com.zs.service.customerlinkman;
 
+import com.alibaba.fastjson.JSONObject;
 import com.feinno.framework.common.service.EntityService;
 import com.zs.domain.customer.CustomerLankman;
 
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public interface FindLinkmanByCustomerIdService extends EntityService<CustomerLankman> {
     public List<CustomerLankman> find(long customerId);
+
+    public List<JSONObject> findForInterviewCount(long customerId);
 }

@@ -1,8 +1,10 @@
 package com.zs.web.controller.basic.usergroup;
 
 import com.feinno.framework.common.dao.support.PageInfo;
+import com.zs.domain.basic.User;
 import com.zs.domain.basic.UserGroup;
 import com.zs.service.basic.usergroup.FindUserGroupPageByWhereService;
+import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,9 @@ public class FindUserGroupPageByWhereController extends
         try {
             Map<String, String> params = new HashMap<String, String>();
             params.put("name", name.trim());
+            if(UserTools.getLoginUserForLevel(request) > User.LEVEL_COMPANY){
+                params.put("creator", UserTools.getLoginUserForZzCode(request));
+            }
             PageInfo<UserGroup> pageInfo = getPageInfo(request);
             Map<String, Boolean> sortMap = getSortMap(request);
             sortMap.put("operateTime", false);

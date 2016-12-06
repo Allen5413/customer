@@ -19,7 +19,17 @@ public class FindCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
     private FindCustomerDAO findCustomerDAO;
 
     @Override
-    public List<Customer> findForOrderByName() {
-        return findCustomerDAO.findForOrderByName();
+    public List<Customer> find() {
+        return findCustomerDAO.find();
+    }
+
+    @Override
+    public List<Customer> findForChild(String zzCode) {
+        return findCustomerDAO.findForChild("%"+zzCode+"%");
+    }
+
+    @Override
+    public List<Customer> findForMe(String zzCode, long userId) {
+        return findCustomerDAO.findForMe(zzCode, userId);
     }
 }

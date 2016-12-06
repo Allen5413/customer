@@ -40,6 +40,8 @@ public class FindUserPageByWhereServiceImpl extends EntityServiceImpl<User, Find
                 jsonObject.put("ugName", objs[4]);
                 jsonObject.put("state", Integer.parseInt(objs[5].toString()) == User.STATE_DISABLE ? "停用" : "启用");
                 jsonObject.put("remark", objs[6]);
+                jsonObject.put("level", objs[7]);
+                jsonObject.put("parentName", objs[8]);
                 jsonArray.add(jsonObject);
             }
             pageInfo.setPageResults(jsonArray);

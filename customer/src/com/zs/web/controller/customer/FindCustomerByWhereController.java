@@ -7,6 +7,7 @@ import com.zs.domain.basic.UserGroupResource;
 import com.zs.domain.customer.CustomerState;
 import com.zs.domain.customer.CustomerType;
 import com.zs.service.basic.area.FindAreaForProvinceService;
+import com.zs.service.basic.user.FindUserByParenSignService;
 import com.zs.service.basic.user.ValidateLoginService;
 import com.zs.service.customer.FindCustomerByWhereService;
 import com.zs.service.customerstate.FindCustomerStateService;
@@ -44,6 +45,8 @@ public class FindCustomerByWhereController extends LoggerController {
     private ValidateLoginService validateLoginService;
     @Resource
     private FindAreaForProvinceService findAreaForProvinceService;
+    @Resource
+    private FindUserByParenSignService findUserByParenSignService;
 
 
     @RequestMapping(value = "find")
@@ -54,6 +57,10 @@ public class FindCustomerByWhereController extends LoggerController {
                        @RequestParam(value="s_provinceCode", required=false, defaultValue="") String provinceCode,
                        HttpServletRequest request){
         try{
+            String loginZzCode = UserTools.getLoginUserForZzCode(request);
+            int loginLevel = UserTools.getLoginUserForLevel(request);
+            long loginId = UserTools.getLoginUserForId(request);
+
             //得到当前登录用户的客户资料管理权限
             Integer isBrowse = UserTools.getLoginUserForIsBrowse(request);
             Integer isAdmin = UserTools.getLoginUserForIsAdmin(request);
@@ -63,12 +70,16 @@ public class FindCustomerByWhereController extends LoggerController {
                 return "customer/customerList";
             }
             if(UserGroupResource.ISBROWSE_ME == isBrowse){
-                userId = UserTools.getLoginUserForId(request)+"";
                 request.setAttribute("userName", UserTools.getLoginUserForName(request));
             }
 
-            //获取客户经理
-            List<User> userList = validateLoginService.getAll();
+            //获取客户经理, 如果是公司级别的斗查询所有的，不是就查询自己以及自己下属的
+            List<User> userList = null;
+            if(loginLevel == User.LEVEL_COMPANY) {
+                userList = validateLoginService.getAll();
+            }else{
+                userList = findUserByParenSignService.find(loginZzCode);
+            }
             //获取客户类型
             List<CustomerType> customerTypeList = findCustomerTypeService.findAll();
             //获取客户状态
@@ -82,6 +93,10 @@ public class FindCustomerByWhereController extends LoggerController {
             params.put("stateId", stateId);
             params.put("provinceCode", provinceCode);
             params.put("name", name);
+            params.put("loginLevel", loginLevel+"");
+            params.put("isBrowse", isBrowse+"");
+            params.put("loginZzCode", loginZzCode);
+            params.put("loginId", loginId+"");
             PageInfo pageInfo = getPageInfo(request);
             pageInfo = findCustomerByWhereService.findPageByWhere(pageInfo, params);
 

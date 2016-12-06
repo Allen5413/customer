@@ -2,15 +2,18 @@ package com.zs.web.controller.interview;
 
 import com.feinno.framework.common.dao.support.PageInfo;
 import com.zs.domain.basic.User;
+import com.zs.domain.basic.UserGroupResource;
 import com.zs.domain.customer.Customer;
 import com.zs.domain.customer.CustomerState;
 import com.zs.domain.customer.CustomerType;
+import com.zs.service.basic.user.FindUserByParenSignService;
 import com.zs.service.basic.user.ValidateLoginService;
 import com.zs.service.customer.FindCustomerService;
 import com.zs.service.customerstate.FindCustomerStateService;
 import com.zs.service.customertype.FindCustomerTypeService;
 import com.zs.service.interview.FindInterviewByWhereService;
 import com.zs.tools.DateTools;
+import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -19,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,8 @@ public class FindInterviewByWhereController extends LoggerController {
     private ValidateLoginService validateLoginService;
     @Resource
     private FindCustomerService findCustomerService;
+    @Resource
+    private FindUserByParenSignService findUserByParenSignService;
 
 
     @RequestMapping(value = "find")
@@ -53,10 +57,34 @@ public class FindInterviewByWhereController extends LoggerController {
                        @RequestParam(value="s_endDate", required=false, defaultValue="") String endDate,
                        HttpServletRequest request){
         try{
+            int loginLevel = UserTools.getLoginUserForLevel(request);
+            String loginZzCode = UserTools.getLoginUserForZzCode(request);
+            long loginId = UserTools.getLoginUserForId(request);
+
+            //得到当前登录用户的客户资料管理权限
+            Integer isBrowse = UserTools.getLoginUserForIsBrowse(request);
+
             //客户信息
-            List<Customer> customerList = findCustomerService.findForOrderByName();
-            //获取客户经理
-            List<User> userList = validateLoginService.getAll();
+            List<Customer> customerList = null;
+            if(loginLevel == User.LEVEL_COMPANY) {
+                customerList = findCustomerService.find();
+            }else{
+                if(UserGroupResource.ISBROWSE_ME == isBrowse){
+                    customerList = findCustomerService.findForMe(loginZzCode, loginId);
+                }else{
+                    customerList = findCustomerService.findForChild(loginZzCode);
+                }
+            }
+
+            //获取客户经理, 如果是公司级别的斗查询所有的，不是就查询自己以及自己下属的
+            List<User> userList = null;
+            if(loginLevel == User.LEVEL_COMPANY) {
+                userList = validateLoginService.getAll();
+            }else{
+                userList = findUserByParenSignService.find(loginZzCode);
+            }
+
+
             //获取客户类型
             List<CustomerType> customerTypeList = findCustomerTypeService.findAll();
             //获取客户状态
@@ -69,6 +97,12 @@ public class FindInterviewByWhereController extends LoggerController {
             params.put("stateId", stateId);
             params.put("beginDate", beginDate);
             params.put("endDate", endDate);
+
+            params.put("loginLevel", loginLevel+"");
+            params.put("isBrowse", isBrowse+"");
+            params.put("loginZzCode", loginZzCode);
+            params.put("loginId", loginId+"");
+
             PageInfo pageInfo = getPageInfo(request);
             pageInfo = findInterviewByWhereService.findPageByWhere(pageInfo, params);
 

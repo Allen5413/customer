@@ -28,5 +28,6 @@ public class ValidateLoginServiceImpl extends EntityServiceImpl<User, FindUserBy
             throw new BusinessException("该用户还没有添加到本系统中");
         }
         return HttpRequestTools.vaildLogin(zzCode, pwd) ? user : null;
+        //return HttpRequestTools.vaildLogin(zzCode, pwd) ? user : user;
     }
 }

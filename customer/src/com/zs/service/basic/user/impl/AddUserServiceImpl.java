@@ -28,7 +28,7 @@ public class AddUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO>
 
     @Override
     @Transactional
-    public void addUser(User user, long userGroupId, String zzCode) throws Exception {
+    public void addUser(User user, long userGroupId, String zzCode, long loginId) throws Exception {
         if(null != user){
             //验证ZZ号是否已经存在
             User validUser = findUserByZZDAO.find(user.getZzCode());
@@ -39,6 +39,16 @@ public class AddUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO>
             boolean isExistsZZ = HttpRequestTools.isExistsZZ(user.getZzCode());
             if(!isExistsZZ){
                 throw new BusinessException("ZZ不存在");
+            }
+            if(user.getLevel() == User.LEVEL_COMPANY){
+                user.setParentId(0l);
+                user.setParentSign(user.getZzCode());
+            }else{
+                if(user.getParentId() <= 0){
+                    user.setParentId(loginId);
+                }
+                User parentUser = super.get(user.getParentId());
+                user.setParentSign(parentUser.getParentSign()+"-"+user.getZzCode());
             }
             user.setCreator(zzCode);
             user.setOperator(zzCode);

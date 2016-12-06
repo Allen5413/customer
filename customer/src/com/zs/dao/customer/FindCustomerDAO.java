@@ -11,5 +11,15 @@ import java.util.List;
  */
 public interface FindCustomerDAO extends EntityJpaDao<Customer, Long> {
     @Query("FROM Customer ORDER BY name")
-    public List<Customer> findForOrderByName();
+    public List<Customer> find();
+
+    @Query(nativeQuery = true, value = "select t.* from (" +
+            "select c.* from user u, customer c where parent_sign like ?1 and u.id = c.user_id " +
+            "union " +
+            "select c.* from user u, customer c where parent_sign like ?1 and u.zz_code = c.creator" +
+            ") t ORDER BY t.name")
+    public List<Customer> findForChild(String zzCode);
+
+    @Query("from Customer where creator = ?1 or userId = ?2 ORDER BY name")
+    public List<Customer> findForMe(String zzCode, long userId);
 }

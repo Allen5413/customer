@@ -105,7 +105,7 @@
         <td>${customer.ctName}</td>
         <td>${customer.csName}</td>
         <td id="${customer.no}"></td>
-        <td>${customer.lName}</td>
+        <td><a href="#" style="color: #0092DC" onclick="searchLinkMan(${customer.id})">${customer.lName}</a></td>
         <td>${customer.phone}</td>
         <td>${customer.post}</td>
         <td>${customer.remark}</td>
@@ -180,6 +180,10 @@
 
   function searchInfo(id){
     openDialog('编辑客户', 0.4, 0.7, '${pageContext.request.contextPath}/findCustomerById/open.htm?id='+id, 0);
+  }
+
+  function searchLinkMan(id){
+    openDialog('查看联系人', 0.4, 0.7, '${pageContext.request.contextPath}/findLinkmanByCustomerId/open.htm?id='+id, 0);
   }
 
   function addInterview(){

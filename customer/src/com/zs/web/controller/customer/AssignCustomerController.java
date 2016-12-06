@@ -1,10 +1,12 @@
 package com.zs.web.controller.customer;
 
 import com.zs.domain.basic.Area;
+import com.zs.domain.basic.User;
 import com.zs.domain.customer.Customer;
 import com.zs.domain.customer.CustomerState;
 import com.zs.domain.customer.CustomerType;
 import com.zs.service.basic.area.FindAreaByCodeService;
+import com.zs.service.basic.user.FindUserByParenSignService;
 import com.zs.service.basic.user.FindUserForStateEnableService;
 import com.zs.service.customer.AssignCustomerService;
 import com.zs.service.customerstate.FindCustomerStateService;
@@ -42,6 +44,8 @@ public class AssignCustomerController extends
     private FindCustomerTypeService findCustomerTypeService;
     @Resource
     private FindUserForStateEnableService findUserForStateEnableService;
+    @Resource
+    private FindUserByParenSignService findUserByParenSignService;
 
     /**
      * 打开页面
@@ -51,6 +55,9 @@ public class AssignCustomerController extends
     public String open(HttpServletRequest request,
                        @RequestParam("id")long id){
         try {
+            String loginZzCode = UserTools.getLoginUserForZzCode(request);
+            int loginLevel = UserTools.getLoginUserForLevel(request);
+
             //查询客户信息
             Customer customer = assignCustomerService.get(id);
             //查询所在省份
@@ -59,8 +66,13 @@ public class AssignCustomerController extends
             CustomerType customerType = findCustomerTypeService.get(customer.getCustomerTypeId());
             //查询客户状态
             CustomerState customerState = findCustomerStateService.get(customer.getCustomerStateId());
-            //查询客户经理
-            List<JSONObject> userList = findUserForStateEnableService.find();
+            //获取客户经理, 如果是公司级别的斗查询所有的，不是就查询自己以及自己下属的
+            List<User> userList = null;
+            if(loginLevel == User.LEVEL_COMPANY) {
+                userList = findUserForStateEnableService.getAll();
+            }else{
+                userList = findUserByParenSignService.find(loginZzCode);
+            }
 
             request.setAttribute("customer", customer);
             request.setAttribute("area", area);

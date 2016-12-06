@@ -74,16 +74,17 @@ public class LoginController extends LoggerController<User, ValidateLoginService
             if(user.getState() == User.STATE_DISABLE){
                 throw new BusinessException("该用户已经停用，请联系管理员");
             }
-            return setSession(request, user.getZzCode(), user.getName(), user.getId());
+            return setSession(request, user.getZzCode(), user.getName(), user.getId(), user.getLevel());
         }else {
             return "用户名密码错误";
         }
     }
 
-    protected String setSession(HttpServletRequest request, String zzCode, String name, long userId)throws Exception{
+    protected String setSession(HttpServletRequest request, String zzCode, String name, long userId, int level)throws Exception{
         request.getSession().setAttribute("userId", userId);
         request.getSession().setAttribute("zzCode", zzCode);
         request.getSession().setAttribute("name", name);
+        request.getSession().setAttribute("level", level);
         //得到用户拥有的菜单资源权限
         Map<String, List<com.zs.domain.basic.Resource>> menuMap = this.getUserMenu(request, userId);
         request.getSession().setAttribute("menuMap", menuMap);

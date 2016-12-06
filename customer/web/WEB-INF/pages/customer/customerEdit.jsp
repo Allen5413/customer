@@ -61,7 +61,7 @@
       <c:forEach var="linkman" items="${linkmanList}" varStatus="status">
         <li>
           <input type="hidden" name="linkmanId" value="${linkman.id}" />
-          <c:if test="${status.index > 0}">
+          <c:if test="${status.index > 0 && linkman.interviewCount  < 1}">
             <span class="right"><a href="#" onclick="delLinkman(this)">删除</a></span>
           </c:if>
           <p><label>联系人姓名：</label><input class="pInput_150" type="text" name="linkmanName" value="${linkman.name}" />

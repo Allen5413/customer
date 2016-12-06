@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="pop_content" style="width: 95%">
   <form id="addForm" name="addForm" action="${pageContext.request.contextPath}/addUser/add.htm" method="post">
-    <input type="hidden" name="customerId" value="${customer.id}"/>
+    <input type="hidden" id="parentId" name="parentId" value="0"/>
     <ul class="fill_form">
       <li>
         <label>ZZ号：</label><input type="text" id="zzCode" name="zzCode" />
@@ -14,12 +14,13 @@
         <label>联系电话：</label><input type="text" id="phone" name="phone" />
       </li>
       <li>
-        <label>用户角色：</label>
+        <label>用户权限：</label>
         <span class="inline-select">
           <select class="select-140" id="userGroupId" name="userGroupId">
             <option value="">--请选择--</option>
             <c:forEach var="userGroup" items="${userGroupList}">
-              <option value="${userGroup.id}">${userGroup.name}</option>
+              <c:if test="${level > 0}"><option value="${userGroup.id}">${userGroup.name}</option></c:if>
+              <c:if test="${level == 0}"><option value="${userGroup.id}">${userGroup.name} -- ${userGroup.userName}</option></c:if>
             </c:forEach>
           </select>
         </span>
@@ -33,11 +34,67 @@
           </select>
         </span>
       </li>
+      <li>
+        <label>用户级别：</label>
+        <span class="inline-select">
+          <select class="select-140" id="level" name="level">
+            <option value="">--请选择--</option>
+            <c:if test="${level == 0}">
+              <option value="0">公司</option>
+              <option value="1">区域</option>
+              <option value="2">省级</option>
+              <option value="3">业务</option>
+            </c:if>
+            <c:if test="${level == 1}">
+              <option value="2">省级</option>
+              <option value="3">业务</option>
+            </c:if>
+            <c:if test="${level == 2}">
+              <option value="3">业务</option>
+            </c:if>
+          </select>
+        </span>
+      </li>
       <li><label class="left">备注：</label><textarea class="pText_280" name="remark" id="remark"></textarea></li>
     </ul>
+    <table>
+      <tr>
+        <td width="85px" align="right">上级用户：</td>
+        <td><ul id="userTree" class="easyui-tree"></ul></td>
+      </tr>
+    </table>
   </form>
 </div>
 <script>
+  $('#userTree').tree({
+    data:${userTree},
+    lines: true,
+    animate: true,
+    checkbox: true,
+    cascadeCheck: false,
+    onSelect: function (node) {
+      var cknodes = $('#userTree').tree("getChecked");
+      for (var i = 0; i < cknodes.length; i++) {
+        if (cknodes[i].id != node.id) {
+          $('#userTree').tree("uncheck", cknodes[i].target);
+        }
+      }
+      if (node.checked) {
+        $('#userTree').tree('uncheck', node.target);
+
+      } else {
+        $('#userTree').tree('check', node.target);
+
+      }
+    },
+    onLoadSuccess: function (node, data) {
+      $(this).find('span.tree-checkbox').unbind().click(function () {
+        $('#userTree').tree('select', $(this).parent());
+        return false;
+      });
+    }
+  });
+
   function sub(){
     if($("#zzCode").val() == ""){
       alert("请填写ZZ号");
@@ -52,6 +109,10 @@
       return false;
     }
 
+    var nodes = $('#userTree').tree("getChecked");
+    if(nodes.length > 0){
+      $("#parentId").val(nodes[0].id);
+    }
     $.ajax({
       cache: true,
       type: "POST",

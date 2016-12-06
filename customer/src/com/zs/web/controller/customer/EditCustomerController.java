@@ -1,7 +1,6 @@
 package com.zs.web.controller.customer;
 
 import com.zs.domain.customer.Customer;
-import com.zs.domain.customer.CustomerLankman;
 import com.zs.service.basic.area.FindAreaForProvinceService;
 import com.zs.service.customer.EditCustomerService;
 import com.zs.service.customerlinkman.FindLinkmanByCustomerIdService;
@@ -51,7 +50,7 @@ public class EditCustomerController extends
             //查询客户信息
             Customer customer = editCustomerService.get(id);
             //查询客户联系人信息
-            List<CustomerLankman> linkmanList = findLinkmanByCustomerIdService.find(id);
+            List<com.alibaba.fastjson.JSONObject> linkmanList = findLinkmanByCustomerIdService.findForInterviewCount(id);
 
             request.setAttribute("customer", customer);
             request.setAttribute("linkmanList", linkmanList);

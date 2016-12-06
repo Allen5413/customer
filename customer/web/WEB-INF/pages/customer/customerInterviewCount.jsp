@@ -12,8 +12,11 @@
     value.push({y:${map.count}, id: ${map.id}});
     num++;
   </c:forEach>
-
-  $("#content").height(num*60+"px");
+  if(num == 1) {
+    $("#content").height("180px");
+  }else{
+    $("#content").height(num*100+"px");
+  }
 
   $('#content').highcharts({
     chart: {
