@@ -14,7 +14,7 @@
         <label>联系电话：</label><input type="text" id="phone" name="phone" />
       </li>
       <li>
-        <label>用户权限：</label>
+        <label>职务：</label>
         <span class="inline-select">
           <select class="select-140" id="userGroupId" name="userGroupId">
             <option value="">--请选择--</option>

@@ -5,8 +5,8 @@
   <form id="pageForm" name="pageForm" action="${pageContext.request.contextPath}/findUserGroupResource/find.htm" method="post">
     <div class="search_title">
       <div class="search_bar">
-        <strong>角色使用权限</strong>
-        角色名：
+        <strong>职务使用权限</strong>
+        职务名：
         <select name="s_groupId" id="s_groupId" onchange="searchFormPage($('#pageForm'), '${pageContext.request.contextPath}/findUserGroupResource/find.htm')">
           <c:forEach var="userGroup" items="${userGroupList}">
             <option value="${userGroup.id}" <c:if test="${userGroup.id == param.s_groupId}">selected="selected"</c:if> >${userGroup.name}</option>
@@ -16,7 +16,7 @@
     </div>
     <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
       <tr>
-        <th width="20%" style="text-align: center">角色名</th>
+        <th width="20%" style="text-align: center">职务名</th>
         <th width="20%">页面</th>
         <th width="60%">权限设置</th>
       </tr>

@@ -17,7 +17,7 @@
       <c:choose>
         <c:when test="${user.level > 0 && !empty userTree}">
           <li>
-            <label>用户权限：</label>
+            <label>职务：</label>
             <span class="inline-select">
               <select class="select-140" id="userGroupId" name="userGroupId">
                 <option value="">--请选择--</option>

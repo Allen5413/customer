@@ -4,7 +4,7 @@
 <form id="addForm" name="addForm" method="post">
   <ul class="fill_form">
     <li>
-      <label>角色名称：</label>
+      <label>职务名称：</label>
       <input type="text" id="name" name="name" />
     </li>
     <li><label class="left">备注：</label><textarea class="pText_280" name="remark" id="remark"></textarea></li>

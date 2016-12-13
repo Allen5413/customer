@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="title-btn">
-      <strong>登录角色设置</strong>
+      <strong>职务设置</strong>
       <a href="#" onclick="add()">新增</a>
       <a href="#" onclick="del()">删除</a>
     </div>
@@ -23,7 +23,7 @@
           <a href="#" onclick="checkAll('cb')" style="color: #0092DC">全选</a> |
           <a href="#" onclick="checkNall('cb')" style="color: #0092DC">反选</a>
         </th>
-        <th width="20%">角色名称</th>
+        <th width="20%">职务名称</th>
         <th width="70%">备注</th>
       </tr>
       <c:if test="${empty pageInfo || empty pageInfo.pageResults}">
@@ -43,7 +43,7 @@
   </div>
 <script>
   function add(){
-    openDialog('添加角色', 0.3, 0.3, '${pageContext.request.contextPath}/addUserGroup/openAddUserGroupPage.htm');
+    openDialog('添加职务', 0.3, 0.3, '${pageContext.request.contextPath}/addUserGroup/openAddUserGroupPage.htm');
   }
 
   function del(){
@@ -57,10 +57,10 @@
     });
 
     if(num == 0){
-      alert("请选择要删除的角色");
+      alert("请选择要删除的职务");
       return false;
     }
-    if(confirm("您确定要删除选中的角色？")){
+    if(confirm("您确定要删除选中的职务？")){
       $.ajax({
         url:"${pageContext.request.contextPath}/delUserGroup/userGroupDel.htm",
         method : 'POST',

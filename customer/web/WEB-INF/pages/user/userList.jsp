@@ -58,7 +58,7 @@
       <th width="7%">ZZ号</th>
       <th width="20%">姓名</th>
       <th width="7%">联系电话</th>
-      <th width="5%">用户角色</th>
+      <th width="5%">职务</th>
       <th width="5%">状态</th>
       <th width="5%">等级</th>
       <th width="5%">上级</th>
