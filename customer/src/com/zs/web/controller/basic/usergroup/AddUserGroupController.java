@@ -1,8 +1,6 @@
 package com.zs.web.controller.basic.usergroup;
 
-import com.zs.domain.basic.Menu;
 import com.zs.domain.basic.UserGroup;
-import com.zs.service.basic.menu.FindMenuService;
 import com.zs.service.basic.usergroup.AddUserGroupService;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
@@ -10,12 +8,10 @@ import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * 新增用户组
@@ -30,8 +26,6 @@ public class AddUserGroupController extends
 
     @Resource
     private AddUserGroupService addUserGroupService;
-    @Resource
-    private FindMenuService findMenuService;
 
     /**
      * 打开新增用户组页面
@@ -39,9 +33,7 @@ public class AddUserGroupController extends
      */
     @RequestMapping(value = "openAddUserGroupPage")
     public String openAddUserGroupPage(HttpServletRequest request){
-        //得到所有菜单信息
-        List<Menu> menuList = findMenuService.getAll();
-        request.setAttribute("menuList", menuList);
+        request.setAttribute("level", UserTools.getLoginUserForLevel(request));
         return "userGroup/userGroupAdd";
     }
 

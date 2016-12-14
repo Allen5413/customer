@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.zs.domain.basic.User;
 import com.zs.service.basic.user.EditUserService;
 import com.zs.service.basic.user.FindUserForTreeService;
-import com.zs.service.basic.usergroup.FindUserGroupByCreatorService;
-import com.zs.service.basic.usergroup.FindUserGroupForUserNameService;
-import com.zs.service.basic.usergroup.FindUserGroupService;
+import com.zs.service.basic.usergroup.FindUserGroupByLevelService;
 import com.zs.service.basic.usergroupuser.FindUserGroupUserByUserIdService;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
@@ -34,9 +32,7 @@ public class EditUserController extends LoggerController<User, EditUserService> 
     @Resource
     private EditUserService editUserService;
     @Resource
-    private FindUserGroupForUserNameService findUserGroupForUserNameService;
-    @Resource
-    private FindUserGroupByCreatorService findUserGroupByCreatorService;
+    private FindUserGroupByLevelService findUserGroupByLevelService;
     @Resource
     private FindUserGroupUserByUserIdService findUserGroupUserByUserIdService;
     @Resource
@@ -51,9 +47,9 @@ public class EditUserController extends LoggerController<User, EditUserService> 
         try {
             int level = UserTools.getLoginUserForLevel(request);
             if (level == User.LEVEL_COMPANY) {
-                request.setAttribute("userGroupList", findUserGroupForUserNameService.find());
+                request.setAttribute("userGroupList", findUserGroupByLevelService.getAll());
             } else {
-                request.setAttribute("userGroupList", findUserGroupByCreatorService.find(UserTools.getLoginUserForZzCode(request)));
+                request.setAttribute("userGroupList", findUserGroupByLevelService.find(level));
             }
             request.setAttribute("level", level);
 
@@ -61,10 +57,10 @@ public class EditUserController extends LoggerController<User, EditUserService> 
             request.setAttribute("user", user);
             request.setAttribute("userGroupId", findUserGroupUserByUserIdService.find(user.getId()).getUserGroupId());
 
-            if(id != UserTools.getLoginUserForId(request)) {
-                JSONArray jsonArray = findUserForTreeService.findForEditUser(id, UserTools.getLoginUserForId(request));
-                request.setAttribute("userTree", jsonArray);
-            }
+            JSONArray jsonArray = findUserForTreeService.findForEditUser(id, UserTools.getLoginUserForId(request));
+            request.setAttribute("userTree", jsonArray);
+
+            request.setAttribute("isEditMe", id == UserTools.getLoginUserForId(request) ? true : false);
 
         }catch (Exception e){
             super.outputException(request, e, log, "打开编辑账号页面");

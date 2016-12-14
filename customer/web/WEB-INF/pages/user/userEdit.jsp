@@ -14,29 +14,20 @@
       <li>
         <label>联系电话：</label><input type="text" id="phone" name="phone" value="${user.phone}" />
       </li>
-      <c:choose>
-        <c:when test="${user.level > 0 && !empty userTree}">
-          <li>
-            <label>职务：</label>
-            <span class="inline-select">
-              <select class="select-140" id="userGroupId" name="userGroupId">
-                <option value="">--请选择--</option>
-                <c:forEach var="userGroup" items="${userGroupList}">
-                  <c:if test="${level > 0}">
-                    <option value="${userGroup.id}" <c:if test="${userGroupId == userGroup.id}">selected="selected"</c:if>>${userGroup.name}</option>
-                  </c:if>
-                  <c:if test="${level == 0}">
-                    <option value="${userGroup.id}" <c:if test="${userGroupId == userGroup.id}">selected="selected"</c:if>>${userGroup.name} -- ${userGroup.userName}</option>
-                  </c:if>
-                </c:forEach>
-              </select>
-            </span>
-          </li>
-        </c:when>
-        <c:otherwise>
-          <input type="hidden" id="userGroupId" name="userGroupId" value="${userGroupId}">
-        </c:otherwise>
-      </c:choose>
+      <input type="hidden" id="userGroupId" name="userGroupId" value="${userGroupId}" />
+      <c:if test="${level eq '0' || !isEditMe}">
+        <li>
+          <label>职务：</label>
+          <span class="inline-select">
+            <select class="select-140" id="ugId" onchange="selectUserGroup()">
+              <option value="">--请选择--</option>
+              <c:forEach var="userGroup" items="${userGroupList}">
+                  <option value="${userGroup.id}_${userGroup.level}" <c:if test="${userGroupId == userGroup.id}">selected="selected"</c:if>>${userGroup.name}</option>
+              </c:forEach>
+            </select>
+          </span>
+        </li>
+      </c:if>
       <li>
         <label>状态：</label>
         <span class="inline-select">
@@ -46,38 +37,12 @@
           </select>
         </span>
       </li>
-      <li>
-        <label>用户级别：</label>
-        <span class="inline-select">
-          <select class="select-140" id="level" name="level">
-            <option value="">--请选择--</option>
-            <c:if test="${level == 0}">
-              <option value="0" <c:if test="${0 == user.level}">selected="selected"</c:if>>公司</option>
-              <option value="1" <c:if test="${1 == user.level}">selected="selected"</c:if>>区域</option>
-              <option value="2" <c:if test="${2 == user.level}">selected="selected"</c:if>>省级</option>
-              <option value="3" <c:if test="${3 == user.level}">selected="selected"</c:if>>业务</option>
-            </c:if>
-            <c:if test="${level == 1}">
-              <option value="1" <c:if test="${1 == user.level}">selected="selected"</c:if>>区域</option>
-              <option value="2" <c:if test="${2 == user.level}">selected="selected"</c:if>>省级</option>
-              <option value="3" <c:if test="${3 == user.level}">selected="selected"</c:if>>业务</option>
-            </c:if>
-            <c:if test="${level == 2}">
-              <option value="2" <c:if test="${2 == user.level}">selected="selected"</c:if>>省级</option>
-              <option value="3" <c:if test="${3 == user.level}">selected="selected"</c:if>>业务</option>
-            </c:if>
-            <c:if test="${level == 3}">
-              <option value="3" <c:if test="${3 == user.level}">selected="selected"</c:if>>业务</option>
-            </c:if>
-          </select>
-        </span>
-      </li>
       <li><label class="left">备注：</label><textarea class="pText_280" name="remark" id="remark">${user.remark}</textarea></li>
     </ul>
   </form>
 </div>
-<c:if test="${user.level > 0 && !empty userTree}">
-  <table>
+<c:if test="${!empty userTree}">
+  <table id="userTreeTable">
     <tr>
       <td width="85px" align="right">上级用户：</td>
       <td><ul id="userTree" class="easyui-tree"></ul></td>
@@ -85,7 +50,7 @@
   </table>
 </c:if>
 <script>
-  <c:if test="${user.level > 0 && !empty userTree}">
+  <c:if test="${!empty userTree}">
     $('#userTree').tree({
       data:${userTree},
       lines: true,
@@ -116,6 +81,9 @@
     });
   </c:if>
 
+  <c:if test="${user.level eq '0'}">
+    $("#userTreeTable").hide();
+  </c:if>
 
   function sub(obj){
     if($("#zzCode").val() == ""){
@@ -152,5 +120,21 @@
         }
       }
     });
+  }
+
+  function selectUserGroup(){
+    var userGroupIdLevel = $("#ugId").val();
+    if(userGroupIdLevel == ""){
+      $("#userGroupId").val("");
+    }else{
+      var userGroupId = userGroupIdLevel.split("_")[0];
+      var level = userGroupIdLevel.split("_")[1];
+      $("#userGroupId").val(userGroupId);
+      if(level == 0){
+        $("#userTreeTable").hide();
+      }else{
+        $("#userTreeTable").show();
+      }
+    }
   }
 </script>

@@ -2,6 +2,7 @@ package com.zs.service.basic.user.impl;
 
 import com.feinno.framework.common.exception.BusinessException;
 import com.feinno.framework.common.service.EntityServiceImpl;
+import com.zs.dao.basic.user.FindUserByParentIdDAO;
 import com.zs.dao.basic.user.FindUserByZZDAO;
 import com.zs.dao.customer.FindCustomerByUserIdDAO;
 import com.zs.domain.basic.User;
@@ -23,6 +24,8 @@ public class DelUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO>
 
     @Resource
     private FindCustomerByUserIdDAO findCustomerByUserIdDAO;
+    @Resource
+    private FindUserByParentIdDAO findUserByParentIdDAO;
 
     @Override
     @Transactional
@@ -39,6 +42,11 @@ public class DelUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO>
                 throw new BusinessException("用户["+user.getZzCode()+" - "+user.getName()+"]下面还指派有客户，请取消指派后再删除！");
             }
 
+            //查询该用户下还有没有关联的用户，如果有，不允许删除
+            List<User> userList = findUserByParentIdDAO.find(user.getId());
+            if(null != userList && 0 < userList.size()){
+                throw new BusinessException("用户["+user.getZzCode()+" - "+user.getName()+"]下面还有关联用户，请取消关联后再删除！");
+            }
 
             user.setState(User.STATE_DELETE);
             user.setOperator(zzCode);

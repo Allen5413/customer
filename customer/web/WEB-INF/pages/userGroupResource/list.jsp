@@ -16,9 +16,10 @@
     </div>
     <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
       <tr>
-        <th width="20%" style="text-align: center">职务名</th>
-        <th width="20%">页面</th>
-        <th width="60%">权限设置</th>
+        <th width="15%" style="text-align: center">职务名</th>
+        <th width="15%" style="text-align: center">层级</th>
+        <th width="15%">页面</th>
+        <th width="55%">权限设置</th>
       </tr>
       <c:if test="${empty resourceList}">
         <tr>
@@ -28,6 +29,12 @@
       <c:forEach var="resource" items="${resourceList}" varStatus="status">
         <tr>
           <td align="center">${userGroup.name}</td>
+          <td align="center">
+            <c:if test="${userGroup.level eq '0'}">公司</c:if>
+            <c:if test="${userGroup.level eq '1'}">区域</c:if>
+            <c:if test="${userGroup.level eq '2'}">省级</c:if>
+            <c:if test="${userGroup.level eq '3'}">业务</c:if>
+          </td>
           <td>${resource.name}</td>
           <td>
             <c:if test="${resource.rId == 1}">

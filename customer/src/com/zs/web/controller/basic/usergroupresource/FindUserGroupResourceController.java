@@ -1,8 +1,7 @@
 package com.zs.web.controller.basic.usergroupresource;
 
-import com.zs.domain.basic.User;
 import com.zs.domain.basic.UserGroup;
-import com.zs.service.basic.usergroup.FindUserGroupByCreatorService;
+import com.zs.service.basic.usergroup.FindUserGroupByLevelService;
 import com.zs.service.basic.usergroup.FindUserGroupPageByWhereService;
 import com.zs.service.basic.usergroup.FindUserGroupService;
 import com.zs.service.basic.usergroupresource.FindUserGroupResourceByGroupIdService;
@@ -32,22 +31,22 @@ public class FindUserGroupResourceController extends
     @Resource
     private FindUserGroupService findUserGroupService;
     @Resource
-    private FindUserGroupByCreatorService findUserGroupByCreatorService;
-    @Resource
     private FindUserGroupResourceByGroupIdService findUserGroupResourceByGroupIdService;
+    @Resource
+    private FindUserGroupByLevelService findUserGroupByLevelService;
 
     @RequestMapping(value = "find")
     public String find(@RequestParam(value="s_groupId", required=false, defaultValue="") String groupId,
                                   HttpServletRequest request) {
         try {
             int loginLevel = UserTools.getLoginUserForLevel(request);
-            //查询所有角色
             List<UserGroup> userGroupList = null;
-            if(loginLevel == User.LEVEL_COMPANY){
-                userGroupList = findUserGroupService.getAll();
+            if(loginLevel == UserGroup.LEVEL_COMPANY){
+                userGroupList = findUserGroupByLevelService.getAll();
             }else{
-                userGroupList = findUserGroupByCreatorService.find(UserTools.getLoginUserForZzCode(request));
+                userGroupList = findUserGroupByLevelService.find(loginLevel);
             }
+
             if(StringUtils.isEmpty(groupId) && null != userGroupList && 0 < userGroupList.size()){
                 groupId = userGroupList.get(0).getId()+"";
             }

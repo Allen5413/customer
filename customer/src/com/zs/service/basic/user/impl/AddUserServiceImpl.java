@@ -3,8 +3,10 @@ package com.zs.service.basic.user.impl;
 import com.feinno.framework.common.exception.BusinessException;
 import com.feinno.framework.common.service.EntityServiceImpl;
 import com.zs.dao.basic.user.FindUserByZZDAO;
+import com.zs.dao.basic.usergroup.FindUserGroupByCreatorDAO;
 import com.zs.dao.basic.usergroupuser.FindUserGroupUserByGroupIdDAO;
 import com.zs.domain.basic.User;
+import com.zs.domain.basic.UserGroup;
 import com.zs.domain.basic.UserGroupUser;
 import com.zs.service.basic.user.AddUserService;
 import com.zs.tools.HttpRequestTools;
@@ -25,11 +27,19 @@ public class AddUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO>
     private FindUserByZZDAO findUserByZZDAO;
     @Resource
     private FindUserGroupUserByGroupIdDAO findUserGroupUserByGroupIdDAO;
+    @Resource
+    private FindUserGroupByCreatorDAO findUserGroupByCreatorDAO;
 
     @Override
     @Transactional
     public void addUser(User user, long userGroupId, String zzCode, long loginId) throws Exception {
         if(null != user){
+            UserGroup userGroup = findUserGroupByCreatorDAO.get(userGroupId);
+            if(userGroup == null){
+                throw new BusinessException("职务不存在！");
+            }
+            user.setLevel(userGroup.getLevel());
+
             //验证ZZ号是否已经存在
             User validUser = findUserByZZDAO.find(user.getZzCode());
             if(null != validUser && validUser.getZzCode().equals(user.getZzCode())){
@@ -38,7 +48,7 @@ public class AddUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO>
             //验证zz的真实性
             boolean isExistsZZ = HttpRequestTools.isExistsZZ(user.getZzCode());
             if(!isExistsZZ){
-                throw new BusinessException("ZZ不存在");
+                //throw new BusinessException("ZZ不存在");
             }
             if(user.getLevel() == User.LEVEL_COMPANY){
                 user.setParentId(0l);
@@ -48,7 +58,10 @@ public class AddUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO>
                     user.setParentId(loginId);
                 }
                 User parentUser = super.get(user.getParentId());
-                user.setParentSign(parentUser.getParentSign()+"-"+user.getZzCode());
+                if(parentUser.getLevel() == User.LEVEL_BUSINESS){
+                    throw new BusinessException("业务员级别的用户下面不能在添加用户");
+                }
+                user.setParentSign(parentUser.getParentSign() + "-" + user.getZzCode());
             }
             user.setCreator(zzCode);
             user.setOperator(zzCode);

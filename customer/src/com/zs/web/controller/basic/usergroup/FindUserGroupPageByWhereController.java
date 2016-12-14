@@ -36,9 +36,7 @@ public class FindUserGroupPageByWhereController extends
         try {
             Map<String, String> params = new HashMap<String, String>();
             params.put("name", name.trim());
-            if(UserTools.getLoginUserForLevel(request) > User.LEVEL_COMPANY){
-                params.put("creator", UserTools.getLoginUserForZzCode(request));
-            }
+            params.put("level", UserTools.getLoginUserForLevel(request)+"");
             PageInfo<UserGroup> pageInfo = getPageInfo(request);
             Map<String, Boolean> sortMap = getSortMap(request);
             sortMap.put("operateTime", false);

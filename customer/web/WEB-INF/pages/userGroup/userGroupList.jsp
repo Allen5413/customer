@@ -24,7 +24,8 @@
           <a href="#" onclick="checkNall('cb')" style="color: #0092DC">反选</a>
         </th>
         <th width="20%">职务名称</th>
-        <th width="70%">备注</th>
+        <th width="10%">职务层级</th>
+        <th width="60%">备注</th>
       </tr>
       <c:if test="${empty pageInfo || empty pageInfo.pageResults}">
         <tr>
@@ -35,6 +36,12 @@
         <tr onclick="changeTR(this)">
           <td align="center"><input type="checkbox" name="cb" value="${userGroup.id}"></td>
           <td>${userGroup.name}</td>
+          <td>
+            <c:if test="${userGroup.level eq '0'}">公司</c:if>
+            <c:if test="${userGroup.level eq '1'}">区域</c:if>
+            <c:if test="${userGroup.level eq '2'}">省级</c:if>
+            <c:if test="${userGroup.level eq '3'}">业务</c:if>
+          </td>
           <td>${userGroup.remark}</td>
         </tr>
       </c:forEach>

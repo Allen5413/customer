@@ -19,8 +19,14 @@ import java.util.Set;
 @Table(name = "user_group")
 public class UserGroup extends AbstractEntity {
 
+    public static final int LEVEL_COMPANY = 0;    //公司
+    public static final int LEVEL_AREA = 1;       //区域
+    public static final int LEVEL_PROV = 2;       //省级
+    public static final int LEVEL_BUSINESS = 3;   //业务员
+
     private Long id;                            //主键
     private String name;                        //名称
+    private int level;                          //等级
     private String remark;                      //说明
     private String creator;                     //创建人
     private Date createTime = new Date();       //创建时间
@@ -93,5 +99,13 @@ public class UserGroup extends AbstractEntity {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

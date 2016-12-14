@@ -4,8 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.zs.domain.basic.User;
 import com.zs.service.basic.user.AddUserService;
 import com.zs.service.basic.user.FindUserForTreeService;
-import com.zs.service.basic.usergroup.FindUserGroupByCreatorService;
-import com.zs.service.basic.usergroup.FindUserGroupForUserNameService;
+import com.zs.service.basic.usergroup.FindUserGroupByLevelService;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import net.sf.json.JSONObject;
@@ -31,11 +30,9 @@ public class AddUserController extends
     @Resource
     private AddUserService addUserService;
     @Resource
-    private FindUserGroupForUserNameService findUserGroupForUserNameService;
-    @Resource
-    private FindUserGroupByCreatorService findUserGroupByCreatorService;
-    @Resource
     private FindUserForTreeService findUserForTreeService;
+    @Resource
+    private FindUserGroupByLevelService findUserGroupByLevelService;
 
     /**
      * 打开新增用户页面
@@ -46,9 +43,9 @@ public class AddUserController extends
         try {
             int level = UserTools.getLoginUserForLevel(request);
             if (level == User.LEVEL_COMPANY) {
-                request.setAttribute("userGroupList", findUserGroupForUserNameService.find());
+                request.setAttribute("userGroupList", findUserGroupByLevelService.getAll());
             } else {
-                request.setAttribute("userGroupList", findUserGroupByCreatorService.find(UserTools.getLoginUserForZzCode(request)));
+                request.setAttribute("userGroupList", findUserGroupByLevelService.find(level));
             }
             request.setAttribute("level", level);
 

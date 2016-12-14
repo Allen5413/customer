@@ -16,11 +16,11 @@
       <li>
         <label>职务：</label>
         <span class="inline-select">
-          <select class="select-140" id="userGroupId" name="userGroupId">
+          <input type="hidden" id="userGroupId" name="userGroupId" />
+          <select class="select-140" id="ugId" onchange="selectUserGroup()">
             <option value="">--请选择--</option>
             <c:forEach var="userGroup" items="${userGroupList}">
-              <c:if test="${level > 0}"><option value="${userGroup.id}">${userGroup.name}</option></c:if>
-              <c:if test="${level == 0}"><option value="${userGroup.id}">${userGroup.name} -- ${userGroup.userName}</option></c:if>
+              <option value="${userGroup.id}_${userGroup.level}">${userGroup.name}</option>
             </c:forEach>
           </select>
         </span>
@@ -34,30 +34,9 @@
           </select>
         </span>
       </li>
-      <li>
-        <label>用户级别：</label>
-        <span class="inline-select">
-          <select class="select-140" id="level" name="level">
-            <option value="">--请选择--</option>
-            <c:if test="${level == 0}">
-              <option value="0">公司</option>
-              <option value="1">区域</option>
-              <option value="2">省级</option>
-              <option value="3">业务</option>
-            </c:if>
-            <c:if test="${level == 1}">
-              <option value="2">省级</option>
-              <option value="3">业务</option>
-            </c:if>
-            <c:if test="${level == 2}">
-              <option value="3">业务</option>
-            </c:if>
-          </select>
-        </span>
-      </li>
       <li><label class="left">备注：</label><textarea class="pText_280" name="remark" id="remark"></textarea></li>
     </ul>
-    <table>
+    <table id="userTreeTable">
       <tr>
         <td width="85px" align="right">上级用户：</td>
         <td><ul id="userTree" class="easyui-tree"></ul></td>
@@ -105,7 +84,7 @@
       return false;
     }
     if($("#userGroupId").val() == ""){
-      alert("请选择角色");
+      alert("请选择职务");
       return false;
     }
 
@@ -128,5 +107,22 @@
         }
       }
     });
+  }
+
+  function selectUserGroup(){
+    var userGroupIdLevel = $("#ugId").val();
+    if(userGroupIdLevel == ""){
+      $("#userGroupId").val("");
+    }else{
+      var userGroupId = userGroupIdLevel.split("_")[0];
+      var level = userGroupIdLevel.split("_")[1];
+      $("#userGroupId").val(userGroupId);
+
+      if(level == 0){
+        $("#userTreeTable").hide();
+      }else{
+        $("#userTreeTable").show();
+      }
+    }
   }
 </script>

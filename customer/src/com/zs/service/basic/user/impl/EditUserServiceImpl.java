@@ -4,8 +4,10 @@ import com.feinno.framework.common.exception.BusinessException;
 import com.feinno.framework.common.service.EntityServiceImpl;
 import com.zs.dao.basic.user.FindUserByParentIdDAO;
 import com.zs.dao.basic.user.FindUserByZZDAO;
+import com.zs.dao.basic.usergroup.FindUserGroupByCreatorDAO;
 import com.zs.dao.basic.usergroupuser.FindUserGroupUserByUserIdDAO;
 import com.zs.domain.basic.User;
+import com.zs.domain.basic.UserGroup;
 import com.zs.domain.basic.UserGroupUser;
 import com.zs.service.basic.user.EditUserService;
 import com.zs.tools.DateTools;
@@ -29,11 +31,18 @@ public class EditUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO
     private FindUserGroupUserByUserIdDAO findUserGroupUserByUserIdDAO;
     @Resource
     private FindUserByParentIdDAO findUserByParentIdDAO;
+    @Resource
+    private FindUserGroupByCreatorDAO findUserGroupByCreatorDAO;
 
     @Override
     @Transactional
     public void editUser(User user, long userGroupId, String zzCode, long loginId) throws Exception {
         if(null != user){
+            UserGroup userGroup = findUserGroupByCreatorDAO.get(userGroupId);
+            if(userGroup == null){
+                throw new BusinessException("职务不存在！");
+            }
+            user.setLevel(userGroup.getLevel());
             //通过id查询User
             User oldUser = findUserByZZDAO.get(user.getId());
             //验证ZZ号是否已经存在
@@ -44,7 +53,7 @@ public class EditUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO
             //验证zz的真实性
             boolean isExistsZZ = HttpRequestTools.isExistsZZ(user.getZzCode());
             if(!isExistsZZ){
-                throw new BusinessException("ZZ不存在");
+                //throw new BusinessException("ZZ不存在");
             }
             oldUser.setLevel(user.getLevel());
             if(oldUser.getLevel() == User.LEVEL_COMPANY){
@@ -57,7 +66,13 @@ public class EditUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO
                     if (user.getParentId() == 0) {
                         parentUser = super.get(loginId);
                     } else {
+                        if(user.getParentId() == oldUser.getId()){
+                            throw new BusinessException("不能把自己添加到自己下面");
+                        }
                         parentUser = super.get(user.getParentId());
+                    }
+                    if(parentUser.getLevel() == User.LEVEL_BUSINESS){
+                        throw new BusinessException("业务员级别的用户下面不能在添加用户");
                     }
                     oldUser.setParentId(parentUser.getId());
                     oldUser.setParentSign(parentUser.getParentSign() + "-" + user.getZzCode());

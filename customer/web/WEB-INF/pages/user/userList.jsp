@@ -92,7 +92,7 @@
 </div>
 <script>
   function add(){
-    openDialog('新增用户', 0.3, 0.5, '${pageContext.request.contextPath}/addUser/open.htm');
+    openDialog('新增用户', 0.3, 0.7, '${pageContext.request.contextPath}/addUser/open.htm');
   }
 
 
@@ -114,7 +114,7 @@
       alert("编辑用户不能多选");
       return false;
     }
-    openDialog('编辑用户', 0.3, 0.5, '${pageContext.request.contextPath}/editUser/open.htm?id='+id);
+    openDialog('编辑用户', 0.3, 0.7, '${pageContext.request.contextPath}/editUser/open.htm?id='+id);
   }
 
   function del(){

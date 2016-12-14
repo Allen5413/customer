@@ -26,12 +26,21 @@ public class FindUserGroupPageByWhereDAOImpl extends BaseQueryDao implements Fin
 
         StringBuilder sql = new StringBuilder("FROM UserGroup where 1=1 ");
         String name = paramsMap.get("name");
+        String level = paramsMap.get("level");
         String creator = paramsMap.get("creator");
 
         List<Object> param = new ArrayList<Object>();
         if(!StringUtils.isEmpty(name)){
             sql.append(" and name like ? ");
             param.add("%"+name+"%");
+        }
+        if(!StringUtils.isEmpty(level)){
+            if(Integer.parseInt(level) == UserGroup.LEVEL_COMPANY) {
+                sql.append(" and level >= ? ");
+            }else{
+                sql.append(" and level > ? ");
+            }
+            param.add(Integer.parseInt(level));
         }
         if(!StringUtils.isEmpty(creator)){
             sql.append(" and creator = ? ");
