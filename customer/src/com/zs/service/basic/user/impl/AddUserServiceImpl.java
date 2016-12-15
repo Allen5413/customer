@@ -48,7 +48,7 @@ public class AddUserServiceImpl extends EntityServiceImpl<User, FindUserByZZDAO>
             //验证zz的真实性
             boolean isExistsZZ = HttpRequestTools.isExistsZZ(user.getZzCode());
             if(!isExistsZZ){
-                //throw new BusinessException("ZZ不存在");
+                throw new BusinessException("ZZ不存在");
             }
             if(user.getLevel() == User.LEVEL_COMPANY){
                 user.setParentId(0l);

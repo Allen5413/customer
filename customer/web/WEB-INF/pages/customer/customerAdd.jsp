@@ -48,6 +48,21 @@
           </c:forEach>
         </select>
       </li>
+      <li>
+        <label>客户经理：</label>
+        <c:if test="${isBrowse == 2}">
+          <select name="userId">
+            <option value="">--请选择--</option>
+            <c:forEach var="user" items="${userList}">
+              <option value="${user.id}" <c:if test="${user.id == loginId}">selected="selected" </c:if> >${user.name}[${user.zzCode}]</option>
+            </c:forEach>
+          </select>
+        </c:if>
+        <c:if test="${isBrowse == 1}">
+          <input type="hidden" name="userId" value="${loginId}" />
+          ${loginName}
+        </c:if>
+      </li>
     </ul>
     <br /><br />
     <div class="pop-tabs">

@@ -49,21 +49,11 @@
     <strong>客户资料列表</strong>
     <c:if test="${!empty isAdmin}">
       <a href="#" onclick="add()">添加客户</a>
-      <a href="#" onclick="edit()">编辑</a>
-    </c:if>
-    <c:if test="${isAssign == 1}">
-      <a href="#" onclick="assign()">指派</a>
-    </c:if>
-    <c:if test="${!empty isAdmin}">
-      <a href="#" onclick="addInterview()">添加访谈记录</a>
     </c:if>
   </div>
   <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
     <tr>
-      <th width="5%" >
-        <a href="#" onclick="checkAll('cb')" style="color: #0092DC">全选</a>|
-        <a href="#" onclick="checkNall('cb')" style="color: #0092DC">反选</a>
-      </th>
+      <th width="5%" >操作</th>
       <th width="4%">学校No</th>
       <th width="12%">客户名称</th>
       <th width="5%">客户经理</th>
@@ -87,12 +77,13 @@
     <c:forEach var="customer" items="${pageInfo.pageResults}" varStatus="status">
       <tr onclick="changeTR(this)" >
         <td align="center">
-            <%--如果只能管理自己的客户--%>
-          <c:if test="${1 == isAdmin && customer.userId == userId}">
-            <input type="checkbox" name="cb" value="${customer.id}">
-          </c:if>
-          <c:if test="${2 == isAdmin}">
-            <input type="checkbox" name="cb" value="${customer.id}">
+          <%--如果只能管理自己的客户--%>
+          <c:if test="${(1 == isAdmin && customer.userId == userId) || 2 == isAdmin}">
+            <a href="#" style="color: #0092DC" onclick="edit(${customer.id})">编辑</a>
+            <c:if test="${isAssign == 1}">
+              <a href="#" style="color: #0092DC" onclick="assign(${customer.id})">指派</a><br />
+            </c:if>
+            <a href="#" style="color: #0092DC" onclick="addInterview(${customer.id})">添加访谈记录</a>
           </c:if>
         </td>
         <td>${customer.no}</td>
@@ -136,45 +127,11 @@
     openDialog('添加客户', 0.5, 0.8, '${pageContext.request.contextPath}/addCustomer/open.htm');
   }
 
-  function edit(){
-    var num = 0;
-    var id = 0;
-    $("[name=cb]").each(function (){
-      if($(this).is(':checked')){
-        num++;
-        id = $(this).val();
-      }
-    });
-
-    if(num == 0){
-      alert("请选择要编辑的客户");
-      return false;
-    }
-    if(num > 1){
-      alert("编辑客户不能多选");
-      return false;
-    }
+  function edit(id){
     openDialog('编辑客户', 0.5, 0.8, '${pageContext.request.contextPath}/editCustomer/open.htm?id='+id);
   }
 
-  function assign(){
-    var num = 0;
-    var id = 0;
-    $("[name=cb]").each(function (){
-      if($(this).is(':checked')){
-        num++;
-        id = $(this).val();
-      }
-    });
-
-    if(num == 0){
-      alert("请选择要指派的客户");
-      return false;
-    }
-    if(num > 1){
-      alert("指派客户不能多选");
-      return false;
-    }
+  function assign(id){
     openDialog('客户指派', 0.5, 0.4, '${pageContext.request.contextPath}/assignCustomer/open.htm?id='+id);
   }
 
@@ -186,24 +143,7 @@
     openDialog('查看联系人', 0.4, 0.7, '${pageContext.request.contextPath}/findLinkmanByCustomerId/open.htm?id='+id, 0);
   }
 
-  function addInterview(){
-    var num = 0;
-    var id = 0;
-    $("[name=cb]").each(function (){
-      if($(this).is(':checked')){
-        num++;
-        id = $(this).val();
-      }
-    });
-
-    if(num == 0){
-      alert("请选择客户");
-      return false;
-    }
-    if(num > 1){
-      alert("客户不能多选");
-      return false;
-    }
-    openDialog('编辑客户', 0.3, 0.3, '${pageContext.request.contextPath}/addInterview/open.htm?id='+id);
+  function addInterview(id){
+    openDialog('添加访谈记录', 0.3, 0.3, '${pageContext.request.contextPath}/addInterview/open.htm?id='+id);
   }
 </script>
