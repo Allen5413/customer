@@ -64,9 +64,6 @@
       </div>
     </div>
   </div>
-  <div id="footAdmin">
-    <p><span class="right"></span>欢迎您，<a href="#">${loginName}</a> <em class="hrl_2">&nbsp;</em> 姓名：<a href="#">${name}</a></p>
-  </div>
 </div>
 <div id="dialogDiv"></div>
 </body>
