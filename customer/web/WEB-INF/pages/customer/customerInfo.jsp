@@ -38,4 +38,25 @@
         </li>
       </c:forEach>
     </ul>
+    <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <th width="10%">客户经理</th>
+        <th width="10%">交谈对象</th>
+        <th width="65%">交谈记录</th>
+        <th width="15%">最后修改日期</th>
+      </tr>
+      <c:if test="${empty interviewList}">
+        <tr>
+          <td colspan="99" align="center" style="color: red;">没有找到相关数据</td>
+        </tr>
+      </c:if>
+      <c:forEach var="interview" items="${interviewList}" varStatus="status">
+        <tr onclick="changeTR(this)">
+          <td>${interview.uName}</td>
+          <td>${interview.clName}</td>
+          <td>${interview.content}</td>
+          <td>${interview.operateTime}</td>
+        </tr>
+      </c:forEach>
+    </table>
 </div>

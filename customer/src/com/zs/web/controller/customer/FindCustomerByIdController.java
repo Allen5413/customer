@@ -11,7 +11,10 @@ import com.zs.service.customer.EditCustomerService;
 import com.zs.service.customerlinkman.FindLinkmanByCustomerIdService;
 import com.zs.service.customerstate.FindCustomerStateService;
 import com.zs.service.customertype.FindCustomerTypeService;
+import com.zs.service.interview.FindInterviewByCustomerIdAndNumService;
+import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
+import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +43,8 @@ public class FindCustomerByIdController extends
     private FindCustomerTypeService findCustomerTypeService;
     @Resource
     private FindLinkmanByCustomerIdService findLinkmanByCustomerIdService;
+    @Resource
+    private FindInterviewByCustomerIdAndNumService findInterviewByCustomerIdAndNumService;
 
     /**
      * 打开新增页面
@@ -47,7 +52,8 @@ public class FindCustomerByIdController extends
      */
     @RequestMapping(value = "open")
     public String open(HttpServletRequest request,
-                       @RequestParam("id")long id){
+                       @RequestParam("id")long id,
+                       @RequestParam(value = "num", required = false, defaultValue = "5")int num){
         try {
             //查询客户信息
             Customer customer = editCustomerService.get(id);
@@ -62,12 +68,19 @@ public class FindCustomerByIdController extends
             CustomerState customerState = findCustomerStateService.get(customer.getCustomerStateId());
             //查询客户状态
             CustomerType customerType = findCustomerTypeService.get(customer.getCustomerTypeId());
+            //查询客户最近访谈记录
+            int loginLevel = UserTools.getLoginUserForLevel(request);
+            int isBrowse = UserTools.getLoginUserForIsBrowse(request);
+            String loginZzCode = UserTools.getLoginUserForZzCode(request);
+            long loginId = UserTools.getLoginUserForId(request);
+            List<JSONObject> interviewList = findInterviewByCustomerIdAndNumService.find(id, num, loginLevel, isBrowse, loginZzCode, loginId);
 
             request.setAttribute("customer", customer);
             request.setAttribute("linkmanList", linkmanList);
             request.setAttribute("area", area);
             request.setAttribute("customerState", customerState);
             request.setAttribute("customerType", customerType);
+            request.setAttribute("interviewList", interviewList);
         } catch (Exception e) {
             super.outputException(request, e, log, "查看客户详情");
             return "error";

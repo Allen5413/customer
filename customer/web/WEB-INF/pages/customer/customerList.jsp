@@ -53,21 +53,21 @@
   </div>
   <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
     <tr>
-      <th width="5%" >操作</th>
+      <th width="16%" >操作</th>
       <th width="4%">学校No</th>
-      <th width="12%">客户名称</th>
-      <th width="5%">客户经理</th>
-      <th width="5%">所在省份</th>
+      <th width="10%">客户名称</th>
+      <th width="4%">客户经理</th>
+      <th width="4%">所在省份</th>
       <th width="10%">地址</th>
       <th width="13%">办学规模</th>
       <th width="5%">客户代码</th>
       <th width="5%">客户类型</th>
       <th width="5%">客户状态</th>
-      <th width="5%">注册人数</th>
-      <th width="5%">联系人姓名</th>
-      <th width="6%">联系电话</th>
+      <th width="4%">注册人数</th>
+      <th width="4%">联系人姓名</th>
+      <th width="5%">联系电话</th>
       <th width="5%">职务</th>
-      <th width="10%">备注</th>
+      <th>备注</th>
     </tr>
     <c:if test="${empty pageInfo || empty pageInfo.pageResults}">
       <tr>
@@ -77,14 +77,16 @@
     <c:forEach var="customer" items="${pageInfo.pageResults}" varStatus="status">
       <tr onclick="changeTR(this)" >
         <td align="center">
+          <div class="title-btn">
           <%--如果只能管理自己的客户--%>
-          <c:if test="${(1 == isAdmin && customer.userId == userId) || 2 == isAdmin}">
-            <a href="#" style="color: #0092DC" onclick="edit(${customer.id})">编辑</a>
-            <c:if test="${isAssign == 1}">
-              <a href="#" style="color: #0092DC" onclick="assign(${customer.id})">指派</a><br />
+            <c:if test="${(1 == isAdmin && customer.userId == userId) || 2 == isAdmin}">
+                <a href="#" onclick="edit(${customer.id})">编辑</a>
+              <c:if test="${isAssign == 1}">
+                <a href="#" onclick="assign(${customer.id})">指派</a>
+              </c:if>
+              <a href="#" onclick="addInterview(${customer.id})">添加访谈记录</a>
             </c:if>
-            <a href="#" style="color: #0092DC" onclick="addInterview(${customer.id})">添加访谈记录</a>
-          </c:if>
+          </div>
         </td>
         <td>${customer.no}</td>
         <td><a href="#" style="color: #0092DC" onclick="searchInfo(${customer.id})">${customer.cName}</a></td>
