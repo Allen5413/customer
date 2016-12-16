@@ -64,6 +64,16 @@ public class LoginController extends LoggerController<User, ValidateLoginService
         return jsonObject;
     }
 
+    /**
+     * 跳转到App登录页面
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "appLogin")
+    public String appLogin(HttpServletRequest request){
+        return "/app/login";
+    }
+
 
     protected String loginUser(HttpServletRequest request, String zzCode, String pwd)throws Exception{
         User user = validateLoginService.validateLogin(zzCode, pwd);
