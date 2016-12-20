@@ -80,11 +80,12 @@
           <div class="title-btn">
           <%--如果只能管理自己的客户--%>
             <c:if test="${(1 == isAdmin && customer.userId == userId) || 2 == isAdmin}">
-                <a href="#" onclick="edit(${customer.id})">编辑</a>
+              <a href="#" onclick="edit(${customer.id})">编辑</a>
+              <a href="#" onclick="addInterview(${customer.id})">添加访谈记录</a><br />
               <c:if test="${isAssign == 1}">
                 <a href="#" onclick="assign(${customer.id})">指派</a>
               </c:if>
-              <a href="#" onclick="addInterview(${customer.id})">添加访谈记录</a>
+              <a href="#" onclick="findLog(${customer.id})">查询信息变更日志</a>
             </c:if>
           </div>
         </td>
@@ -142,10 +143,14 @@
   }
 
   function searchLinkMan(id){
-    openDialog('查看联系人', 0.4, 0.7, '${pageContext.request.contextPath}/findLinkmanByCustomerId/open.htm?id='+id, 0);
+    openDialog('查看联系人', 0.6, 0.7, '${pageContext.request.contextPath}/findLinkmanByCustomerId/open.htm?id='+id, 0);
   }
 
   function addInterview(id){
     openDialog('添加访谈记录', 0.3, 0.3, '${pageContext.request.contextPath}/addInterview/open.htm?id='+id);
+  }
+
+  function findLog(id){
+    openDialog('查看客户信息变更日志', 0.9, 0.7, '${pageContext.request.contextPath}/findCustomerLogByCustomerId/find.htm?customerId='+id, 0);
   }
 </script>

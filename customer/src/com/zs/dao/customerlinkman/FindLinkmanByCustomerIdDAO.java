@@ -14,7 +14,7 @@ public interface FindLinkmanByCustomerIdDAO extends EntityJpaDao<CustomerLankman
     @Query("FROM CustomerLankman WHERE customerId = ?1 AND state = 0 ORDER BY createTime")
     public List<CustomerLankman> find(long customerId);
 
-    @Query(nativeQuery = true, value = "select cl.id, cl.`name`, cl.phone, cl.post, cl.remark, count(i.id) " +
+    @Query(nativeQuery = true, value = "select cl.id, cl.`name`, cl.phone, cl.post, cl.qq, cl.trait, cl.remark, count(i.id) " +
             "from customer_lankman cl LEFT JOIN interview i on cl.id = i.customer_lankman_id " +
             "where cl.customer_id = ?1 and cl.state = 0 " +
             "group by cl.id, cl.`name`, cl.phone, cl.post, cl.remark " +

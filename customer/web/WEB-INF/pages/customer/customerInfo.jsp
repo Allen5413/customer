@@ -35,6 +35,10 @@
             <span class="w-240"><label>职务：</label>${linkman.post}</span>
             <span class="w-240"> <label>备注：</label>${linkman.remark}</span>
           </p>
+          <p>
+            <span class="w-240"><label>QQ：</label>${linkman.qq}</span>
+            <span class="w-240"> <label>特点：</label>${linkman.trait}</span>
+          </p>
         </li>
       </c:forEach>
     </ul>

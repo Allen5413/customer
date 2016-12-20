@@ -70,6 +70,10 @@
             <label>职务：</label><input class="pInput_150" type="text" name="linkmanPost" value="${linkman.post}" />
             <label>备注：</label><input class="pInput_150" type="text" name="linkmanRemark" value="${linkman.remark}" />
           </p>
+          <p>
+            <label>qq：</label><input class="pInput_150" type="text" name="linkmanQQ" value="${linkman.qq}" />
+            <label>特点：</label><input class="pInput_150" type="text" name="linkmanTrait" value="${linkman.trait}" />
+          </p>
         </li>
       </c:forEach>
     </ul>
@@ -105,6 +109,12 @@
         temp += $(this).val()+"*";
       });
       $(this).find("[name=linkmanRemark]").each(function(){
+        temp += $(this).val()+"*";
+      });
+      $(this).find("[name=linkmanQQ]").each(function(){
+        temp += $(this).val()+"*";
+      });
+      $(this).find("[name=linkmanTrait]").each(function(){
         temp += $(this).val();
       });
       linkmanInfo.val(linkmanInfo.val()+temp+"|");
@@ -147,6 +157,8 @@
     addHtml += "<label>联系电话：</label><input class=\"pInput_150\" type=\"text\" name=\"linkmanPhone\" /></p>";
     addHtml += "<p><label>职务：</label><input class=\"pInput_150\" type=\"text\" name=\"linkmanPost\" />";
     addHtml += "<label>备注：</label><input class=\"pInput_150\" type=\"text\" name=\"linkmanRemark\" /></p>";
+    addHtml += "<p><label>QQ：</label><input class=\"pInput_150\" type=\"text\" name=\"linkmanQQ\" />";
+    addHtml += "<label>特点：</label><input class=\"pInput_150\" type=\"text\" name=\"linkmanTrait\" /></p>";
     addHtml += "</li>";
     $("#linkmanUL").html(html+addHtml);
   }

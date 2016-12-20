@@ -36,8 +36,10 @@ public class FindLinkmanByCustomerIdServiceImpl extends EntityServiceImpl<Custom
                 jsonObject.put("name", null == objs[1] ? "" : objs[1]);
                 jsonObject.put("phone", null == objs[2] ? "" : objs[2]);
                 jsonObject.put("post", null == objs[3] ? "" : objs[3]);
-                jsonObject.put("remark", null == objs[4] ? "" : objs[4]);
-                jsonObject.put("interviewCount", null == objs[5] ? "" : objs[5]);
+                jsonObject.put("qq", null == objs[4] ? "" : objs[4]);
+                jsonObject.put("trait", null == objs[5] ? "" : objs[5]);
+                jsonObject.put("remark", null == objs[6] ? "" : objs[6]);
+                jsonObject.put("interviewCount", null == objs[7] ? "" : objs[7]);
                 resultList.add(jsonObject);
             }
         }

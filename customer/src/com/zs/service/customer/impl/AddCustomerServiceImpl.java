@@ -3,6 +3,8 @@ package com.zs.service.customer.impl;
 import com.feinno.framework.common.exception.BusinessException;
 import com.feinno.framework.common.service.EntityServiceImpl;
 import com.zs.dao.basic.school.FindSchoolByNoDAO;
+import com.zs.dao.basic.user.FindUserByZZDAO;
+import com.zs.dao.cusotmerlog.CustomerLogDAO;
 import com.zs.dao.customer.FindCustomerByNameDAO;
 import com.zs.dao.customer.FindCustomerByNoDAO;
 import com.zs.dao.customer.FindCustomerByUserIdDAO;
@@ -11,6 +13,7 @@ import com.zs.domain.basic.School;
 import com.zs.domain.basic.UserGroupResource;
 import com.zs.domain.customer.Customer;
 import com.zs.domain.customer.CustomerLankman;
+import com.zs.domain.customer.CustomerLog;
 import com.zs.service.customer.AddCustomerService;
 import com.zs.tools.UserTools;
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +35,10 @@ public class AddCustomerServiceImpl extends EntityServiceImpl<Customer, FindCust
     private FindLinkmanByCustomerIdDAO findLinkmanByCustomerIdDAO;
     @Resource
     private FindCustomerByNameDAO findCustomerByNameDAO;
-
+    @Resource
+    private CustomerLogDAO customerLogDAO;
+    @Resource
+    private FindUserByZZDAO findUserByZZDAO;
 
     @Override
     @Transactional
@@ -61,6 +67,23 @@ public class AddCustomerServiceImpl extends EntityServiceImpl<Customer, FindCust
         customer.setCreator(zzCode);
         customer.setOperator(zzCode);
         super.save(customer);
+
+        //记录客户信息变更日志
+        CustomerLog customerLog = new CustomerLog();
+        customerLog.setCustomerId(customer.getId());
+        customerLog.setNo(customer.getNo());
+        customerLog.setCode(customer.getCode());
+        customerLog.setName(customer.getName());
+        customerLog.setAddress(customer.getAddress());
+        customerLog.setCustomerStateId(customer.getCustomerStateId());
+        customerLog.setCustomerTypeId(customer.getCustomerTypeId());
+        customerLog.setProvinceCode(customer.getProvinceCode());
+        customerLog.setScale(customer.getScale());
+        customerLog.setRemark(customer.getRemark());
+        customerLog.setOperator(customer.getOperator());
+        customerLog.setOperatorName(findUserByZZDAO.find(customer.getOperator()).getName());
+        customerLogDAO.save(customerLog);
+
         //添加客户联系人
         if(!StringUtils.isEmpty(linkmanInfo)){
             String[] linkmanInfoArray = linkmanInfo.split("\\|");
@@ -72,6 +95,8 @@ public class AddCustomerServiceImpl extends EntityServiceImpl<Customer, FindCust
                         String phone = "";
                         String post = "";
                         String remark = "";
+                        String qq = "";
+                        String trait = "";
                         if(linkmanInfoStrArray.length == 1){
                             name = linkmanInfoStrArray[0];
                         }
@@ -90,6 +115,21 @@ public class AddCustomerServiceImpl extends EntityServiceImpl<Customer, FindCust
                             post = linkmanInfoStrArray[2];
                             remark = linkmanInfoStrArray[3];
                         }
+                        if(linkmanInfoStrArray.length == 5){
+                            name = linkmanInfoStrArray[0];
+                            phone = linkmanInfoStrArray[1];
+                            post = linkmanInfoStrArray[2];
+                            remark = linkmanInfoStrArray[3];
+                            qq = linkmanInfoStrArray[4];
+                        }
+                        if(linkmanInfoStrArray.length == 6){
+                            name = linkmanInfoStrArray[0];
+                            phone = linkmanInfoStrArray[1];
+                            post = linkmanInfoStrArray[2];
+                            remark = linkmanInfoStrArray[3];
+                            qq = linkmanInfoStrArray[4];
+                            trait = linkmanInfoStrArray[5];
+                        }
 
                         CustomerLankman customerLankman = new CustomerLankman();
                         customerLankman.setCreator(zzCode);
@@ -98,6 +138,8 @@ public class AddCustomerServiceImpl extends EntityServiceImpl<Customer, FindCust
                         customerLankman.setOperator(zzCode);
                         customerLankman.setPhone(phone);
                         customerLankman.setPost(post);
+                        customerLankman.setQq(qq);
+                        customerLankman.setTrait(trait);
                         customerLankman.setRemark(remark);
                         customerLankman.setState(CustomerLankman.STATE_NORMAL);
                         findLinkmanByCustomerIdDAO.save(customerLankman);

@@ -2,12 +2,15 @@ package com.zs.service.customer.impl;
 
 import com.feinno.framework.common.exception.BusinessException;
 import com.feinno.framework.common.service.EntityServiceImpl;
+import com.zs.dao.basic.user.FindUserByZZDAO;
+import com.zs.dao.cusotmerlog.CustomerLogDAO;
 import com.zs.dao.customer.FindCustomerByNameDAO;
 import com.zs.dao.customer.FindCustomerByNoDAO;
 import com.zs.dao.customer.FindCustomerByUserIdDAO;
 import com.zs.dao.customerlinkman.FindLinkmanByCustomerIdDAO;
 import com.zs.domain.customer.Customer;
 import com.zs.domain.customer.CustomerLankman;
+import com.zs.domain.customer.CustomerLog;
 import com.zs.service.customer.EditCustomerService;
 import com.zs.tools.DateTools;
 import org.apache.commons.lang.StringUtils;
@@ -28,6 +31,10 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
     private FindCustomerByNameDAO findCustomerByNameDAO;
     @Resource
     private FindCustomerByNoDAO findCustomerByNoDAO;
+    @Resource
+    private CustomerLogDAO customerLogDAO;
+    @Resource
+    private FindUserByZZDAO findUserByZZDAO;
 
     @Override
     @Transactional
@@ -62,6 +69,22 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
         customer.setOperateTime(DateTools.getLongNowTime());
         super.update(customer);
 
+        //记录客户信息变更日志
+        CustomerLog customerLog = new CustomerLog();
+        customerLog.setCustomerId(customer.getId());
+        customerLog.setNo(customer.getNo());
+        customerLog.setCode(customer.getCode());
+        customerLog.setName(customer.getName());
+        customerLog.setAddress(customer.getAddress());
+        customerLog.setCustomerStateId(customer.getCustomerStateId());
+        customerLog.setCustomerTypeId(customer.getCustomerTypeId());
+        customerLog.setProvinceCode(customer.getProvinceCode());
+        customerLog.setScale(customer.getScale());
+        customerLog.setRemark(customer.getRemark());
+        customerLog.setOperator(customer.getOperator());
+        customerLog.setOperatorName(findUserByZZDAO.find(customer.getOperator()).getName());
+        customerLogDAO.save(customerLog);
+
         //删除联系人
         if(!StringUtils.isEmpty(delLinkman)){
             String[] ids = delLinkman.split(",");
@@ -91,6 +114,8 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
                         String phone = "";
                         String post = "";
                         String remark = "";
+                        String qq = "";
+                        String trait = "";
                         if(linkmanInfoStrArray.length == 1){
                             id = linkmanInfoStrArray[0];
                         }
@@ -116,6 +141,23 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
                             post = linkmanInfoStrArray[3];
                             remark = linkmanInfoStrArray[4];
                         }
+                        if(linkmanInfoStrArray.length == 6){
+                            id = linkmanInfoStrArray[0];
+                            name = linkmanInfoStrArray[1];
+                            phone = linkmanInfoStrArray[2];
+                            post = linkmanInfoStrArray[3];
+                            remark = linkmanInfoStrArray[4];
+                            qq = linkmanInfoStrArray[5];
+                        }
+                        if(linkmanInfoStrArray.length == 7){
+                            id = linkmanInfoStrArray[0];
+                            name = linkmanInfoStrArray[1];
+                            phone = linkmanInfoStrArray[2];
+                            post = linkmanInfoStrArray[3];
+                            remark = linkmanInfoStrArray[4];
+                            qq = linkmanInfoStrArray[5];
+                            trait = linkmanInfoStrArray[6];
+                        }
 
                         //说明是新增的联系人
                         if("new".equals(id)){
@@ -127,6 +169,8 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
                             customerLankman.setState(CustomerLankman.STATE_NORMAL);
                             customerLankman.setPhone(phone);
                             customerLankman.setPost(post);
+                            customerLankman.setQq(qq);
+                            customerLankman.setTrait(trait);
                             customerLankman.setRemark(remark);
                             findLinkmanByCustomerIdDAO.save(customerLankman);
                         }else{
@@ -136,6 +180,8 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
                             customerLankman.setOperateTime(DateTools.getLongNowTime());
                             customerLankman.setPhone(phone);
                             customerLankman.setPost(post);
+                            customerLankman.setQq(qq);
+                            customerLankman.setTrait(trait);
                             customerLankman.setRemark(remark);
                             findLinkmanByCustomerIdDAO.update(customerLankman);
                         }

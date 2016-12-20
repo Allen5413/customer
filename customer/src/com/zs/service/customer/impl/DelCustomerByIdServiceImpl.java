@@ -2,6 +2,7 @@ package com.zs.service.customer.impl;
 
 import com.feinno.framework.common.exception.BusinessException;
 import com.feinno.framework.common.service.EntityServiceImpl;
+import com.zs.dao.cusotmerlog.CustomerLogDAO;
 import com.zs.dao.customer.FindCustomerByNoDAO;
 import com.zs.dao.customerlinkman.DelLinkmanByCustomerIdDAO;
 import com.zs.dao.interview.DelInterviewByCustomerIdDAO;
@@ -22,6 +23,8 @@ public class DelCustomerByIdServiceImpl extends EntityServiceImpl<Customer, Find
     private DelInterviewByCustomerIdDAO delInterviewByCustomerIdDAO;
     @Resource
     private DelLinkmanByCustomerIdDAO delLinkmanByCustomerIdDAO;
+    @Resource
+    private CustomerLogDAO customerLogDAO;
 
     @Override
     @Transactional
@@ -36,6 +39,8 @@ public class DelCustomerByIdServiceImpl extends EntityServiceImpl<Customer, Find
                 delInterviewByCustomerIdDAO.del(customer.getId());
                 //删除客户的联系人
                 delLinkmanByCustomerIdDAO.del(customer.getId());
+                //删除信息更新日志
+                customerLogDAO.delByCustomerId(customer.getId());
                 //删除客户信息
                 super.remove(customer);
             }

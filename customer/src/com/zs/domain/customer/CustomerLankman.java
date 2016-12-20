@@ -21,6 +21,8 @@ public class CustomerLankman extends AbstractEntity {
     private String name;                        //联系人姓名
     private String phone;                       //联系电话
     private String post;                        //职务
+    private String qq;                          //qq
+    private String trait;                       //特点
     private String remark;                      //说明
     private int state;                          //状态[0：正常；1：删除]
     private String creator;                     //创建人
@@ -126,5 +128,21 @@ public class CustomerLankman extends AbstractEntity {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getTrait() {
+        return trait;
+    }
+
+    public void setTrait(String trait) {
+        this.trait = trait;
     }
 }
