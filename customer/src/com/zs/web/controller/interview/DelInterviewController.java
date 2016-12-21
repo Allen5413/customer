@@ -36,7 +36,7 @@ public class DelInterviewController extends
                           @RequestParam("ids")String ids){
         JSONObject jsonObject = new JSONObject();
         try{
-            delInterviewByIdService.del(ids.split(","));
+            delInterviewByIdService.del(request.getRealPath(""), ids.split(","));
             jsonObject.put("state", 0);
         }
         catch(Exception e){

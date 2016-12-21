@@ -7,5 +7,5 @@ import com.zs.domain.customer.Interview;
  * Created by Allen on 2016/3/9.
  */
 public interface DelInterviewByIdService extends EntityService<Interview> {
-    public void del(String... ids)throws Exception;
+    public void del(String realPath, String... ids)throws Exception;
 }

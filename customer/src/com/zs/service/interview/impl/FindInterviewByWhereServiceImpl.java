@@ -36,7 +36,7 @@ public class FindInterviewByWhereServiceImpl extends EntityServiceImpl implement
             for(Object[] objs : list){
                 //JSON日期转换必须要传bean，所以这里先把日期format后在设置值
                 Interview interview = new Interview();
-                interview.setOperateTime((Date) objs[7]);
+                interview.setOperateTime((Date) objs[9]);
                 JsonConfig jsonConfig = new JsonConfig();
                 jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessorTools());
                 JSONObject jsonObject = JSONObject.fromObject(interview, jsonConfig);
@@ -48,6 +48,8 @@ public class FindInterviewByWhereServiceImpl extends EntityServiceImpl implement
                 jsonObject.put("csName", objs[4]);
                 jsonObject.put("ctName", objs[5]);
                 jsonObject.put("content", objs[6]);
+                jsonObject.put("ip", objs[7]);
+                jsonObject.put("address", objs[8]);
                 jsonArray.add(jsonObject);
             }
             pageInfo.setPageResults(jsonArray);

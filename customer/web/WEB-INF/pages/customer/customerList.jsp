@@ -147,7 +147,7 @@
   }
 
   function addInterview(id){
-    openDialog('添加访谈记录', 0.3, 0.3, '${pageContext.request.contextPath}/addInterview/open.htm?id='+id);
+    openDialog('添加访谈记录', 0.3, 0.6, '${pageContext.request.contextPath}/addInterview/open.htm?id='+id);
   }
 
   function findLog(id){

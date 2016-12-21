@@ -1,7 +1,10 @@
 package com.zs.tools;
 
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -17,11 +20,13 @@ public class HttpRequestTools {
 
     //Http请求url
     private static String url;
+    private static String sinaUrl;
 
     static{
         try {
             PropertiesTools propertiesTools = new PropertiesTools("resource/commons.properties");
             url = propertiesTools.getProperty("eduwest.url");
+            sinaUrl = propertiesTools.getProperty("sina.url");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,6 +88,27 @@ public class HttpRequestTools {
         return Integer.parseInt(jsonObject.getString("num"));
     }
 
+    public static String getAddressByIp(String ip)throws Exception{
+        String address = "{}";
+        if(!"127.0.0.1".equals(ip)){
+            address = sendGet(sinaUrl + "?format=json&ip=" + ip);
+        }
+        address = address.equals("-2") ? "{}" : address;
+        JSONObject json = JSONObject.fromObject(address);
+        if(null != json){
+            String country = null == json.get("country") ? "" : json.get("country").toString();
+            String province = null == json.get("province") ? "" : json.get("province").toString();
+            String city = null == json.get("city") ? "" : json.get("city").toString();
+            String district = null == json.get("district") ? "" : json.get("district").toString();
+            String desc = null == json.get("desc") ? "" : json.get("desc").toString();
+            address = country+province+city+district+desc;
+            if(StringUtils.isEmpty(address)){
+                address = "客户拜访系统PC管理端记录";
+            }
+        }
+        return address;
+    }
+
     public static void main(String[] args){
         try {
             int A=5, B=6;
@@ -90,6 +116,10 @@ public class HttpRequestTools {
             B = A^B;
             A = A^B;
             System.out.println(A+"  "+B);
+
+            String s = StringEscapeUtils.escapeJava("汉字");
+            System.out.println(s);
+            System.out.println(StringEscapeUtils.escapeCsv("\u4e2d\u56fd"));
         } catch (Exception e) {
             e.printStackTrace();
         }

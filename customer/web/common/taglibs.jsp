@@ -28,3 +28,5 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/script/zDialog/zDialog.js" charset="utf-8"></script>
 <!-- Highcharts -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/script/Highcharts-4.2.5/js/highcharts.js" charset="utf-8"></script>
+<!-- JavaScript获取客户端IP[利用新浪接口] -->
+<script type="text/javascript" src="http://counter.sina.com.cn/ip/" charset="gb2312"></script>

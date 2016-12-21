@@ -19,6 +19,14 @@
         </span>
       </li>
       <li><label class="left">交流记录：</label><textarea class="pText_280" name="content" id="content">${interview.content}</textarea></li>
+      <li>
+        <label>当前ip：</label>${ip}
+        <input type="hidden" name="ip" value="${ip}" />
+      </li>
+      <li>
+        <label>当前地址：</label>${address}
+        <input type="hidden" name="address" value="${address}" />
+      </li>
     </ul>
   </form>
 </div>

@@ -10,9 +10,12 @@ import com.zs.service.customerlinkman.FindLinkmanByCustomerIdService;
 import com.zs.service.customerstate.FindCustomerStateService;
 import com.zs.service.customertype.FindCustomerTypeService;
 import com.zs.service.interview.EditInterviewService;
+import com.zs.tools.HttpRequestTools;
+import com.zs.tools.IpTools;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,10 +56,15 @@ public class EditInterviewController extends
             Customer customer = addCustomerService.get(interview.getCustomerId());
             //查询该客户的联系人
             List<CustomerLankman> linkmanList = findLinkmanByCustomerIdService.find(interview.getCustomerId());
+            //获取当前ip地址
+            String ip = IpTools.getIpAddress(request);
+            String address = HttpRequestTools.getAddressByIp(ip);
 
             request.setAttribute("customer", customer);
             request.setAttribute("interview", interview);
             request.setAttribute("linkmanList", linkmanList);
+            request.setAttribute("ip", ip);
+            request.setAttribute("address", address);
 
         } catch (Exception e) {
             super.outputException(request, e, log, "打开页面");
@@ -75,10 +83,16 @@ public class EditInterviewController extends
     public JSONObject editor(HttpServletRequest request,
                           @RequestParam("id")long id,
                           @RequestParam("linkmanId")long linkmanId,
-                          @RequestParam("content")String content){
+                          @RequestParam("content")String content,
+                          @RequestParam(value = "ip", required = false, defaultValue = "")String ip,
+                          @RequestParam(value = "address", required = false, defaultValue = "")String address){
         JSONObject jsonObject = new JSONObject();
         try{
-            editInterviewService.edit(id, linkmanId, content, UserTools.getLoginUserForZzCode(request));
+            if(StringUtils.isEmpty(ip)){
+                ip = IpTools.getIpAddress(request);
+                address = HttpRequestTools.getAddressByIp(ip);
+            }
+            editInterviewService.edit(id, linkmanId, content, UserTools.getLoginUserForZzCode(request), ip, address);
             jsonObject.put("state", 0);
         }
         catch(Exception e){

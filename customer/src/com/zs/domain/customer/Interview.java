@@ -15,6 +15,8 @@ public class Interview extends AbstractEntity {
     private long customerId;                    //客户id
     private long customerLankmanId;             //交谈对象id
     private String content;                     //交谈内容
+    private String ip;                          //ip
+    private String address;                     //ip所属地址
     private String creator;                     //创建人
     private Date createTime = new Date();       //创建时间
     private String operator;                    //操作人
@@ -94,5 +96,21 @@ public class Interview extends AbstractEntity {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

@@ -6,6 +6,8 @@ import com.zs.domain.customer.Interview;
 import com.zs.service.customer.AddCustomerService;
 import com.zs.service.customerlinkman.FindLinkmanByCustomerIdService;
 import com.zs.service.interview.AddInterviewService;
+import com.zs.tools.HttpRequestTools;
+import com.zs.tools.IpTools;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import net.sf.json.JSONObject;
@@ -48,8 +50,13 @@ public class AddInterviewController extends
             Customer customer = addCustomerService.get(id);
             //查询该客户的联系人
             List<CustomerLankman> linkmanList = findLinkmanByCustomerIdService.find(id);
+            //获取当前ip地址
+            String ip = IpTools.getIpAddress(request);
+            String address = HttpRequestTools.getAddressByIp(ip);
             request.setAttribute("customer", customer);
             request.setAttribute("linkmanList", linkmanList);
+            request.setAttribute("ip", ip);
+            request.setAttribute("address", address);
         } catch (Exception e) {
             super.outputException(request, e, log, "打开新增页面");
             return "error";
@@ -58,7 +65,7 @@ public class AddInterviewController extends
     }
 
     /**
-     * 新增用户
+     * 新增访谈记录
      * @param request
      * @return
      */
@@ -67,7 +74,7 @@ public class AddInterviewController extends
     public JSONObject add(HttpServletRequest request, Interview interview){
         JSONObject jsonObject = new JSONObject();
         try{
-            addInterviewService.add(interview, UserTools.getLoginUserForZzCode(request));
+            addInterviewService.add(interview, request);
             jsonObject.put("state", 0);
         }
         catch(Exception e){

@@ -17,7 +17,7 @@ public class EditInterviewServiceImpl extends EntityServiceImpl<Interview, Inter
 
     @Override
     @Transactional
-    public void edit(long id, long linkmanId, String content, String zzCode) throws Exception {
+    public void edit(long id, long linkmanId, String content, String zzCode, String ip, String address) throws Exception {
         Interview interview = super.get(id);
         if(null == interview){
             throw new BusinessException("该访谈记录不存在");
@@ -26,6 +26,8 @@ public class EditInterviewServiceImpl extends EntityServiceImpl<Interview, Inter
         interview.setContent(content);
         interview.setOperator(zzCode);
         interview.setOperateTime(DateTools.getLongNowTime());
+        interview.setIp(ip);
+        interview.setAddress(address);
         super.update(interview);
     }
 }
