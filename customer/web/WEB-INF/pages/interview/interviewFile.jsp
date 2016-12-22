@@ -12,7 +12,7 @@
       <c:if test="${!empty interviewFileList}">
         <c:forEach var="interviewFile" items="${interviewFileList}">
           <li>
-            <img src="${interviewFile.url}">
+            <img src="${pageContext.request.contextPath}/${interviewFile.url}">
           </li>
         </c:forEach>
       </c:if>
