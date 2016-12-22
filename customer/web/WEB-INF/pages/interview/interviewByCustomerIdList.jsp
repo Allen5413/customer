@@ -11,13 +11,15 @@
   <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <th width="5%" >序号</th>
-      <th width="7%">客户经理</th>
-      <th width="20%">客户名称</th>
-      <th width="7%">交谈对象</th>
+      <th width="5%">客户经理</th>
+      <th width="10%">客户名称</th>
+      <th width="5%">交谈对象</th>
       <th width="5%">客户状态</th>
       <th width="5%">客户类型</th>
-      <th width="36%">交谈记录</th>
-      <th width="15%">最后修改日期</th>
+      <th width="34%">交谈记录</th>
+      <th width="10%">最后修改日期</th>
+      <th width="7%">ip</th>
+      <th width="15%">操作地址</th>
     </tr>
     <c:if test="${empty pageInfo || empty pageInfo.pageResults}">
       <tr>
@@ -34,6 +36,8 @@
         <td>${interview.ctName}</td>
         <td>${interview.content}</td>
         <td>${interview.operateTime}</td>
+        <td>${interview.ip}</td>
+        <td>${interview.address}</td>
       </tr>
     </c:forEach>
   </table>
