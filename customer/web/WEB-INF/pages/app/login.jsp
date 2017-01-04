@@ -1,11 +1,36 @@
-﻿<%@ page language="java" contentType="text/html; charset=utf-8"
-         pageEncoding="utf-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html>
+<html>
 <head>
-  <%@ include file="/common/meta.jsp"%>
-  <%@ include file="/common/taglibs.jsp"%>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+  <title>客户拜访</title>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css"  />
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css"  />
+  <style>section{padding-top:44px;}</style>
 </head>
+<body>
+<header>
+  <div class="header w">
+    <p class="tit" style="text-align:center;">登录</p>
+  </div>
+</header>
+<section>
+  <div class="auto w bg-f">
+    <div class="login-mod">
+      <ul>
+        <li><input class="input-nickname" placeholder="手机号/ZZ号" name="loginName" id="loginName"></li>
+        <li><input class="input-pwd" placeholder="请输入密码" type="password" name="pwd" id="pwd"></li>
+        <li><button class="btn-logon" onclick="sub()">登 录</button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+</body>
+</html>
 <script type="text/javascript">
   $(function(){
     //回车事件
@@ -37,7 +62,7 @@
         data:params,
         success:function(data){
           if(data.msg == "success"){
-            location.href = "${pageContext.request.contextPath}/index/main.htm";
+            location.href = "${pageContext.request.contextPath}/findCustomerByWhereForApp/find.htm";
           }else {
             alert(data.msg);
           }
@@ -46,28 +71,3 @@
     }
   }
 </script>
-<body id="main_body">
-  <div id="page">
-    <div id="header">
-      <div class="logo_admin">
-        <div class="logo"><h2>客户拜访记录系统</h2></div>
-      </div>
-    </div>
-    <div id="centerAdmin">
-      <div class="login-box">
-        <h2>欢迎登录客户拜访记录系统App端</h2>
-        <ul class="login-info-list">
-          <li><label>账 号：</label><input class="input-login-1" type="text" name="loginName" id="loginName" /></li>
-          <li><label>密 码：</label><input class="input-login-1" type="password" name="pwd" id="pwd" /></li>
-          <li>
-            <a class="btn-login" href="#" onclick="sub()">登 录</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div id="footAdmin">
-      <p><span class="right">Copyright 2009 至善在线教育网 版权所有 渝ICP备06004276号 </span></p>
-    </div>
-  </div>
-</body>
-</html>

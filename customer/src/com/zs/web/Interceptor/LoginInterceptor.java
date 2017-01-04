@@ -31,9 +31,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter{
             if (!StringUtils.isEmpty(zzCode) && !StringUtils.isEmpty(name)) {
                 flag = true;
             }else{
-                response.sendRedirect("/login.jsp");
+                if(url.toLowerCase().indexOf("app") > -1){
+                    response.sendRedirect("/cust/loginUser/appLogin.htm");
+                }else {
+                    response.sendRedirect("/cust/login.jsp");
+                }
             }
-
         }
         return flag;
     }

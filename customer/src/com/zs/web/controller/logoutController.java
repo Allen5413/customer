@@ -31,4 +31,19 @@ public class logoutController extends LoggerController<User, ValidateLoginServic
         }
         return "../../login";
     }
+
+    @RequestMapping(value = "logouApp")
+    public String logouApp(HttpServletRequest request, HttpServletResponse response){
+        try{
+            request.getSession().removeAttribute("loginName");
+            request.getSession().removeAttribute("name");
+            request.getSession().removeAttribute("loginType");
+            request.getSession().removeAttribute("menuMap");
+            response.sendRedirect("/cust/loginUser/appLogin.htm");
+        }catch(Exception e){
+            super.outputException(request, e, log, "用户登出");
+            return "error";
+        }
+        return "../../login";
+    }
 }

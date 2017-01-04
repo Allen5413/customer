@@ -12,4 +12,7 @@ import java.util.List;
 public interface FindUserByParenSignDAO extends EntityJpaDao<User, Long> {
     @Query("from User where parentSign like ?1")
     public List<User> find(String zzCode);
+
+    @Query("from User where parentSign like ?1 and level = ?2")
+    public List<User> findAndLevel(String zzCode, int level);
 }

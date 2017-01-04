@@ -25,10 +25,13 @@ public class FindInterviewByWhereDAOImpl extends BaseQueryDao
         List<Object> param = new ArrayList<Object>();
         String customerId = paramsMap.get("customerId");
         String userId = paramsMap.get("userId");
+        String linkmanId = paramsMap.get("linkmanId");
         String typeId = paramsMap.get("typeId");
         String stateId = paramsMap.get("stateId");
         String beginDate = paramsMap.get("beginDate");
         String endDate = paramsMap.get("endDate");
+        String year = paramsMap.get("year");
+        String month = paramsMap.get("month");
         String loginLevel = paramsMap.get("loginLevel");
         String isBrowse = paramsMap.get("isBrowse");
         String loginZzCode = paramsMap.get("loginZzCode");
@@ -70,6 +73,10 @@ public class FindInterviewByWhereDAOImpl extends BaseQueryDao
             sql += "and u.id = ? ";
             param.add(Long.parseLong(userId));
         }
+        if(!StringUtils.isEmpty(linkmanId)){
+            sql += "and i.customer_lankman_id = ? ";
+            param.add(Long.parseLong(linkmanId));
+        }
         if(!StringUtils.isEmpty(typeId)){
             sql += "and ct.id = ? ";
             param.add(Long.parseLong(typeId));
@@ -85,6 +92,14 @@ public class FindInterviewByWhereDAOImpl extends BaseQueryDao
         if(!StringUtils.isEmpty(endDate)){
             sql += "and i.operate_time <= ? ";
             param.add(endDate+" 23:59:59");
+        }
+        if(!StringUtils.isEmpty(year)){
+            sql += "and YEAR(i.create_time) = ? ";
+            param.add(Integer.parseInt(year));
+        }
+        if(!StringUtils.isEmpty(month)){
+            sql += "and MONTH(i.create_time) = ? ";
+            param.add(Integer.parseInt(month));
         }
         sql += "order by i.operate_time desc";
 

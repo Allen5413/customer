@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 /**
- * 查询所有公司级别的用户
+ * 查询所有区域级别的用户
  * Created by Allen on 2016/11/24.
  */
-public interface FindUserForCompanyDAO extends EntityJpaDao<User, Long> {
-    @Query("from User where state = 1 and level = 0 order by name")
+public interface FindUserForBusinessDAO extends EntityJpaDao<User, Long> {
+    @Query("from User where state = 1 and level = 3 order by name")
     public List<User> find();
 }

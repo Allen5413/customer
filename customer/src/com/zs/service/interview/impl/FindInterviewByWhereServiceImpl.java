@@ -3,6 +3,7 @@ package com.zs.service.interview.impl;
 import com.feinno.framework.common.dao.support.PageInfo;
 import com.feinno.framework.common.service.EntityServiceImpl;
 import com.zs.dao.FindPageByWhereDAO;
+import com.zs.dao.interview.InterviewDAO;
 import com.zs.domain.customer.Interview;
 import com.zs.service.interview.FindInterviewByWhereService;
 import com.zs.tools.DateJsonValueProcessorTools;
@@ -21,7 +22,7 @@ import java.util.Map;
  * Created by Allen on 2016/3/9.
  */
 @Service("findInterviewByWhereService")
-public class FindInterviewByWhereServiceImpl extends EntityServiceImpl implements FindInterviewByWhereService {
+public class FindInterviewByWhereServiceImpl extends EntityServiceImpl<Interview, InterviewDAO> implements FindInterviewByWhereService {
 
     @Resource
     private FindPageByWhereDAO findInterviewByWhereDAO;
