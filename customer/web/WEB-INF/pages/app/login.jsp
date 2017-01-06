@@ -56,10 +56,9 @@
         "pwd":pwd
       };
       $.ajax({
-        url:"${pageContext.request.contextPath}/loginUser/login.htm",
-        method : 'POST',
+        url:"${pageContext.request.contextPath}/loginUser/login.htm?zzCode="+loginName+"&pwd="+pwd,
+        method : 'GET',
         async:false,
-        data:params,
         success:function(data){
           if(data.msg == "success"){
             location.href = "${pageContext.request.contextPath}/findCustomerByWhereForApp/find.htm";
