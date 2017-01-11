@@ -7,6 +7,7 @@ import com.zs.dao.interview.InterviewDAO;
 import com.zs.domain.customer.Interview;
 import com.zs.service.interview.FindInterviewByWhereService;
 import com.zs.tools.DateJsonValueProcessorTools;
+import com.zs.tools.DateTools;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -35,9 +36,10 @@ public class FindInterviewByWhereServiceImpl extends EntityServiceImpl<Interview
             List<Object[]> list = pageInfo.getPageResults();
             JSONArray jsonArray = new JSONArray();
             for(Object[] objs : list){
+                Date operateTime = (Date) objs[9];
                 //JSON日期转换必须要传bean，所以这里先把日期format后在设置值
                 Interview interview = new Interview();
-                interview.setOperateTime((Date) objs[9]);
+                interview.setOperateTime(operateTime);
                 JsonConfig jsonConfig = new JsonConfig();
                 jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessorTools());
                 JSONObject jsonObject = JSONObject.fromObject(interview, jsonConfig);
@@ -51,6 +53,11 @@ public class FindInterviewByWhereServiceImpl extends EntityServiceImpl<Interview
                 jsonObject.put("content", objs[6]);
                 jsonObject.put("ip", objs[7]);
                 jsonObject.put("address", objs[8]);
+                jsonObject.put("creator", objs[10]);
+                //操作时间是否超过1天，如果超过了就不能修改了
+                jsonObject.put("isPassOneDay", DateTools.compareDateTime(DateTools.getLongNowTime(), operateTime, 1440));
+                jsonObject.put("cId", objs[11]);
+                jsonObject.put("clId", objs[12]);
                 jsonArray.add(jsonObject);
             }
             pageInfo.setPageResults(jsonArray);

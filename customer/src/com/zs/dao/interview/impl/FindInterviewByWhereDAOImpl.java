@@ -37,7 +37,7 @@ public class FindInterviewByWhereDAOImpl extends BaseQueryDao
         String loginZzCode = paramsMap.get("loginZzCode");
         String loginId = paramsMap.get("loginId");
 
-        String field = "i.id, u.name uName, c.name cName, cl.name clName, cs.name csName, ct.name ctName, i.content, i.ip, i.address, i.operate_time";
+        String field = "i.id, u.name uName, c.name cName, cl.name clName, cs.name csName, ct.name ctName, i.content, i.ip, i.address, i.operate_time, i.creator, c.id cId, cl.id clId";
         String sql = "from ";
 
         if(Integer.parseInt(loginLevel) > User.LEVEL_COMPANY) {

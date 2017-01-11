@@ -9,9 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
   <title>客户拜访</title>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css"  />
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css"  />
+  <%@ include file="common/taglibsForApp.jsp"%>
   <style>section{padding-top:44px;}</style>
 </head>
 <body>
@@ -47,10 +45,10 @@
         </c:if>
         <c:if test="${!empty customerList}">
           <c:forEach var="customer" items="${customerList}">
-            <li>
+            <li onclick="location.href = '${pageContext.request.contextPath}/findCustomerByIdForApp/open.htm?id=${customer.id}'">
               <div class="content">
                 <div class="col-txt">${customer.cName}</div>
-                <div class="col-r"><a href="${pageContext.request.contextPath}/findCustomerByIdForApp/open.htm?id=${customer.id}">${customer.csName} <i class="i-arr"></i></a></div>
+                <div class="col-r">${customer.csName} <i class="i-arr"></i></div>
               </div>
             </li>
           </c:forEach>

@@ -36,6 +36,7 @@ public class FindInterviewTotalForAppController extends
             request.setAttribute("yearList", yearList);
             request.setAttribute("year", DateTools.getThisYear());
             request.setAttribute("month", DateTools.getThisMonth());
+            request.setAttribute("month12", DateTools.getLast12Months());
             return "app/interviewTotal";
         }catch (Exception e){
             return "error";
@@ -45,7 +46,7 @@ public class FindInterviewTotalForAppController extends
     @RequestMapping(value = "findYear")
     @ResponseBody
     public JSONObject findYear(HttpServletRequest request,
-                               @RequestParam("year")int year){
+                               @RequestParam(value = "year", required = false)Integer year){
         JSONObject jsonObject = new JSONObject();
         try{
             jsonObject.put("json", findInterviewTotalService.findYear(year));

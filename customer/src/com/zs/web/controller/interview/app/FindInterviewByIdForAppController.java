@@ -10,6 +10,8 @@ import com.zs.service.customer.FindCustomerService;
 import com.zs.service.customerlinkman.FindLinkmanByCustomerIdService;
 import com.zs.service.interview.FindInterviewByWhereService;
 import com.zs.service.interviewfile.FindInterviewFileByInterviewIdService;
+import com.zs.tools.DateTools;
+import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import com.zs.web.controller.interview.FindInterviewByWhereController;
 import org.apache.log4j.Logger;
@@ -60,6 +62,9 @@ public class FindInterviewByIdForAppController extends LoggerController {
             request.setAttribute("interview", interview);
             request.setAttribute("interviewFileList", interviewFileList);
             request.setAttribute("user", user);
+            request.setAttribute("loginZzCode", UserTools.getLoginUserForZzCode(request));
+            //操作时间是否超过1天，如果超过了就不能修改了
+            request.setAttribute("isPassOneDay", DateTools.compareDateTime(DateTools.getLongNowTime(), interview.getOperateTime(), 1440));
             return "app/interviewInfo";
         }
         catch(Exception e){

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿<%@ page language="java" contentType="text/html; charset=utf-8"
+         pageEncoding="utf-8"%>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -7,9 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
   <title>客户拜访</title>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css"  />
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css"  />
+  <%@ include file="common/taglibsForApp.jsp"%>
   <style>section{padding-top:44px;}</style>
 </head>
 <body>
@@ -22,17 +22,24 @@
   <div class="auto w bg-f">
     <div class="login-mod">
       <ul>
-        <li><input class="input-nickname" placeholder="手机号/ZZ号" name="loginName" id="loginName"></li>
-        <li><input class="input-pwd" placeholder="请输入密码" type="password" name="pwd" id="pwd"></li>
+        <li><input class="input-nickname" placeholder="手机号/ZZ号" id="loginName" value="${param.zzCode}"></li>
+        <li><input class="input-pwd" placeholder="请输入密码" type="password" id="password"></li>
         <li><button class="btn-logon" onclick="sub()">登 录</button></li>
       </ul>
     </div>
   </div>
 </section>
+<form id="loginForm" name="loginForm" action="${pageContext.request.contextPath}/loginUser/loginApp.htm" method="get">
+  <input type="hidden" id="zzCode" name="zzCode" />
+  <input type="hidden" id="pwd" name="pwd" />
+</form>
 </body>
 </html>
 <script type="text/javascript">
   $(function(){
+    if("${msg}" != ""){
+      alert("${msg}");
+    }
     //回车事件
     document.onkeydown = function(e){
       var ev = document.all ? window.event : e;
@@ -44,29 +51,28 @@
 
   function sub(){
     var loginName = $.trim($("#loginName").val());
-    var pwd = $.trim($("#pwd").val());
+    var pwd = $.trim($("#password").val());
     if(loginName == ""){
       alert("请输入用户名！");
     }
     else if(pwd == ""){
       alert("请输入密码！");
     }else{
-      var params = {
-        "zzCode":loginName,
-        "pwd":pwd
-      };
-      $.ajax({
-        url:"${pageContext.request.contextPath}/loginUser/login.htm?zzCode="+loginName+"&pwd="+pwd,
-        method : 'GET',
-        async:false,
-        success:function(data){
-          if(data.msg == "success"){
-            location.href = "${pageContext.request.contextPath}/findCustomerByWhereForApp/find.htm";
-          }else {
-            alert(data.msg);
-          }
-        }
-      });
+      $("#zzCode").val(loginName);
+      $("#pwd").val(pwd);
+      $("#loginForm").submit();
+      <%--$.ajax({--%>
+        <%--url:"${pageContext.request.contextPath}/loginUser/login.htm?zzCode="+loginName+"&pwd="+pwd,--%>
+        <%--method : 'GET',--%>
+        <%--async:false,--%>
+        <%--success:function(data){--%>
+          <%--if(data.msg == "success"){--%>
+            <%--location.href = "${pageContext.request.contextPath}/findCustomerByWhereForApp/find.htm";--%>
+          <%--}else {--%>
+            <%--alert(data.msg);--%>
+          <%--}--%>
+        <%--}--%>
+      <%--});--%>
     }
   }
 </script>

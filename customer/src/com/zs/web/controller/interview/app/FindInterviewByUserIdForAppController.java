@@ -66,6 +66,7 @@ public class FindInterviewByUserIdForAppController extends LoggerController {
             request.setAttribute("customer", customer);
             request.setAttribute("customerLankman", customerLankman);
             request.setAttribute("interviewList", pageInfo.getPageResults());
+            request.setAttribute("loginZzCode", loginZzCode);
 
             return "app/findInterviewByUserId";
         }

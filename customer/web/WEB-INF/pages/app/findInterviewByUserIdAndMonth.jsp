@@ -9,17 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
   <title>客户拜访</title>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css"  />
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css"  />
-  <script src="${pageContext.request.contextPath}/app/mobiscroll/js/mobiscroll.core-2.5.2.js" type="text/javascript"></script>
-  <script src="${pageContext.request.contextPath}/app/mobiscroll/js/mobiscroll.core-2.5.2-zh.js" type="text/javascript"></script>
-  <link href="${pageContext.request.contextPath}/app/mobiscroll/css/mobiscroll.core-2.5.2.css" rel="stylesheet" type="text/css" />
-  <link href="${pageContext.request.contextPath}/app/mobiscroll/css/mobiscroll.animation-2.5.2.css" rel="stylesheet" type="text/css" />
-  <script src="${pageContext.request.contextPath}/app/mobiscroll/js/mobiscroll.datetime-2.5.1.js" type="text/javascript"></script>
-  <script src="${pageContext.request.contextPath}/app/mobiscroll/js/mobiscroll.datetime-2.5.1-zh.js" type="text/javascript"></script>
-  <script src="${pageContext.request.contextPath}/app/mobiscroll/js/mobiscroll.android-ics-2.5.2.js" type="text/javascript"></script>
-  <link href="${pageContext.request.contextPath}/app/mobiscroll/css/mobiscroll.android-ics-2.5.2.css" rel="stylesheet" type="text/css" />
+  <%@ include file="common/taglibsForApp.jsp"%>
   <style>
     section{padding-top:44px;}
   </style>
@@ -55,14 +45,18 @@
         <c:if test="${!empty interviewList}">
           <c:forEach var="interview" items="${interviewList}">
             <li>
-              <div class="title">
+              <div class="title" onclick="location.href='${pageContext.request.contextPath}/findInterviewByUserIdForApp/find.htm?customerId=${interview.cId}&linkmanId=${interview.clId}'">
                 <a href="javascript:;">${interview.cName}-${interview.clName}</a>
               </div>
-              <div class="text">
+              <div class="text" onclick="location.href='${pageContext.request.contextPath}/findInterviewByIdForApp/find.htm?id=${interview.id}'">
                 <p>${interview.content}</p>
-                  <p class="by"><i class="i-lac"></i>${interview.uName} ${interview.operateTime} ${interview.address}</p>
+                <p class="by"><i class="i-lac"></i>${interview.uName} ${interview.operateTime} ${interview.address}</p>
               </div>
-              <div class="opr-tl"><a class="btn-edit" href="${pageContext.request.contextPath}/editInterviewForApp/open.htm?id=${interview.id}">编辑</a></div>
+              <div class="opr-tl">
+                <c:if test="${loginZzCode eq interview.creator && !interview.isPassOneDay}">
+                  <a class="btn-edit" href="${pageContext.request.contextPath}/editInterviewForApp/open.htm?id=${interview.id}">编辑</a>
+                </c:if>
+              </div>
             </li>
           </c:forEach>
         </c:if>

@@ -11,6 +11,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -23,8 +26,6 @@ public class UpLoadFileTools {
     /**
      * 上传图片
      * @param request
-     * @param id
-     * @param saveImgPathType
      * @param imgType
      * @param imgSize
      * @param imgMaxCount
@@ -110,5 +111,50 @@ public class UpLoadFileTools {
         }
         // 目录此时为空，可以删除
         return dir.delete();
+    }
+
+    /**
+     * 复制单个文件
+     * @param oldPath String 原文件路径 如：c:/fqf.txt
+     * @param newPath String 复制后路径 如：f:/fqf.txt
+     * @return boolean
+     */
+    public static void copyFile(HttpServletRequest request, String oldPath, String newPath, String fileName) {
+        try {
+            int bytesum = 0;
+            int byteread = 0;
+            oldPath = request.getRealPath("")+oldPath;
+            newPath = request.getRealPath("")+newPath;
+            new File(newPath).mkdirs();
+            File oldfile = new File(oldPath);
+            if (oldfile.exists()) { //文件存在时
+                InputStream inStream = new FileInputStream(oldPath); //读入原文件
+                FileOutputStream fs = new FileOutputStream(newPath+"/"+fileName);
+                byte[] buffer = new byte[2048];
+                while ( (byteread = inStream.read(buffer)) != -1) {
+                    bytesum += byteread; //字节数 文件大小
+                    System.out.println(bytesum);
+                    fs.write(buffer, 0, byteread);
+                }
+                inStream.close();
+            }
+        }catch (Exception e) {
+            System.out.println("复制单个文件操作出错");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 剪切文件
+     * @param oldPath String 如：c:/fqf.txt
+     * @param newPath String 如：d:/fqf.txt
+     */
+    public static void custFile(HttpServletRequest request, String oldPath, String newPath, String fileName) {
+        try {
+            copyFile(request, oldPath, newPath, fileName);
+            delFile(request, oldPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

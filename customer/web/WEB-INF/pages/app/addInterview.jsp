@@ -9,11 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
   <title>客户拜访</title>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-form.js" charset="utf-8"></script>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/app/js/gps.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css"  />
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css"  />
+  <%@ include file="common/taglibsForApp.jsp"%>
   <style>section{padding-top:44px;}</style>
 </head>
 <body>
@@ -25,58 +21,66 @@
     </div>
   </header>
   <section>
-    <form id="addForm" name="addForm" action="${pageContext.request.contextPath}/addInterviewForApp/add.htm" method="post" enctype="multipart/form-data">
-      <input type="hidden" id="customerId" name="customerId" value="${customer.id}"/>
-      <input type="hidden" id="customerLankmanId" name="customerLankmanId" value="${customerLankman.id}"/>
-      <input type="hidden" name="ip" value="${ip}" />
-      <input type="hidden" id="address" name="address" />
       <div class="auto w bg-f">
         <div class="adm-select-list">
           <ul>
-            <li>
-              <div class="content">
-                <div class="col-tg">客户名称：</div>
-                <div class="col-txt">
-                  <c:if test="${empty customer}">
-                    <a href="javascript:;" id="customerText" onclick="selectIf(0)">请选择（必填）</a>
-                  </c:if>
-                  <c:if test="${!empty customer}">${customer.name}</c:if>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="content">
-                <div class="col-tg">交谈对象：</div>
-                <div class="col-txt">
-                  <c:if test="${empty customerLankman}">
-                    <a href="javascript:;" id="linkmanText" onclick="selectIf(1)">请选择（必填）</a>
-                  </c:if>
-                  <c:if test="${!empty customerLankman}">${customerLankman.name}</c:if>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="content">
-                <div class="col-tg">交流记录：</div>
-                <div class="col-txt">
-                  <div class="text-input">
-                    <textarea placeholder="请输入交流记录" name="content" id="content"></textarea>
+            <form id="addForm" name="addForm" action="${pageContext.request.contextPath}/addInterviewForApp/add.htm" method="post">
+              <input type="hidden" id="customerId" name="customerId" value="${customer.id}"/>
+              <input type="hidden" id="customerLankmanId" name="customerLankmanId" value="${customerLankman.id}"/>
+              <input type="hidden" name="ip" value="${ip}" />
+              <input type="hidden" id="address" name="address" />
+              <input type="hidden" id="filePaths" name="filePaths" value="" />
+              <li>
+                <div class="content">
+                  <div class="col-tg">客户名称：</div>
+                  <div class="col-txt">
+                    <c:if test="${empty customer}">
+                      <a href="javascript:;" id="customerText" onclick="selectIf(0)">请选择（必填）</a>
+                    </c:if>
+                    <c:if test="${!empty customer}">${customer.name}</c:if>
                   </div>
                 </div>
+              </li>
+              <li>
+                <div class="content">
+                  <div class="col-tg">交谈对象：</div>
+                  <div class="col-txt">
+                    <c:if test="${empty customerLankman}">
+                      <a href="javascript:;" id="linkmanText" onclick="selectIf(1)">请选择（必填）</a>
+                    </c:if>
+                    <c:if test="${!empty customerLankman}">${customerLankman.name}</c:if>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="content">
+                  <div class="col-tg">交流记录：</div>
+                  <div class="col-txt">
+                    <div class="text-input">
+                      <textarea placeholder="请输入交流记录" name="content" id="content"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </form>
+            <li>
+              <div class="add-pics-list">
+                <form id="fileForm" name="fileForm" action="${pageContext.request.contextPath}/uploadTempFile/upload.htm" method="post" enctype="multipart/form-data">
+                  <ul id="fileUl">
+                    <li><a class="add-btn" href="javascript:;"><i class="i-plus"></i><input type="file" class="uploadFile" id="img" name="img" onchange="changeFile()"></a></li>
+                  </ul>
+                </form>
               </div>
             </li>
           </ul>
-          <div class="btn-bar">
-            <a class="upload-btn" href="javascript:;">上传附件<input type="file" class="uploadFile" id="img" name="img"></a>
-          </div>
         </div>
       </div>
       <div class="ft-fixed-opr">
         <a class="btn-opr-com" href="javascript:;" onclick="sub()">确定</a>
       </div>
-    </form>
   </section>
 </div>
+
 <div id="divCustomer">
   <header>
     <div class="header w">
@@ -239,6 +243,48 @@
         if(data.state == 0){
           alert("提交成功！");
           location.href = "${pageContext.request.contextPath}/findInterviewByWhereForApp/find.htm";
+        }else{
+          alert(data.msg);
+        }
+      }
+    });
+  }
+
+  function changeFile(){
+    $("#fileForm").ajaxSubmit({
+      url:"${pageContext.request.contextPath}/uploadTempFile/upload.htm",
+      dataType : 'json',
+      success: function(data) {
+        if(data.state == 0){
+          var fileUrl = data.filePath;
+          var html = "<li><img src='${pageContext.request.contextPath}"+fileUrl+"'><a class='x-del' href='javascript:;' onclick=\"delFile('"+fileUrl+"', this);\">×</a></li>";
+          html += $("#fileUl").html();
+          $("#fileUl").html(html);
+          $("#img").val("");
+          var filePaths = $("#filePaths").val();
+          if(filePaths == ""){
+            $("#filePaths").val(fileUrl);
+          }else{
+            $("#filePaths").val(filePaths+","+fileUrl);
+          }
+        }else{
+          alert(data.msg);
+        }
+      }
+    });
+  }
+
+  function delFile(fileUrl, obj){
+    $.ajax({
+      url:"${pageContext.request.contextPath}/uploadTempFile/delFile.htm",
+      method : 'POST',
+      async:false,
+      data:{"filePath":fileUrl},
+      success:function(data){
+        if(data.state == 0){
+          $(obj).parent().remove();
+          var filePaths = $("#filePaths").val();
+          $("#filePaths").val(filePaths.replace(fileUrl, ""));
         }else{
           alert(data.msg);
         }

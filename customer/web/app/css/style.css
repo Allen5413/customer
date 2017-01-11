@@ -320,7 +320,7 @@ header{background:none;}
 	-webkit-transform-origin: left top;
 	transform-origin: left top;
 }
-.month-select a{display:block; position:relative; z-index:6; width:100%;}
+.month-select a{display:block; position:relative; z-index:6; width:100%; line-height:30px;}
 .month-select .arr-bt{background:url(../images/arr-down.png); background-size:100%; display:inline-block; width:16px; height:12px; margin-left:4px; position:relative; top:2px;}
 .month-select .turn-l,.month-select .turn-r{display:flex; width:15%; height:30px;}
 .month-select .txt{display:flex; width:70%;}
@@ -348,6 +348,24 @@ header{background:none;}
 	transform-origin: left top;
 }
 .set-link li a{display:block; padding:15px; position:relative; z-index:6; font-size:16px;}
+
+.add-pics-list{clear:both; padding:10px 5px 10px 12px;}
+.add-pics-list ul:after{clear:both; display:block; content:"";}
+.add-pics-list li{float:left; width:25%; padding-right:5px; position:relative;}
+.add-pics-list li img{max-width:220px; height:85px;}
+.add-pics-list li .x-del{position:absolute; z-index:10; width:16px !important; padding:0; height:16px !important; border-radius:50%; background:#f33; color:#fff; line-height:16px; font-size:14px; text-align:center; top:0px; right:5px; margin:0 !important;}
+.add-pics-list li .add-btn{display:block; border:solid #f0f0f0 1px; height:85px; z-index:10;}
+.add-pics-list li .i-plus{display:inline-block; width:100%; height:100%; background:url(../images/i-plus.png) center center no-repeat; background-size:75%;}
+.add-pics-list li .add-btn:hover,.add-pics-list li .add-btn:focus{border-color:#e5e5e5;}
+.add-pics-list li .add-btn:hover .i-plus,.add-pics-list li .add-btn:focus .i-plus{background-image:url(../images/i-plus-on.png);}
+@media screen and (max-width:325px){
+   .add-pics-list li img{height:65px;}
+   .add-pics-list li .add-btn{height:65px;}
+}
+@media screen and (min-width:400px){
+   .add-pics-list li img{height:95px;}
+   .add-pics-list li .add-btn{height:95px;}
+}
 
 
 .annex-info-mod p{padding:20px; font-size:16px;}

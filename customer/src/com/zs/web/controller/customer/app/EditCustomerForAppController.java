@@ -10,6 +10,7 @@ import com.zs.service.customer.EditCustomerService;
 import com.zs.service.customerlinkman.FindLinkmanByCustomerIdService;
 import com.zs.service.customerstate.FindCustomerStateService;
 import com.zs.service.customertype.FindCustomerTypeService;
+import com.zs.tools.IpTools;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import net.sf.json.JSONObject;
@@ -87,10 +88,13 @@ public class EditCustomerForAppController extends
     @ResponseBody
     public JSONObject editor(HttpServletRequest request, Customer customer,
                           @RequestParam(value = "linkmanInfo", required = false, defaultValue = "")String linkmanInfo,
-                          @RequestParam(value = "delLinkman", required = false, defaultValue = "")String delLinkman){
+                          @RequestParam(value = "delLinkman", required = false, defaultValue = "")String delLinkman,
+                          @RequestParam(value = "ip_address", required = false, defaultValue = "")String ip_address){
         JSONObject jsonObject = new JSONObject();
         try{
-            editCustomerService.edit(customer, linkmanInfo, delLinkman, UserTools.getLoginUserForZzCode(request));
+            //获取当前ip地址
+            String ip = IpTools.getIpAddress(request);
+            editCustomerService.edit(customer, linkmanInfo, delLinkman, UserTools.getLoginUserForZzCode(request), ip, ip_address, UserTools.getLoginUserForName(request));
             jsonObject.put("state", 0);
         }
         catch(Exception e){

@@ -16,10 +16,12 @@ import com.zs.service.interview.FindInterviewByWhereService;
 import com.zs.tools.DateTools;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
+import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -105,7 +107,7 @@ public class FindInterviewByWhereForAppController extends LoggerController {
             params.put("loginId", loginId+"");
 
             PageInfo pageInfo = getPageInfo(request);
-            pageInfo.setCountOfCurrentPage(9999999);
+            pageInfo.setCountOfCurrentPage(5);
             pageInfo = findInterviewByWhereService.findPageByWhere(pageInfo, params);
 
             request.setAttribute("interviewList", pageInfo.getPageResults());
@@ -113,13 +115,50 @@ public class FindInterviewByWhereForAppController extends LoggerController {
             request.setAttribute("typeList", customerTypeList);
             request.setAttribute("stateList", customerStateList);
             request.setAttribute("customerList", customerList);
-            request.setAttribute("nowDate", DateTools.getThisYear()+"-"+DateTools.getThisMonth()+"-"+DateTools.getThisDay());
+            request.setAttribute("nowDate", DateTools.getLongNowTime());
+            request.setAttribute("loginZzCode", loginZzCode);
             return "app/interviewList";
         }
         catch(Exception e){
             super.outputException(request, e, log, "分页查询访谈信息");
             return "error";
         }
+    }
+
+    @RequestMapping(value = "findPage")
+    @ResponseBody
+    public JSONObject findPage(@RequestParam(value="pageNo", required=false, defaultValue="") String pageNo,
+                       @RequestParam(value="pageCount", required=false, defaultValue="5") String pageCount,
+                       HttpServletRequest request){
+        JSONObject json = new JSONObject();
+        try{
+            int loginLevel = UserTools.getLoginUserForLevel(request);
+            String loginZzCode = UserTools.getLoginUserForZzCode(request);
+            long loginId = UserTools.getLoginUserForId(request);
+
+            //得到当前登录用户的客户资料管理权限
+            Integer isBrowse = UserTools.getLoginUserForIsBrowse(request);
+
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("loginLevel", loginLevel+"");
+            params.put("isBrowse", isBrowse+"");
+            params.put("loginZzCode", loginZzCode);
+            params.put("loginId", loginId+"");
+
+            PageInfo pageInfo = getPageInfo(request);
+            pageInfo.setCurrentPage(Integer.parseInt(pageNo));
+            pageInfo.setCountOfCurrentPage(Integer.parseInt(pageCount));
+            pageInfo = findInterviewByWhereService.findPageByWhere(pageInfo, params);
+
+            json.put("interviewList", pageInfo.getPageResults());
+            json.put("state", 0);
+        }
+        catch(Exception e){
+            String msg = super.outputException(request, e, log, "下来刷新拜访数据");
+            json.put("state", 1);
+            json.put("msg", msg);
+        }
+        return json;
     }
 
     @RequestMapping(value = "openFindByOther")
@@ -224,5 +263,6 @@ public class FindInterviewByWhereForAppController extends LoggerController {
         request.setAttribute("typeList", customerTypeList);
         request.setAttribute("stateList", customerStateList);
         request.setAttribute("customerList", customerList);
+        request.setAttribute("loginZzCode", loginZzCode);
     }
 }

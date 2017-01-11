@@ -9,9 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
   <title>客户拜访</title>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css"  />
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css"  />
+  <%@ include file="common/taglibsForApp.jsp"%>
   <style>section{padding-top:44px;}</style>
 </head>
 <body>
@@ -192,38 +190,44 @@
       </div>
     </header>
     <c:if test="${param.search eq 'do'}">
-      <div class="auto w bg-f">
-        <div class="adm-visit-list">
-          <ul>
-            <c:if test="${empty interviewList}">
-              <section>
-                <div class="auto w bg-f">
-                  <div class="adm-log-list">
-                    <div class="null-tips">
-                      <div class="tips-pic"><img src="${pageContext.request.contextPath}/app/images/null-tips.png"></div>
-                      <p>对不起，没有找到相关的记录</p>
+      <section>
+        <div class="auto w bg-f">
+          <div class="adm-visit-list">
+            <ul>
+              <c:if test="${empty interviewList}">
+
+                  <div class="auto w bg-f">
+                    <div class="adm-log-list">
+                      <div class="null-tips">
+                        <div class="tips-pic"><img src="${pageContext.request.contextPath}/app/images/null-tips.png"></div>
+                        <p>对不起，没有找到相关的记录</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </section>
-            </c:if>
-            <c:if test="${!empty interviewList}">
-              <c:forEach var="interview" items="${interviewList}">
-                <li>
-                  <div class="title">
-                    <a href="javascript:;">${interview.cName}-${interview.clName}</a>
-                  </div>
-                  <div class="text">
-                    <p>${interview.content}</p>
-                    <p class="by"><i class="i-lac"></i>${interview.uName} ${interview.operateTime} ${interview.address}</p>
-                  </div>
-                  <div class="opr-tl"><a class="btn-edit" href="${pageContext.request.contextPath}/editInterviewForApp/open.htm?id=${interview.id}">编辑</a></div>
-                </li>
-              </c:forEach>
-            </c:if>
-          </ul>
+
+              </c:if>
+              <c:if test="${!empty interviewList}">
+                <c:forEach var="interview" items="${interviewList}">
+                  <li>
+                    <div class="title" onclick="location.href='${pageContext.request.contextPath}/findInterviewByUserIdForApp/find.htm?customerId=${interview.cId}&linkmanId=${interview.clId}'">
+                      <a href="javascript:;">${interview.cName}-${interview.clName}</a>
+                    </div>
+                    <div class="text" onclick="location.href='${pageContext.request.contextPath}/findInterviewByIdForApp/find.htm?id=${interview.id}'">
+                      <p>${interview.content}</p>
+                      <p class="by"><i class="i-lac"></i>${interview.uName} ${interview.operateTime} ${interview.address}</p>
+                    </div>
+                    <div class="opr-tl">
+                      <c:if test="${loginZzCode eq interview.creator && !interview.isPassOneDay}">
+                        <a class="btn-edit" href="${pageContext.request.contextPath}/editInterviewForApp/open.htm?id=${interview.id}">编辑</a>
+                      </c:if>
+                    </div>
+                  </li>
+                </c:forEach>
+              </c:if>
+            </ul>
+          </div>
         </div>
-      </div>
+      </section>
     </c:if>
   </div>
 </form>

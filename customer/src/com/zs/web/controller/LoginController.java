@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -65,12 +68,49 @@ public class LoginController extends LoggerController<User, ValidateLoginService
     }
 
     /**
+     * 用户登录
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "loginApp")
+    public String loginApp(@RequestParam(value="zzCode") String zzCode,
+                            @RequestParam(value="pwd") String pwd,
+                            HttpServletRequest request,
+                            HttpServletResponse response){
+        String msg = "";
+        JSONObject jsonObject = new JSONObject();
+        try{
+            msg = loginUser(request, zzCode, pwd);
+            if("用户名密码错误".equals(msg)){
+                throw new BusinessException("用户名密码错误");
+            }
+            response.sendRedirect("/cust/findCustomerByWhereForApp/find.htm");
+            return "app/customerList";
+        }catch(Exception e){
+            msg = super.outputException(request, e, log, "用户登录");
+            try {
+                try {
+                    request.getRequestDispatcher("/loginUser/appLogin.htm?msg="+msg).forward(request,response);
+                } catch (ServletException e1) {
+                    e1.printStackTrace();
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }finally {
+            jsonObject.put("msg", msg);
+        }
+        return "error";
+    }
+
+    /**
      * 跳转到App登录页面
      * @param request
      * @return
      */
     @RequestMapping(value = "appLogin")
-    public String appLogin(HttpServletRequest request){
+    public String appLogin(HttpServletRequest request, @RequestParam(value = "msg", required = false)String msg){
+        request.setAttribute("msg", msg);
         return "/app/login";
     }
 

@@ -10,4 +10,5 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface AddInterviewService extends EntityService<Interview> {
     public void add(Interview interview, HttpServletRequest request)throws Exception;
+    public void addForApp(Interview interview, String[] filePaths, HttpServletRequest request)throws Exception;
 }

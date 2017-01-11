@@ -101,10 +101,12 @@ public class AddInterviewForAppController extends
      */
     @RequestMapping(value = "add")
     @ResponseBody
-    public JSONObject add(HttpServletRequest request, Interview interview){
+    public JSONObject add(HttpServletRequest request,
+                          Interview interview,
+                          @RequestParam(value = "filePaths", required = false, defaultValue = "")String filePaths){
         JSONObject jsonObject = new JSONObject();
         try{
-            addInterviewService.add(interview, request);
+            addInterviewService.addForApp(interview, null == filePaths ? null : filePaths.split(","), request);
             jsonObject.put("state", 0);
         }
         catch(Exception e){

@@ -9,9 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
   <title>客户拜访</title>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css"  />
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css"  />
+  <%@ include file="common/taglibsForApp.jsp"%>
   <style>section{padding-top:44px;}</style>
 </head>
 <body>
@@ -20,13 +18,15 @@
     <p class="tit" style="text-align:center;">拜访详情</p>
     <a class="back icon" href="${pageContext.request.contextPath}/findInterviewByWhereForApp/find.htm"></a>
     <span class="next">
-      <a href="${pageContext.request.contextPath}/editInterviewForApp/open.htm?id=${interview.id}"><i class="i-edit"></i></a>
+      <c:if test="${loginZzCode eq interview.creator && !isPassOneDay}">
+        <a href="${pageContext.request.contextPath}/editInterviewForApp/open.htm?id=${interview.id}"><i class="i-edit"></i></a>
+      </c:if>
     </span>
   </div>
 </header>
 <section>
   <div class="auto w bg-f">
-    <div class="visit-info-mod">
+    <div class="visit-info-mod" onclick="location.href='${pageContext.request.contextPath}/findInterviewByUserIdForApp/find.htm?customerId=${customer.id}&linkmanId=${customerLankman.id}'">
       <div class="mod-info">
         <div class="title">
           <a href="javascript:;">${customer.name}-${customerLankman.name}</a>

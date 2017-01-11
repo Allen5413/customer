@@ -2,12 +2,19 @@ package com.zs.web.controller.customer;
 
 import com.zs.domain.basic.User;
 import com.zs.domain.customer.Customer;
+import com.zs.domain.customer.CustomerState;
+import com.zs.domain.customer.Interview;
 import com.zs.service.basic.area.FindAreaForProvinceService;
 import com.zs.service.basic.school.FindSchoolForNotExistsService;
 import com.zs.service.basic.user.FindUserByParenSignService;
 import com.zs.service.customer.AddCustomerService;
+import com.zs.service.customerlinkman.FindLinkmanByCustomerIdService;
 import com.zs.service.customerstate.FindCustomerStateForStateYesService;
+import com.zs.service.customerstate.FindCustomerStateService;
 import com.zs.service.customertype.FindCustomerTypeForStateYesService;
+import com.zs.service.interview.AddInterviewService;
+import com.zs.tools.HttpRequestTools;
+import com.zs.tools.IpTools;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import net.sf.json.JSONObject;
@@ -42,6 +49,12 @@ public class AddCustomerController extends
     private FindCustomerTypeForStateYesService findCustomerTypeForStateYesService;
     @Resource
     private FindUserByParenSignService findUserByParenSignService;
+    @Resource
+    private FindLinkmanByCustomerIdService findLinkmanByCustomerIdService;
+    @Resource
+    private FindCustomerStateService findCustomerStateService;
+    @Resource
+    private AddInterviewService addInterviewService;
 
     /**
      * 打开新增页面
@@ -83,6 +96,26 @@ public class AddCustomerController extends
         JSONObject jsonObject = new JSONObject();
         try{
             addCustomerService.add(customer, linkmanInfo, request);
+            //查询客户联系人信息
+            List<com.alibaba.fastjson.JSONObject> linkmanList = findLinkmanByCustomerIdService.findForInterviewCount(customer.getId());
+            if(null != linkmanList && 0 < linkmanList.size()){
+                //获取当前ip地址
+                String ip = IpTools.getIpAddress(request);
+                String address = HttpRequestTools.getAddressByIp(ip);
+                //获取客户状态
+                CustomerState customerState = findCustomerStateService.get(customer.getCustomerStateId());
+                com.alibaba.fastjson.JSONObject json = linkmanList.get(0);
+                long linkmanId = Long.parseLong(json.get("id").toString());
+                Interview interview = new Interview();
+                interview.setCustomerId(customer.getId());
+                interview.setCustomerLankmanId(linkmanId);
+                interview.setIp(ip);
+                interview.setAddress(address);
+                interview.setContent(UserTools.getLoginUserForName(request) + "创建状态为\"" + customerState.getName() + "\"");
+                interview.setCreator(UserTools.getLoginUserForZzCode(request));
+                interview.setOperator(UserTools.getLoginUserForZzCode(request));
+                addInterviewService.add(interview, null);
+            }
             jsonObject.put("state", 0);
         }
         catch(Exception e){

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -11,17 +12,7 @@
   <title>客户拜访</title>
   <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
   <!-- Highcharts -->
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/Highcharts-4.2.5/js/highcharts.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css"  />
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css"  />
-  <script src="${pageContext.request.contextPath}/app/mobiscroll/js/mobiscroll.core-2.5.2.js" type="text/javascript"></script>
-  <script src="${pageContext.request.contextPath}/app/mobiscroll/js/mobiscroll.core-2.5.2-zh.js" type="text/javascript"></script>
-  <link href="${pageContext.request.contextPath}/app/mobiscroll/css/mobiscroll.core-2.5.2.css" rel="stylesheet" type="text/css" />
-  <link href="${pageContext.request.contextPath}/app/mobiscroll/css/mobiscroll.animation-2.5.2.css" rel="stylesheet" type="text/css" />
-  <script src="${pageContext.request.contextPath}/app/mobiscroll/js/mobiscroll.datetime-2.5.1.js" type="text/javascript"></script>
-  <script src="${pageContext.request.contextPath}/app/mobiscroll/js/mobiscroll.datetime-2.5.1-zh.js" type="text/javascript"></script>
-  <script src="${pageContext.request.contextPath}/app/mobiscroll/js/mobiscroll.android-ics-2.5.2.js" type="text/javascript"></script>
-  <link href="${pageContext.request.contextPath}/app/mobiscroll/css/mobiscroll.android-ics-2.5.2.css" rel="stylesheet" type="text/css" />
+  <%@ include file="common/taglibsForApp.jsp"%>
   <style>section{padding-top:44px;}</style>
 </head>
 <body>
@@ -43,6 +34,8 @@
         <input type="text" name="appDate" id="appDate" size="1" style="width: 1px;" />
       </div>
       <div class="mod-curve" id="totalPic" style="height: 300px;"></div>
+      <div class="mod-curve" id="totalPic2" style="height: 300px;"></div>
+      <div class="mod-curve" id="totalPic3" style="height: 300px;"></div>
     </div>
     <div class="month-select">
       <a class="turn-l" href="javascript:;" onclick="changeTotalUserCount(0)"><i class="arr-l"></i></a>
@@ -119,12 +112,14 @@
       };
       $("#appDate").val('').scroller('destroy').scroller($.extend(opt['date'], opt['default']));
     });
-    totalPic(${year});
+    totalPic();
+    totalPic2();
     totalUserCount();
   });
   function totalPic(year){
     var data = [];
     var data2 = [];
+    var month12 = [];
     $.ajax({
       cache: true,
       type: "POST",
@@ -140,6 +135,15 @@
         }
       }
     });
+    if(typeof(year) == "undefined"){
+      <c:forEach var="month2" items="${month12}">
+        month12.push("${fn:substring(month2, 5, fn:length(month2))}月");
+      </c:forEach>
+    }else{
+      for(var i = 1; i<=12; i++){
+        month12.push(i+"月");
+      }
+    }
     $('#totalPic').highcharts({
       hart: {
         type: 'line'
@@ -148,11 +152,11 @@
         text: ''
       },
       xAxis: {
-        categories: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+        categories: month12
       },
       yAxis: {
         title: {
-          text: ''
+          text: '客户类型统计'
         }
       },
       plotOptions: {
@@ -171,6 +175,103 @@
         name: '拜访记录',
         data: data2,
         color: '#09f'
+      }]
+    });
+  }
+
+  function totalPic2(){
+    var data = [];
+    var data2 = [];
+    $.ajax({
+      cache: true,
+      type: "POST",
+      url:"${pageContext.request.contextPath}/findCutomerStateTotalCount/find.htm",
+      data:{},
+      async: false,
+      success: function(result) {
+        if(result.state == 0){
+          for(var i=0; i<result.list.length; i++){
+            var name = result.list[i].name;
+            var point = result.list[i].countPoint;
+            data.push([name, point]);
+          }
+        }
+      }
+    });
+    $.ajax({
+      cache: true,
+      type: "POST",
+      url:"${pageContext.request.contextPath}/findCutomerTypeTotalCount/find.htm",
+      data:{},
+      async: false,
+      success: function(result) {
+        if(result.state == 0){
+          for(var i=0; i<result.list.length; i++){
+            var name = result.list[i].name;
+            var point = result.list[i].countPoint;
+            data2.push([name, point]);
+          }
+        }
+      }
+    });
+    $('#totalPic2').highcharts({
+      chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false
+      },
+      title: {
+        text: '客户状态统计'
+      },
+      tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f} %</b>'
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+          }
+        }
+      },
+      series: [{
+        type: 'pie',
+        name: '',
+        data: data
+      }]
+    });
+
+    $('#totalPic3').highcharts({
+      chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false
+      },
+      title: {
+        text: '客户类型统计'
+      },
+      tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+            style: {
+              color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+            }
+          }
+        }
+      },
+      series: [{
+        type: 'pie',
+        name: '',
+        data: data2
       }]
     });
   }

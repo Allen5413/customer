@@ -9,9 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
   <title>客户拜访</title>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css"  />
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css"  />
+  <%@ include file="common/taglibsForApp.jsp"%>
   <style>section{padding-top:44px;}</style>
 </head>
 <body>
@@ -24,6 +22,7 @@
   </header>
   <section>
     <form id="addForm" name="addForm" action="${pageContext.request.contextPath}/addCustomerForApp/add.htm" method="post">
+      <input type="hidden" id="ip_address" name="ip_address" />
       <input type="hidden" id="linkmanInfo" name="linkmanInfo" />
       <div class="auto w bg-f">
         <div class="adm-select-list">
@@ -225,6 +224,11 @@
 </body>
 </html>
 <script>
+
+  callMap();
+  function callMapReturn(x,y,address){
+    $("#ip_address").val(address);
+  }
 
   function sub(){
     var linkmanInfo = $("#linkmanInfo");

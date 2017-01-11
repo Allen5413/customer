@@ -23,7 +23,7 @@ public interface FindInterviewTotalService extends EntityService<Interview> {
      * @return
      * @throws Exception
      */
-    public JSONObject findYear(int year)throws Exception;
+    public JSONObject findYear(Integer year)throws Exception;
 
     /**
      * 统计月份业务员拜访记录排行

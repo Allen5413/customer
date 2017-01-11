@@ -166,6 +166,7 @@ public class DateTools {
 
     public static void main(String[] args) {
         SimpleDateFormat sd = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat sd2 = new SimpleDateFormat("yyyyMMddHHmmss");
 
         String date = "20110202";
         // System.out.println(sd.parse(date, new java.text.ParsePosition(0)));
@@ -173,6 +174,14 @@ public class DateTools {
         System.out.println(transferStringToLong("1970-02-20 01:02:47"));
         System.out.println(transferLongToDate("yyyy-MM-dd HH:mm:ss", Long.valueOf("1415878787733")));
         System.out.println(System.currentTimeMillis());
+
+        try {
+            System.out.println(sd2.parse("20170106101010").getTime() - sd2.parse("20170105101010").getTime());
+            System.out.println(compareDateTime(sd2.parse("20170106101011"), sd2.parse("20170105101010"), 1440));
+            System.out.println(getLast12Months());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
     /**
      * 将long转换成日期格式
@@ -220,5 +229,20 @@ public class DateTools {
      */
     public static boolean compareDateTime(Date time1, Date time2, int gap) {
         return time1.getTime() - time2.getTime() > gap * 60 * 1000;
+    }
+
+    /** 
+     * 获取最近12个月，经常用于统计图表的X轴 
+     */
+    public static String[] getLast12Months(){
+        String[] last12Months = new String[12];
+        Calendar cal = Calendar.getInstance();
+        //要先+1,才能把本月的算进去
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)+1);
+        for(int i=0; i<12; i++){
+            cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)-1); //逐次往前推1个月
+            last12Months[11-i] = cal.get(Calendar.YEAR)+ "-" + (cal.get(Calendar.MONTH)+1);
+        }
+        return last12Months;
     }
 }

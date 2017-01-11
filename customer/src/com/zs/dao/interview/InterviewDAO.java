@@ -34,10 +34,10 @@ public interface InterviewDAO extends EntityJpaDao<Interview, Long> {
      * @param date2
      * @return
      */
-    @Query(nativeQuery = true, value = "select month, count(*) customerCount from (" +
-            "select DISTINCT MONTH(i.create_time) month, i.customer_id from interview i where i.create_time >= ?1 and i.create_time <= ?2 " +
+    @Query(nativeQuery = true, value = "select year, month, count(*) customerCount from (" +
+            "select DISTINCT YEAR (i.create_time) year, MONTH(i.create_time) month, i.customer_id from interview i where i.create_time >= ?1 and i.create_time <= ?2 " +
             ") t " +
-            "group by month")
+            "group by year, month")
     public List<Object[]> findHalfYearCustomerTotalForMonth(String date, String date2);
 
     /**
@@ -46,7 +46,7 @@ public interface InterviewDAO extends EntityJpaDao<Interview, Long> {
      * @param date2
      * @return
      */
-    @Query(nativeQuery = true, value = "select MONTH(i.create_time) month, count(*) interviewCount from interview i where i.create_time >= ?1 and i.create_time <= ?2 group by month")
+    @Query(nativeQuery = true, value = "select YEAR (i.create_time) year,  MONTH(i.create_time) month, count(*) interviewCount from interview i where i.create_time >= ?1 and i.create_time <= ?2 group by year, month")
     public List<Object[]> findHalfYearInterviewTotalForMonth(String date, String date2);
 
     /**

@@ -9,9 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
   <title>客户拜访</title>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css"  />
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css"  />
+  <%@ include file="common/taglibsForApp.jsp"%>
   <style>section{padding-top:44px;}</style>
 </head>
 <body>
@@ -76,11 +74,15 @@
               <div class="title">
                 <a href="javascript:;">${customerLankman.name}</a>
               </div>
-              <div class="text">
-                <p><a href="${pageContext.request.contextPath}/findInterviewByIdForApp/find.htm?id=${interview.id}">${interview.content}</a></p>
+              <div class="text" onclick="location.href='${pageContext.request.contextPath}/findInterviewByIdForApp/find.htm?id=${interview.id}'">
+                <p><a href="javascript:;">${interview.content}</a></p>
                 <p class="by"><i class="i-lac"></i>${interview.uName} ${interview.operateTime} ${interview.address}</p>
               </div>
-              <div class="opr-tl"><a class="btn-edit" href="${pageContext.request.contextPath}/editInterviewForApp/open.htm?id=${interview.id}">编辑</a></div>
+              <div class="opr-tl">
+                <c:if test="${loginZzCode eq interview.creator && !interview.isPassOneDay}">
+                  <a class="btn-edit" href="${pageContext.request.contextPath}/editInterviewForApp/open.htm?id=${interview.id}">编辑</a>
+                </c:if>
+              </div>
             </li>
           </c:forEach>
         </ul>

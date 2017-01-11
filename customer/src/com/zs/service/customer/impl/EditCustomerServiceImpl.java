@@ -1,5 +1,6 @@
 package com.zs.service.customer.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.feinno.framework.common.exception.BusinessException;
 import com.feinno.framework.common.service.EntityServiceImpl;
 import com.zs.dao.basic.user.FindUserByZZDAO;
@@ -8,16 +9,18 @@ import com.zs.dao.customer.FindCustomerByNameDAO;
 import com.zs.dao.customer.FindCustomerByNoDAO;
 import com.zs.dao.customer.FindCustomerByUserIdDAO;
 import com.zs.dao.customerlinkman.FindLinkmanByCustomerIdDAO;
-import com.zs.domain.customer.Customer;
-import com.zs.domain.customer.CustomerLankman;
-import com.zs.domain.customer.CustomerLog;
+import com.zs.domain.customer.*;
 import com.zs.service.customer.EditCustomerService;
+import com.zs.service.customerlinkman.FindLinkmanByCustomerIdService;
+import com.zs.service.customerstate.FindCustomerStateService;
+import com.zs.service.interview.AddInterviewService;
 import com.zs.tools.DateTools;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by Allen on 2016/3/8.
@@ -35,10 +38,16 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
     private CustomerLogDAO customerLogDAO;
     @Resource
     private FindUserByZZDAO findUserByZZDAO;
+    @Resource
+    private FindLinkmanByCustomerIdService findLinkmanByCustomerIdService;
+    @Resource
+    private AddInterviewService addInterviewService;
+    @Resource
+    private FindCustomerStateService findCustomerStateService;
 
     @Override
     @Transactional
-    public void edit(Customer customer, String linkmanInfo, String delLinkman, String zzCode) throws Exception {
+    public void edit(Customer customer, String linkmanInfo, String delLinkman, String zzCode, String ip, String address, String loginName) throws Exception {
         if(null == customer){
             throw new BusinessException("没有提交客户信息");
         }
@@ -67,6 +76,12 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
         customer.setCreateTime(oldCustomer.getCreateTime());
         customer.setOperator(zzCode);
         customer.setOperateTime(DateTools.getLongNowTime());
+        if(oldCustomer.getCustomerStateId() != customer.getCustomerStateId()){
+            CustomerState oldState = findCustomerStateService.get(oldCustomer.getCustomerStateId());
+            CustomerState newState = findCustomerStateService.get(customer.getCustomerStateId());
+            //如果修改了状态，那么记一次拜访记录
+            this.addInterviewForUpdateState(customer.getId(), ip, address, zzCode, loginName, oldState.getName(), newState.getName());
+        }
         super.update(customer);
 
         //记录客户信息变更日志
@@ -188,6 +203,26 @@ public class EditCustomerServiceImpl extends EntityServiceImpl<Customer, FindCus
                     }
                 }
             }
+        }
+    }
+
+
+    protected void addInterviewForUpdateState(long customerId, String ip, String address,
+                                              String zzCode, String loginName, String oldState, String newState)throws Exception{
+        //查询客户联系人信息
+        List<JSONObject> linkmanList = findLinkmanByCustomerIdService.findForInterviewCount(customerId);
+        if(null != linkmanList && 0 < linkmanList.size()){
+            com.alibaba.fastjson.JSONObject json = linkmanList.get(0);
+            long linkmanId = Long.parseLong(json.get("id").toString());
+            Interview interview = new Interview();
+            interview.setCustomerId(customerId);
+            interview.setCustomerLankmanId(linkmanId);
+            interview.setIp(ip);
+            interview.setAddress(address);
+            interview.setContent(loginName + "变更状态由\"" + oldState + "\"改为\""+newState+"\"");
+            interview.setCreator(zzCode);
+            interview.setOperator(zzCode);
+            addInterviewService.add(interview, null);
         }
     }
 }
