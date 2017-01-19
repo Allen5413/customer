@@ -22,12 +22,13 @@
     </div>
   </header>
   <section>
-    <form id="editForm" name="editForm" action="${pageContext.request.contextPath}/editCustomerForApp/editor.htm" method="post">
+    <form id="editForm" name="editForm" action="${pageContext.request.contextPath}/editCustomerForApp/editor.htm" method="get">
       <input type="hidden" name="id" value="${customer.id}" />
       <input type="hidden" name="version" value="${customer.version}" />
       <input type="hidden" id="linkmanInfo" name="linkmanInfo" />
       <input type="hidden" id="delLinkman" name="delLinkman" />
       <input type="hidden" id="ip_address" name="ip_address" />
+      <input type="hidden" id="random" name="random" />
       <div class="auto w bg-f">
         <div class="adm-select-list">
           <div class="title-bgr">基本资料</div>
@@ -318,10 +319,10 @@
       });
       linkmanInfo.val(linkmanInfo.val()+temp+"|");
     });
-
+    $("#random").val(Math.round(Math.random()*100000));
     $.ajax({
       cache: true,
-      type: "POST",
+      type: "get",
       url:"${pageContext.request.contextPath}/editCustomerForApp/editor.htm",
       data:$('#editForm').serialize(),
       async: false,

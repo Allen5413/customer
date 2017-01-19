@@ -92,7 +92,7 @@ public class EditInterviewController extends
                 ip = IpTools.getIpAddress(request);
                 address = HttpRequestTools.getAddressByIp(ip);
             }
-            editInterviewService.edit(id, linkmanId, content, UserTools.getLoginUserForZzCode(request), ip, address);
+            editInterviewService.edit(id, linkmanId, content, ip, address, "", "", request);
             jsonObject.put("state", 0);
         }
         catch(Exception e){

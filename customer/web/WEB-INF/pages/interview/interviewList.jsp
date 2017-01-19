@@ -67,8 +67,12 @@
       <tr onclick="changeTR(this)">
         <td>
           <div class="title-btn">
-            <a href="#" onclick="edit(${interview.id})">编辑</a>
-            <a href="#" onclick="del(${interview.id})">删除</a>
+            <c:if test="${loginZzCode eq interview.creator && !interview.isPassOneDay}">
+              <a href="#" onclick="edit(${interview.id})">编辑</a>
+            </c:if>
+            <c:if test="${'100005' eq loginZzCode || '177126' eq loginZzCode}">
+              <a href="#" onclick="del(${interview.id})">删除</a>
+            </c:if>
             <a href="#" onclick="searchFile(${interview.id})">附件</a>
           </div>
         </td>

@@ -10,7 +10,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
   <title>客户拜访</title>
-  <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js" charset="utf-8"></script>
   <!-- Highcharts -->
   <%@ include file="common/taglibsForApp.jsp"%>
   <style>section{padding-top:44px;}</style>
@@ -29,7 +28,7 @@
         <span class="ln-m blue"><i class="itg"></i>拜访记录总数${json.interviewTotal}</span>
       </p>
       <div class="month-select" style="text-align:center">
-        <a href="javascript:;" onclick="changeDate()" id="yearText">${year}年拜访记录<i class="arr-bt"></i></a>
+        <a href="javascript:;" onclick="changeDate()" id="yearText">${showYear}年拜访记录<i class="arr-bt"></i></a>
         <label id="appDateLabel" for="appDate"></label>
         <input type="text" name="appDate" id="appDate" size="1" style="width: 1px;" />
       </div>
@@ -39,19 +38,50 @@
     </div>
     <div class="month-select">
       <a class="turn-l" href="javascript:;" onclick="changeTotalUserCount(0)"><i class="arr-l"></i></a>
-      <div class="txt"><p id="userCountTxt">${year}年${month}月拜访记录排行</p></div>
+      <div class="txt"><p id="userCountTxt">${userCountYear}年${month}月拜访记录排行</p></div>
       <a class="turn-r" href="javascript:;" onclick="changeTotalUserCount(1)"><i class="arr-r"></i></a>
-      <input type="hidden" id="userCountYear" value="${year}"/>
-      <input type="hidden" id="userCountMonth" value="${month}"/>
     </div>
+    <form name="totalForm" id="totalForm" action="${pageContext.request.contextPath}/findInterviewTotalForApp/open.htm" method="get">
+      <input type="hidden" id="year" name="year" value="${year}" />
+      <input type="hidden" id="userCountYear" name="userCountYear" value="${userCountYear}"/>
+      <input type="hidden" id="month" name="month" value="${month}"/>
+      <input type="hidden" id="num" name="num" value="${num}"/>
+      <input type="hidden" id="flag" name="flag" value="${flag}"/>
+    </form>
     <div class="rank-list">
       <ul id="userCountUL">
+        <c:if test="${empty useCountList}">
+          <div class='null-tips'>
+            <p>对不起，没有找到相关的记录</p>
+          </div>
+        </c:if>
+        <c:if test="${!empty useCountList}">
+          <c:forEach var="useCount" items="${useCountList}" varStatus="status" >
+            <li>
+              <div class="content">
+                <a href="${pageContext.request.contextPath}/findInterviewByWhereForApp/openFindByUserIdAndMonth.htm?userId=${useCount.id}&year=${year}&month=${month}">
+                  <div class="cell-1">
+                    <div class="num">${status.index + 1}</div>
+                  </div>
+                  <div class="cell-2">
+                    <div class="text">
+                      <p>${useCount.name}</p>
+                    </div>
+                  </div>
+                  <div class="cell-3">
+                    <span class="snm">${useCount.count}</span>
+                  </div>
+                </a>
+              </div>
+            </li>
+          </c:forEach>
+        </c:if>
       </ul>
     </div>
     <div class="set-link">
       <ul>
         <li><a href="${pageContext.request.contextPath}/findCustomerForInterviewCountByUserIdForApp/find.htm">拜访记录更新排行</a></li>
-        <li><a href="${pageContext.request.contextPath}/logoutUser/logouApp.htm">退出登录</a></li>
+        <li><a href="javascript:;" onclick="logout()">退出登录</a></li>
       </ul>
     </div>
   </div>
@@ -106,44 +136,28 @@
         dateFormat: 'yyyy',
         dateOrder: 'yy',
         onSelect:function(valueText,inst){
-          $("#yearText").html(valueText+"年拜访记录");
-          totalPic(valueText);
+          $("#year").val(valueText);
+          $("#flag").val("1");
+          $("#totalForm").submit();
         }
       };
       $("#appDate").val('').scroller('destroy').scroller($.extend(opt['date'], opt['default']));
     });
     totalPic();
     totalPic2();
-    totalUserCount();
   });
-  function totalPic(year){
-    var data = [];
-    var data2 = [];
+  function totalPic(){
     var month12 = [];
-    $.ajax({
-      cache: true,
-      type: "POST",
-      url:"${pageContext.request.contextPath}/findInterviewTotalForApp/findYear.htm",
-      data:{"year":year},
-      async: false,
-      success: function(result) {
-        if(result.state == 0){
-          for(var i=0; i<result.json.customerTotalForMonth.length; i++){
-            data.push(result.json.customerTotalForMonth[i]);
-            data2.push(result.json.interviewTotalForMonth[i]);
-          }
-        }
-      }
-    });
-    if(typeof(year) == "undefined"){
+    <c:if test="${'0' eq flag}">
       <c:forEach var="month2" items="${month12}">
         month12.push("${fn:substring(month2, 5, fn:length(month2))}月");
       </c:forEach>
-    }else{
+    </c:if>
+    <c:if test="${'1' eq flag}">
       for(var i = 1; i<=12; i++){
         month12.push(i+"月");
       }
-    }
+    </c:if>
     $('#totalPic').highcharts({
       hart: {
         type: 'line'
@@ -159,6 +173,10 @@
           text: '客户类型统计'
         }
       },
+      credits: {
+        text: '',
+        href: ''
+      },
       plotOptions: {
         line: {
           dataLabels: {
@@ -169,51 +187,31 @@
       },
       series: [{
         name: '拜访客户',
-        data: data,
+        data: [
+                <c:forEach items="${json2.customerTotalForMonth}" var="obj" varStatus="status">
+                  ${obj}
+                  <c:if test="${status.index < 12}">
+                    ,
+                  </c:if>
+                </c:forEach>
+              ],
         color: '#f60'
       }, {
         name: '拜访记录',
-        data: data2,
+        data: [
+                <c:forEach items="${json2.interviewTotalForMonth}" var="obj" varStatus="status">
+                  ${obj}
+                  <c:if test="${status.index < 12}">
+                    ,
+                  </c:if>
+                </c:forEach>
+              ],
         color: '#09f'
       }]
     });
   }
 
   function totalPic2(){
-    var data = [];
-    var data2 = [];
-    $.ajax({
-      cache: true,
-      type: "POST",
-      url:"${pageContext.request.contextPath}/findCutomerStateTotalCount/find.htm",
-      data:{},
-      async: false,
-      success: function(result) {
-        if(result.state == 0){
-          for(var i=0; i<result.list.length; i++){
-            var name = result.list[i].name;
-            var point = result.list[i].countPoint;
-            data.push([name, point]);
-          }
-        }
-      }
-    });
-    $.ajax({
-      cache: true,
-      type: "POST",
-      url:"${pageContext.request.contextPath}/findCutomerTypeTotalCount/find.htm",
-      data:{},
-      async: false,
-      success: function(result) {
-        if(result.state == 0){
-          for(var i=0; i<result.list.length; i++){
-            var name = result.list[i].name;
-            var point = result.list[i].countPoint;
-            data2.push([name, point]);
-          }
-        }
-      }
-    });
     $('#totalPic2').highcharts({
       chart: {
         plotBackgroundColor: null,
@@ -221,25 +219,37 @@
         plotShadow: false
       },
       title: {
-        text: '客户状态统计'
+        text: ''
       },
       tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f} %</b>'
+      },
+      credits: {
+        text: '',
+        href: ''
       },
       plotOptions: {
         pie: {
           allowPointSelect: true,
           cursor: 'pointer',
           dataLabels: {
-            enabled: true,
-            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-          }
+            enabled: false
+          },
+          showInLegend: true
         }
       },
       series: [{
         type: 'pie',
         name: '',
-        data: data
+        data: [
+                <c:set var="csLength" value="${fn:length(csCountList)}" />
+                <c:forEach items="${csCountList}" var="csCount" varStatus="status">
+                  ['${csCount.name}', ${csCount.countPoint}]
+                  <c:if test="${status.index < csLength}">
+                    ,
+                  </c:if>
+                </c:forEach>
+              ]
       }]
     });
 
@@ -250,101 +260,67 @@
         plotShadow: false
       },
       title: {
-        text: '客户类型统计'
+        text: ''
       },
       tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      credits: {
+        text: '',
+        href: ''
       },
       plotOptions: {
         pie: {
           allowPointSelect: true,
           cursor: 'pointer',
           dataLabels: {
-            enabled: true,
-            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-            style: {
-              color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-            }
-          }
+            enabled: false
+          },
+          showInLegend: true
         }
       },
       series: [{
         type: 'pie',
         name: '',
-        data: data2
+        data: [
+                <c:set var="ctLength" value="${fn:length(ctCountList)}" />
+                <c:forEach items="${ctCountList}" var="ctCount" varStatus="status">
+                  ['${ctCount.name}', ${ctCount.countPoint}]
+                  <c:if test="${status.index < ctLength}">
+                    ,
+                  </c:if>
+                </c:forEach>
+              ]
       }]
     });
   }
 
   function changeTotalUserCount(flag){
     var year = $("#userCountYear").val();
-    var month = $("#userCountMonth").val();
+    var month = $("#month").val();
     if(flag == 0){
       if(Number(month) == 1){
         $("#userCountYear").val(Number(year)-1);
-        $("#userCountMonth").val(12);
+        $("#month").val(12);
       }else{
-        $("#userCountMonth").val(Number(month)-1);
+        $("#month").val(Number(month)-1);
       }
     }else{
       if(Number(month) == 12){
         $("#userCountYear").val(Number(year)+1);
-        $("#userCountMonth").val(1);
+        $("#month").val(1);
       }else{
-        $("#userCountMonth").val(Number(month)+1);
+        $("#month").val(Number(month)+1);
       }
     }
-    totalUserCount();
-  }
-
-  function totalUserCount(){
-    var year = $("#userCountYear").val();
-    var month = $("#userCountMonth").val();
-    $.ajax({
-      cache: true,
-      type: "POST",
-      url:"${pageContext.request.contextPath}/findInterviewTotalForApp/findUserCount.htm",
-      data:{"year":year, "month":month},
-      async: false,
-      success: function(data) {
-        if(data.state == 0){
-          var html = "";
-          if(data.list.length > 0) {
-            for (var i = 0; i < data.list.length; i++) {
-              var id = data.list[i].id;
-              var name = data.list[i].name;
-              var count = data.list[i].count;
-              html += "<li>" +
-              "<div class=\"content\">" +
-              "<a href=\"${pageContext.request.contextPath}/findInterviewByWhereForApp/openFindByUserIdAndMonth.htm?userId="+id+"&year="+year+"&month="+month+"\">" +
-              "<div class=\"cell-1\">" +
-              "<div class=\"num\">" + (i + 1) + "</div>" +
-              "</div> " +
-              "<div class=\"cell-2\"> " +
-              "<div class=\"text\"> " +
-              "<p>" + name + "</p> " +
-              "</div> " +
-              "</div> " +
-              "<div class=\"cell-3\"> " +
-              "<span class=\"snm\">" + count + "</span> " +
-              "</div> " +
-              "</a> " +
-              "</div> " +
-              "</li>";
-            }
-          }else{
-            html += "<div class='null-tips'>";
-            html += "<p>对不起，没有找到相关的记录</p>";
-            html += "</div>";
-          }
-          $("#userCountUL").html(html);
-          $("#userCountTxt").html(year+"年"+month+"月拜访记录排行");
-        }
-      }
-    });
+    $("#totalForm").submit();
   }
 
   function changeDate(){
     $("#appDateLabel").click();
+  }
+
+  function logout(){
+    location.href = "${pageContext.request.contextPath}/logoutUser/logouApp.htm";
   }
 </script>

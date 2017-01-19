@@ -21,12 +21,13 @@
     </div>
   </header>
   <section>
-    <form id="addForm" name="addForm" action="${pageContext.request.contextPath}/addCustomerForApp/add.htm" method="post">
+    <form id="addForm" name="addForm" action="${pageContext.request.contextPath}/addCustomerForApp/add.htm" method="get">
       <input type="hidden" id="ip_address" name="ip_address" />
       <input type="hidden" id="linkmanInfo" name="linkmanInfo" />
+      <input type="text" id="token" name="token" value="${token}" />
       <div class="auto w bg-f">
         <div class="adm-select-list">
-          <div class="title-bgr">基本资料</div>
+          <div class="title-bgr">基本资料${token}</div>
           <ul>
             <li>
               <div class="content">
@@ -294,7 +295,7 @@
 
     $.ajax({
       cache: true,
-      type: "POST",
+      type: "get",
       url:"${pageContext.request.contextPath}/addCustomerForApp/add.htm",
       data:$('#addForm').serialize(),
       async: false,

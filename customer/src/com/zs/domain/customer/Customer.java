@@ -152,7 +152,6 @@ public class Customer extends AbstractEntity {
         this.operateTime = operateTime;
     }
 
-    @Version
     public Integer getVersion() {
         return version;
     }

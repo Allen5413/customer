@@ -87,6 +87,7 @@ public class AddInterviewForAppController extends
             //获取当前ip地址
             String ip = IpTools.getIpAddress(request);
             request.setAttribute("ip", ip);
+            request.setAttribute("random", Math.random()*1000000);
         } catch (Exception e) {
             super.outputException(request, e, log, "打开新增页面");
             return "error";
@@ -111,8 +112,12 @@ public class AddInterviewForAppController extends
         }
         catch(Exception e){
             String msg = super.outputException(request, e, log, "新增访谈记录");
-            jsonObject.put("state", 1);
-            jsonObject.put("msg", msg);
+            if(msg.indexOf("for key 'creator'") > 0){
+                jsonObject.put("state", 0);
+            }else {
+                jsonObject.put("state", 1);
+                jsonObject.put("msg", msg);
+            }
         }
         return jsonObject;
     }

@@ -10,6 +10,7 @@ import com.zs.service.basic.menu.FindMenuService;
 import com.zs.service.basic.resource.FindResourceService;
 import com.zs.service.basic.user.ValidateLoginService;
 import com.zs.service.basic.usergroup.FindUserGroupByUserIdService;
+import com.zs.tools.CookieTools;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -72,6 +74,31 @@ public class LoginController extends LoggerController<User, ValidateLoginService
      * @param request
      * @return
      */
+    @RequestMapping(value = "loginAppForRestful")
+    @ResponseBody
+    public JSONObject loginAppForRestful(@RequestParam(value="zzCode") String zzCode,
+                            @RequestParam(value="pwd") String pwd,
+                            HttpServletRequest request,
+                            HttpServletResponse response){
+        String msg = "";
+        JSONObject jsonObject = new JSONObject();
+        try{
+            msg = loginUser(request, zzCode, pwd);
+            CookieTools.add(response, "loginName", zzCode, 60 * 60 * 24 * 365);
+            CookieTools.add(response, "pwd", pwd, 60 * 60 * 24 * 365);
+        }catch(Exception e){
+            msg = super.outputException(request, e, log, "用户登录");
+        }finally {
+            jsonObject.put("msg", msg);
+        }
+        return jsonObject;
+    }
+
+    /**
+     * 用户登录
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "loginApp")
     public String loginApp(@RequestParam(value="zzCode") String zzCode,
                             @RequestParam(value="pwd") String pwd,
@@ -109,8 +136,20 @@ public class LoginController extends LoggerController<User, ValidateLoginService
      * @return
      */
     @RequestMapping(value = "appLogin")
-    public String appLogin(HttpServletRequest request, @RequestParam(value = "msg", required = false)String msg){
-        request.setAttribute("msg", msg);
+    public String appLogin(HttpServletRequest request, HttpServletResponse response,
+                           @RequestParam(value = "delcookie", required = false, defaultValue = "0")String delcookie)throws Exception{
+        Cookie cookie = CookieTools.getCookieByName(request, "loginName");
+        Cookie cookie2 = CookieTools.getCookieByName(request, "pwd");
+        if(null != cookie && null != cookie2){
+            String loginName = cookie.getValue();
+            String pwd = cookie2.getValue();
+            if(!StringUtils.isEmpty(loginName) && !StringUtils.isEmpty(pwd)){
+                if("用户名密码错误".equals(loginUser(request, loginName, pwd))){
+                    throw new BusinessException("用户名密码错误");
+                }
+                response.sendRedirect("/cust/findCustomerByWhereForApp/find.htm");
+            }
+        }
         return "/app/login";
     }
 

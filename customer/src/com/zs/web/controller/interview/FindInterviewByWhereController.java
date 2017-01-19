@@ -112,6 +112,7 @@ public class FindInterviewByWhereController extends LoggerController {
             request.setAttribute("stateList", customerStateList);
             request.setAttribute("customerList", customerList);
             request.setAttribute("nowDate", DateTools.getThisYear()+"-"+DateTools.getThisMonth()+"-"+DateTools.getThisDay());
+            request.setAttribute("loginZzCode", loginZzCode);
             return "interview/interviewList";
         }
         catch(Exception e){

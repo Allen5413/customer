@@ -88,8 +88,8 @@
     </ul>
   </div>
 </footer>
-<form id="pageForm" name="pageForm" method="post" action="${pageContext.request.contextPath}/findInterviewByWhereForApp/findPage.htm">
-  <input type="hidden" id="pageNo" name="pageNo" value=""/>
+<form id="pageForm" name="pageForm" method="get" action="${pageContext.request.contextPath}/findInterviewByWhereForApp/findPage.htm">
+  <input type="hidden" id="pageNo" name="pageNo"/>
   <input type="hidden" id="pageCount" name="pageCount" value="5"/>
 </form>
 </body>
@@ -114,8 +114,8 @@
       //下啦加载时运行
       $("#pageNo").val(pageNo);
       $.ajax({
-        cache: true,
-        type: "POST",
+        cache: false,
+        type: "get",
         url:"${pageContext.request.contextPath}/findInterviewByWhereForApp/findPage.htm",
         data:$("#pageForm").serialize(),
         async: false,
@@ -123,7 +123,6 @@
           if(data.state == 0){
             if(data.interviewList.length > 0){
               var html = $("#contentLi").html();
-
               for(var i=0; i<data.interviewList.length; i++){
                 var interview = data.interviewList[i];
                 html += "<li>";

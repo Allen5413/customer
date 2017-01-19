@@ -152,20 +152,19 @@
         <a class="back icon" href="javascript:;" onclick="returnIf(1)"></a>
       </div>
     </header>
+    <section>
     <c:if test="${param.search eq 'do'}">
       <div class="adm-log-list">
         <ul>
           <c:if test="${empty customerList}">
-            <section>
-              <div class="auto w bg-f">
-                <div class="adm-log-list">
-                  <div class="null-tips">
-                    <div class="tips-pic"><img src="${pageContext.request.contextPath}/app/images/null-tips.png"></div>
-                    <p>对不起，没有找到相关的记录</p>
-                  </div>
+            <div class="auto w bg-f">
+              <div class="adm-log-list">
+                <div class="null-tips">
+                  <div class="tips-pic"><img src="${pageContext.request.contextPath}/app/images/null-tips.png"></div>
+                  <p>对不起，没有找到相关的记录</p>
                 </div>
               </div>
-            </section>
+            </div>
           </c:if>
           <c:if test="${!empty customerList}">
             <c:forEach var="customer" items="${customerList}">
@@ -180,6 +179,7 @@
         </ul>
       </div>
     </c:if>
+    </section>
   </div>
 </form>
 </body>

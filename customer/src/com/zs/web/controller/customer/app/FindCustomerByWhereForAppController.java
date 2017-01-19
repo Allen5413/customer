@@ -12,14 +12,12 @@ import com.zs.service.basic.user.ValidateLoginService;
 import com.zs.service.customer.FindCustomerByWhereService;
 import com.zs.service.customerstate.FindCustomerStateService;
 import com.zs.service.customertype.FindCustomerTypeService;
-import com.zs.tools.HttpRequestTools;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -65,6 +63,7 @@ public class FindCustomerByWhereForAppController extends LoggerController {
             if("do".equals(search)) {
                 this.findPageInfo(pageInfo, params, request);
             }
+            request.setAttribute("name", name);
             return "app/findCustomerByName";
         }
         catch(Exception e){
@@ -75,12 +74,7 @@ public class FindCustomerByWhereForAppController extends LoggerController {
 
 
     @RequestMapping(value = "find")
-    public String find(@RequestParam(value="s_userId", required=false, defaultValue="") String userId,
-                       @RequestParam(value="s_typeId", required=false, defaultValue="") String typeId,
-                       @RequestParam(value="s_stateId", required=false, defaultValue="") String stateId,
-                       @RequestParam(value="s_name", required=false, defaultValue="") String name,
-                       @RequestParam(value="s_provinceCode", required=false, defaultValue="") String provinceCode,
-                       HttpServletRequest request){
+    public String find(HttpServletRequest request){
         try{
             //得到当前登录用户的客户资料管理权限
             Integer isBrowse = UserTools.getLoginUserForIsBrowse(request);

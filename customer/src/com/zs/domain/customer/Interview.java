@@ -89,7 +89,6 @@ public class Interview extends AbstractEntity {
         this.operateTime = operateTime;
     }
 
-    @Version
     public Integer getVersion() {
         return version;
     }

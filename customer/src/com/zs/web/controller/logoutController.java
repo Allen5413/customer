@@ -2,11 +2,13 @@ package com.zs.web.controller;
 
 import com.zs.domain.basic.User;
 import com.zs.service.basic.user.ValidateLoginService;
+import com.zs.tools.CookieTools;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,11 +41,12 @@ public class logoutController extends LoggerController<User, ValidateLoginServic
             request.getSession().removeAttribute("name");
             request.getSession().removeAttribute("loginType");
             request.getSession().removeAttribute("menuMap");
-            response.sendRedirect("/cust/loginUser/appLogin.htm");
+            CookieTools.del(request, response, "loginName");
+            CookieTools.del(request, response, "pwd");
+            return "/app/logout";
         }catch(Exception e){
             super.outputException(request, e, log, "用户登出");
             return "error";
         }
-        return "../../login";
     }
 }

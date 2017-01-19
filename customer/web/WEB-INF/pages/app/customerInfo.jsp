@@ -107,7 +107,7 @@
     if(no != "" && no.length > 0){
       $.ajax({
         url:"${pageContext.request.contextPath}/findCustomerByWhere/findNoCount.htm",
-        method : 'POST',
+        method : 'get',
         async:false,
         data:{"no":no},
         success:function(data){

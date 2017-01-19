@@ -32,14 +32,12 @@
 <form id="loginForm" name="loginForm" action="${pageContext.request.contextPath}/loginUser/loginApp.htm" method="get">
   <input type="hidden" id="zzCode" name="zzCode" />
   <input type="hidden" id="pwd" name="pwd" />
+  <input type="hidden" name="random" />
 </form>
 </body>
 </html>
 <script type="text/javascript">
   $(function(){
-    if("${msg}" != ""){
-      alert("${msg}");
-    }
     //回车事件
     document.onkeydown = function(e){
       var ev = document.all ? window.event : e;
@@ -60,19 +58,20 @@
     }else{
       $("#zzCode").val(loginName);
       $("#pwd").val(pwd);
-      $("#loginForm").submit();
-      <%--$.ajax({--%>
-        <%--url:"${pageContext.request.contextPath}/loginUser/login.htm?zzCode="+loginName+"&pwd="+pwd,--%>
-        <%--method : 'GET',--%>
-        <%--async:false,--%>
-        <%--success:function(data){--%>
-          <%--if(data.msg == "success"){--%>
-            <%--location.href = "${pageContext.request.contextPath}/findCustomerByWhereForApp/find.htm";--%>
-          <%--}else {--%>
-            <%--alert(data.msg);--%>
-          <%--}--%>
-        <%--}--%>
-      <%--});--%>
+      $("#random").val(Math.round(Math.random()*100000));
+      //$("#loginForm").submit();
+      $.ajax({
+        url:"${pageContext.request.contextPath}/loginUser/loginAppForRestful.htm?zzCode="+loginName+"&pwd="+pwd+"&random="+Math.round(Math.random()*100000),
+        method : 'get',
+        async:false,
+        success:function(data){
+          if(data.msg == "success"){
+            location.href = "${pageContext.request.contextPath}/findCustomerByWhereForApp/find.htm";
+          }else {
+            alert(data.msg);
+          }
+        }
+      });
     }
   }
 </script>

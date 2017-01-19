@@ -2,6 +2,7 @@ package com.zs.tools;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 
 /**
@@ -42,6 +43,21 @@ public class StringTools {
                 return df.format(value.doubleValue());
             }else{
                 return "0.00";
+            }
+        }
+        return "";
+    }
+
+    /**
+     * 格式化浮点型，超过10位后不让其显示成科学计数法
+     * @return
+     */
+    public static String changeCode(String str, String oldCode, String newCode) {
+        if(!StringUtils.isEmpty(str)){
+            try {
+                return new String(str.getBytes(oldCode), newCode);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
         }
         return "";

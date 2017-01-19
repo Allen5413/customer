@@ -20,7 +20,7 @@
   </div>
 </header>
 <section>
-  <form id="form" name="form" action="${pageContext.request.contextPath}/findCustomerByWhereForApp/findByName.htm" method="post">
+  <form id="form" name="form" action="${pageContext.request.contextPath}/findCustomerByWhereForApp/findByName.htm" method="get">
     <input type="hidden" name="search" value="do" />
     <div class="auto w bg-f">
       <div class="search">
@@ -46,7 +46,7 @@
             </c:if>
             <c:if test="${!empty customerList}">
               <c:forEach var="customer" items="${customerList}">
-                <li onclick="location.href = '${pageContext.request.contextPath}/findCustomerByIdForApp/open.htm?id=${customer.id}'">
+                <li onclick="location.href='${pageContext.request.contextPath}/findCustomerByIdForApp/open.htm?id=${customer.id}'">
                   <div class="content">
                     <div class="col-txt">${customer.cName}</div>
                     <div class="col-r"><a href="javascript:;">${customer.csName} <i class="i-arr"></i></a></div>

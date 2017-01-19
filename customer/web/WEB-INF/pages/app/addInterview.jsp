@@ -24,12 +24,13 @@
       <div class="auto w bg-f">
         <div class="adm-select-list">
           <ul>
-            <form id="addForm" name="addForm" action="${pageContext.request.contextPath}/addInterviewForApp/add.htm" method="post">
+            <form id="addForm" name="addForm" action="${pageContext.request.contextPath}/addInterviewForApp/add.htm" method="get">
               <input type="hidden" id="customerId" name="customerId" value="${customer.id}"/>
               <input type="hidden" id="customerLankmanId" name="customerLankmanId" value="${customerLankman.id}"/>
               <input type="hidden" name="ip" value="${ip}" />
               <input type="hidden" id="address" name="address" />
               <input type="hidden" id="filePaths" name="filePaths" value="" />
+              <input type="hidden" name="token" value="${token}" />
               <li>
                 <div class="content">
                   <div class="col-tg">客户名称：</div>
@@ -65,7 +66,7 @@
             </form>
             <li>
               <div class="add-pics-list">
-                <form id="fileForm" name="fileForm" action="${pageContext.request.contextPath}/uploadTempFile/upload.htm" method="post" enctype="multipart/form-data">
+                <form id="fileForm" name="fileForm" enctype="multipart/form-data" action="${pageContext.request.contextPath}/uploadTempFile/upload.htm?random=${random}" method="post">
                   <ul id="fileUl">
                     <li><a class="add-btn" href="javascript:;"><i class="i-plus"></i><input type="file" class="uploadFile" id="img" name="img" onchange="changeFile()"></a></li>
                   </ul>
@@ -154,43 +155,6 @@
       $("#divLinkman").show();
       $("#divAdd").hide();
       $("#divCustomer").hide();
-      $.ajax({
-        cache: true,
-        type: "POST",
-        url:"${pageContext.request.contextPath}/findLinkmanByCustomerId/find.htm",
-        data:{"customerId": cusotmerId},
-        async: false,
-        success: function(data) {
-          if(data.state == 0){
-            if(data.linkmanList.length < 1){
-              var html = "<section>";
-              html += "<div class=\"auto w bg-f\">";
-              html += "<div class=\"adm-log-list\">";
-              html += "<div class=\"null-tips\">";
-              html += "<div class=\"tips-pic\"><img src=\"${pageContext.request.contextPath}/app/images/null-tips.png\"></div>";
-              html += "<p>对不起，没有找到相关的记录</p>";
-              html += "</div>";
-              html += "</div>";
-              html += "</div>";
-              html += "</section>";
-              $("#linkmanLi").html(html);
-            }else{
-              var html = "";
-              for(var i=0; i<data.linkmanList.length; i++){
-                var linkman = data.linkmanList[i];
-                html += "<li>";
-                html += "<div class=\"content\">";
-                html += "<a href=\"javascript:;\" onclick=\"selectLinkman("+linkman.id+", '"+linkman.name+"')\">"+linkman.name+"</a>";
-                html += "</div>";
-                html += "</li>";
-              }
-              $("#linkmanLi").html(html);
-            }
-          }else{
-            alert(data.msg);
-          }
-        }
-      });
     }
   }
 
@@ -208,6 +172,50 @@
     $("#customerText").html(name);
     $("#customerId").val(id);
     returnIf(1);
+    $.ajax({
+      cache: true,
+      type: "get",
+      url:"${pageContext.request.contextPath}/findLinkmanByCustomerId/find.htm",
+      data:{"customerId": id, "random":Math.round(Math.random()*100000)},
+      async: false,
+      success: function(data) {
+        if(data.state == 0){
+          if(data.linkmanList.length < 1){
+            var html = "<section>";
+            html += "<div class=\"auto w bg-f\">";
+            html += "<div class=\"adm-log-list\">";
+            html += "<div class=\"null-tips\">";
+            html += "<div class=\"tips-pic\"><img src=\"${pageContext.request.contextPath}/app/images/null-tips.png\"></div>";
+            html += "<p>对不起，没有找到相关的记录</p>";
+            html += "</div>";
+            html += "</div>";
+            html += "</div>";
+            html += "</section>";
+            $("#linkmanLi").html(html);
+          }else{
+            if(1 == data.linkmanList.length){
+              $("#linkmanText").html(data.linkmanList[0].name);
+              $("#customerLankmanId").val(data.linkmanList[0].id);
+            }else{
+              $("#linkmanText").html("请选择（必填）");
+              $("#customerLankmanId").val("");
+            }
+            var html = "";
+            for(var i=0; i<data.linkmanList.length; i++){
+              var linkman = data.linkmanList[i];
+              html += "<li>";
+              html += "<div class=\"content\">";
+              html += "<a href=\"javascript:;\" onclick=\"selectLinkman("+linkman.id+", '"+linkman.name+"')\">"+linkman.name+"</a>";
+              html += "</div>";
+              html += "</li>";
+            }
+            $("#linkmanLi").html(html);
+          }
+        }else{
+          alert(data.msg);
+        }
+      }
+    });
   }
 
   function selectLinkman(id, name){
@@ -251,6 +259,7 @@
   }
 
   function changeFile(){
+
     $("#fileForm").ajaxSubmit({
       url:"${pageContext.request.contextPath}/uploadTempFile/upload.htm",
       dataType : 'json',
@@ -277,7 +286,7 @@
   function delFile(fileUrl, obj){
     $.ajax({
       url:"${pageContext.request.contextPath}/uploadTempFile/delFile.htm",
-      method : 'POST',
+      method : 'get',
       async:false,
       data:{"filePath":fileUrl},
       success:function(data){

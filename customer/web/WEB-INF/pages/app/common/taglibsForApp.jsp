@@ -4,6 +4,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-1.9.1.js?v=1.0.0" charset="utf-8"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/script/jquery/jquery-form.js?v=1.0.0" charset="utf-8"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/app/js/gps.js?v=1.0.0" charset="utf-8"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/ajaxUpload/ajaxfileupload.js?v=1.0.0" charset="utf-8"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/common.css?v=1.0.0"  />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/app/css/style.css?v=1.0.0"  />
 

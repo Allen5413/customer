@@ -99,8 +99,12 @@ public class EditCustomerForAppController extends
         }
         catch(Exception e){
             String msg = super.outputException(request, e, log, "编辑用户");
-            jsonObject.put("state", 1);
-            jsonObject.put("msg", msg);
+            if("success".equals(msg)){
+                jsonObject.put("state", 0);
+            }else {
+                jsonObject.put("state", 1);
+                jsonObject.put("msg", msg);
+            }
         }
         return jsonObject;
     }

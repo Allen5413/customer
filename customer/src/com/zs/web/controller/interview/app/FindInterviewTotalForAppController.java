@@ -1,6 +1,8 @@
 package com.zs.web.controller.interview.app;
 
 import com.zs.domain.customer.Interview;
+import com.zs.service.customerstate.FindCustomerStateTotalCountService;
+import com.zs.service.customertype.FindCustomerTypeTotalCountService;
 import com.zs.service.interview.FindInterviewTotalService;
 import com.zs.tools.DateTools;
 import com.zs.web.controller.LoggerController;
@@ -26,62 +28,44 @@ public class FindInterviewTotalForAppController extends
 
     @Resource
     private FindInterviewTotalService findInterviewTotalService;
+    @Resource
+    private FindCustomerStateTotalCountService findCustomerStateTotalCountService;
+    @Resource
+    private FindCustomerTypeTotalCountService findCustomerTypeTotalCountService;
 
     @RequestMapping(value = "open")
-    public String open(HttpServletRequest request) {
+    public String open(HttpServletRequest request,
+            @RequestParam(value = "year", required = false)Integer year,
+            @RequestParam(value = "showYear", required = false)Integer showYear,
+            @RequestParam(value = "userCountYear", required = false)Integer userCountYear,
+            @RequestParam(value = "month", required = false)Integer month,
+            @RequestParam(value = "num", required = false, defaultValue = "5")int num,
+            @RequestParam(value = "flag", required = false, defaultValue = "0")String flag) {
         try {
+            if(null == userCountYear){
+                userCountYear = Integer.parseInt(DateTools.getThisYear());
+            }
+            if(null == month){
+                month = Integer.parseInt(DateTools.getThisMonth());
+            }
             int thisYear = Integer.parseInt(DateTools.getThisYear());
             int[] yearList = {thisYear, thisYear-1, thisYear-2, thisYear-3, thisYear-4, thisYear-5, thisYear-6, thisYear-7, thisYear-8, thisYear-9};
             request.setAttribute("json", findInterviewTotalService.findTotal());
+            request.setAttribute("json2", findInterviewTotalService.findYear(year));
+            request.setAttribute("csCountList", findCustomerStateTotalCountService.find());
+            request.setAttribute("ctCountList", findCustomerTypeTotalCountService.find());
+            request.setAttribute("useCountList", findInterviewTotalService.findInterviewForUserCount(userCountYear, month, num));
             request.setAttribute("yearList", yearList);
-            request.setAttribute("year", DateTools.getThisYear());
-            request.setAttribute("month", DateTools.getThisMonth());
+            request.setAttribute("year", year);
+            request.setAttribute("showYear", null == year ? Integer.parseInt(DateTools.getThisYear()) : year);
+            request.setAttribute("userCountYear", userCountYear);
+            request.setAttribute("month", month);
+            request.setAttribute("num", num);
+            request.setAttribute("flag", flag);
             request.setAttribute("month12", DateTools.getLast12Months());
             return "app/interviewTotal";
         }catch (Exception e){
             return "error";
         }
-    }
-
-    @RequestMapping(value = "findYear")
-    @ResponseBody
-    public JSONObject findYear(HttpServletRequest request,
-                               @RequestParam(value = "year", required = false)Integer year){
-        JSONObject jsonObject = new JSONObject();
-        try{
-            jsonObject.put("json", findInterviewTotalService.findYear(year));
-            jsonObject.put("state", 0);
-        }
-        catch(Exception e){
-            String msg = super.outputException(request, e, log, "统计图");
-            jsonObject.put("state", 1);
-            jsonObject.put("msg", msg);
-        }
-        return jsonObject;
-    }
-
-    @RequestMapping(value = "findUserCount")
-    @ResponseBody
-    public JSONObject findUserCount(HttpServletRequest request,
-                               @RequestParam(value = "year", required = false, defaultValue = "")String year,
-                               @RequestParam(value = "month", required = false, defaultValue = "")String month,
-                               @RequestParam(value = "num", required = false, defaultValue = "5")int num){
-        JSONObject jsonObject = new JSONObject();
-        try{
-            if(StringUtils.isEmpty(year)){
-                year = DateTools.getThisYear();
-            }
-            if(StringUtils.isEmpty(month)){
-                month = DateTools.getThisMonth();
-            }
-            jsonObject.put("list", findInterviewTotalService.findInterviewForUserCount(Integer.parseInt(year), Integer.parseInt(month), num));
-            jsonObject.put("state", 0);
-        }
-        catch(Exception e){
-            String msg = super.outputException(request, e, log, "统计排行");
-            jsonObject.put("state", 1);
-            jsonObject.put("msg", msg);
-        }
-        return jsonObject;
     }
 }

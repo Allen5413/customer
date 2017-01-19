@@ -38,8 +38,8 @@ public class LoggerController<T extends AbstractEntity, M extends EntityService<
 
     public String outputException(HttpServletRequest request, Exception e, Logger log, String msg){
         e.printStackTrace();
+        String eMsg = e.getMessage();
         if (e instanceof BusinessException) {
-            String eMsg = e.getMessage();
             if(-1 < eMsg.indexOf("StaleObjectStateException")){
                 log.info("您操作的数据已经被修改，请重新获取最新的数据再做操作！");
                 request.setAttribute("errorMsg", "您操作的数据已经被修改，请重新获取最新的数据再做操作！");
@@ -50,6 +50,9 @@ public class LoggerController<T extends AbstractEntity, M extends EntityService<
             }
             return eMsg;
         } else {
+            if(-1 < eMsg.indexOf("Row was updated or deleted by another transaction")){
+                return "success";
+            }
             request.setAttribute("errorMsg", msg+", 操作失败");
             super.handleException(msg+", 操作失败", e, request);
             return msg+", 操作失败";

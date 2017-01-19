@@ -90,19 +90,25 @@ public class EditInterviewForAppController extends
                           @RequestParam("linkmanId")long linkmanId,
                           @RequestParam("content")String content,
                           @RequestParam(value = "ip", required = false, defaultValue = "")String ip,
-                          @RequestParam(value = "address", required = false, defaultValue = "")String address){
+                          @RequestParam(value = "address", required = false, defaultValue = "")String address,
+                          @RequestParam(value = "addFilePaths", required = false, defaultValue = "")String addFilePaths,
+                          @RequestParam(value = "delFilePaths", required = false, defaultValue = "")String delFilePaths){
         JSONObject jsonObject = new JSONObject();
         try{
             if(StringUtils.isEmpty(ip)){
                 ip = IpTools.getIpAddress(request);
             }
-            editInterviewService.edit(id, linkmanId, content, UserTools.getLoginUserForZzCode(request), ip, address);
+            editInterviewService.edit(id, linkmanId, content, ip, address, addFilePaths, delFilePaths, request);
             jsonObject.put("state", 0);
         }
         catch(Exception e){
             String msg = super.outputException(request, e, log, "编辑访谈记录");
-            jsonObject.put("state", 1);
-            jsonObject.put("msg", msg);
+            if("success".equals(msg)){
+                jsonObject.put("state", 0);
+            }else {
+                jsonObject.put("state", 1);
+                jsonObject.put("msg", msg);
+            }
         }
         return jsonObject;
     }

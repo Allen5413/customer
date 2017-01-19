@@ -18,4 +18,8 @@ public interface InterviewFileDAO extends EntityJpaDao<InterviewFile, Long> {
     @Modifying
     @Query(nativeQuery = true, value = "delete from interview_file where interview_id = ?1")
     public void delByInterviewId(long interviewId)throws Exception;
+
+    @Modifying
+    @Query(nativeQuery = true, value = "delete from interview_file where url = ?1")
+    public void delByUrl(String url)throws Exception;
 }

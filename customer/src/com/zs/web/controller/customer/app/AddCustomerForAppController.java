@@ -115,8 +115,12 @@ public class AddCustomerForAppController extends
         }
         catch(Exception e){
             String msg = super.outputException(request, e, log, "新增用户");
-            jsonObject.put("state", 1);
-            jsonObject.put("msg", msg);
+            if(msg.indexOf("for key 'creator'") > 0 || msg.indexOf("已经存在") > 0){
+                jsonObject.put("state", 0);
+            }else {
+                jsonObject.put("state", 1);
+                jsonObject.put("msg", msg);
+            }
         }
         return jsonObject;
     }

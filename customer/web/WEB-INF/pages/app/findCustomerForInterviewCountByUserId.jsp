@@ -25,7 +25,7 @@
   <div class="auto w bg-f">
     <div class="tabs-select">
       <ul>
-        <form id="searchForm" name="searchForm" action="${pageContext.request.contextPath}/findCustomerForInterviewCountByUserIdForApp/find.htm" method="post">
+        <form id="searchForm" name="searchForm" action="${pageContext.request.contextPath}/findCustomerForInterviewCountByUserIdForApp/find.htm" method="get">
           <c:if test="${loginLevel == 0}">
             <li><a href="javascript:;" onclick="changeUserLevel(1)"><c:if test="${empty param.areaName}">区域代理</c:if><c:if test="${!empty param.areaName}">${param.areaName}</c:if><i class="arr-bt"></i></a></li>
             <li><a href="javascript:;" onclick="changeUserLevel(2)"><c:if test="${empty param.provName}">省级代理</c:if><c:if test="${!empty param.provName}">${param.provName}</c:if><i class="arr-bt"></i></a></li>

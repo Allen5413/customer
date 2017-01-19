@@ -128,8 +128,9 @@ public class FindInterviewByWhereForAppController extends LoggerController {
     @RequestMapping(value = "findPage")
     @ResponseBody
     public JSONObject findPage(@RequestParam(value="pageNo", required=false, defaultValue="") String pageNo,
-                       @RequestParam(value="pageCount", required=false, defaultValue="5") String pageCount,
+                       @RequestParam(value="pageCount", required=false, defaultValue="") String pageCount,
                        HttpServletRequest request){
+        pageNo = request.getParameter("pageNo");
         JSONObject json = new JSONObject();
         try{
             int loginLevel = UserTools.getLoginUserForLevel(request);
