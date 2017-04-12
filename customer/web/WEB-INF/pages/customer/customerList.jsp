@@ -51,7 +51,7 @@
       <a href="#" onclick="add()">添加客户</a>
     </c:if>
   </div>
-  <table class="table_slist" cellpadding="0" cellspacing="0" width="100%">
+  <table id="" class="table_slist" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <th width="16%" >操作</th>
       <th width="4%">学校No</th>
@@ -105,25 +105,48 @@
         <td>${customer.remark}</td>
       </tr>
     </c:forEach>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td align="right">合计：</td>
+        <td id="totalNum"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
     <%@ include file="/common/page.jsp"%>
   </table>
 </div>
 <script>
   $(function(){
+    var totalNum=0;
     <c:forEach var="customer" items="${pageInfo.pageResults}">
-    var no = "${customer.no}";
-    if(no != "" && no.length > 0){
-      $.ajax({
-        url:"${pageContext.request.contextPath}/findCustomerByWhere/findNoCount.htm",
-        method : 'POST',
-        async:false,
-        data:{"no":no},
-        success:function(data){
-          $("#"+no).html(data);
-        }
-      });
-    }
+      var no = "${customer.no}";
+      if(no != "" && no.length > 0){
+        $.ajax({
+          url:"${pageContext.request.contextPath}/findCustomerByWhere/findNoCount.htm",
+          method : 'POST',
+          async:false,
+          data:{"no":no},
+          success:function(data){
+            $("#"+no).html(data);
+            if(data == ""){
+              data = 0;
+            }
+            totalNum += data;
+          }
+        });
+      }
     </c:forEach>
+    $("#totalNum").html(totalNum);
   });
 
   function add(){
