@@ -73,6 +73,14 @@
                 </form>
               </div>
             </li>
+            <li>
+              <div class="auto w bg-f">
+                <div class="visit-info-mod">
+                  <p class="by"><i class="i-lac"></i><span id="showAddress"></span></p>
+                </div>
+              </div>
+              <a class="btn-opr-com" href="javascript:;" onclick="callMap();">重新获取</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -134,6 +142,13 @@
   callMap();
   function callMapReturn(x,y,address){
     $("#address").val(address);
+    if(typeof (address) == "undefined" || address == ""){
+      alert(address+"  12");
+      $("#showAddress").html("没有获取到当前位置    ");
+    }else{
+      alert(23);
+      $("#showAddress").html(address);
+    }
   }
 
   $("#divAdd").show();

@@ -3,6 +3,7 @@ package com.zs.dao.basic.school;
 import com.feinno.framework.common.dao.jpa.EntityJpaDao;
 import com.zs.domain.basic.School;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

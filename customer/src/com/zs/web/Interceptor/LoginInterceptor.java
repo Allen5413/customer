@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class LoginInterceptor extends HandlerInterceptorAdapter{
     //不需要拦截的路径
-    private static final String[] IGNORE_URI = {"/login", "/css", "/bankNotify"};
+    private static final String[] IGNORE_URI = {"/login", "/css", "/bankNotify", "/attop"};
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
