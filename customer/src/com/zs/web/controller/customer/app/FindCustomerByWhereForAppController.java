@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ public class FindCustomerByWhereForAppController extends LoggerController {
             if(null == isBrowse){
                 return "app/findCustomerByName";
             }
+            name = URLDecoder.decode(name, "utf-8");
             Map<String, String> params = new HashMap<String, String>();
             params.put("name", name);
             PageInfo pageInfo = getPageInfo(request);

@@ -320,6 +320,7 @@
       linkmanInfo.val(linkmanInfo.val()+temp+"|");
     });
     $("#random").val(Math.round(Math.random()*100000));
+    linkmanInfo.val(encodeURI(linkmanInfo.val()));
     $.ajax({
       cache: true,
       type: "get",

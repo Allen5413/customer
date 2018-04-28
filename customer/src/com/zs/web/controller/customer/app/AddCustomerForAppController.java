@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.List;
 
 /**
@@ -91,6 +92,7 @@ public class AddCustomerForAppController extends
                           @RequestParam(value = "ip_address", required = false, defaultValue = "")String ip_address){
         JSONObject jsonObject = new JSONObject();
         try{
+            linkmanInfo = URLDecoder.decode(linkmanInfo, "UTF-8");
             addCustomerService.add(customer, linkmanInfo, request);
             //查询客户联系人信息
             List<com.alibaba.fastjson.JSONObject> linkmanList = findLinkmanByCustomerIdService.findForInterviewCount(customer.getId());

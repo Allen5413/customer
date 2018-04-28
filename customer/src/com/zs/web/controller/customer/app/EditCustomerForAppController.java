@@ -11,6 +11,7 @@ import com.zs.service.customerlinkman.FindLinkmanByCustomerIdService;
 import com.zs.service.customerstate.FindCustomerStateService;
 import com.zs.service.customertype.FindCustomerTypeService;
 import com.zs.tools.IpTools;
+import com.zs.tools.StringTools;
 import com.zs.tools.UserTools;
 import com.zs.web.controller.LoggerController;
 import net.sf.json.JSONObject;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 /**
@@ -89,8 +92,9 @@ public class EditCustomerForAppController extends
     public JSONObject editor(HttpServletRequest request, Customer customer,
                           @RequestParam(value = "linkmanInfo", required = false, defaultValue = "")String linkmanInfo,
                           @RequestParam(value = "delLinkman", required = false, defaultValue = "")String delLinkman,
-                          @RequestParam(value = "ip_address", required = false, defaultValue = "")String ip_address){
+                          @RequestParam(value = "ip_address", required = false, defaultValue = "")String ip_address) throws UnsupportedEncodingException {
         JSONObject jsonObject = new JSONObject();
+        linkmanInfo = URLDecoder.decode(linkmanInfo, "UTF-8");
         try{
             //获取当前ip地址
             String ip = IpTools.getIpAddress(request);

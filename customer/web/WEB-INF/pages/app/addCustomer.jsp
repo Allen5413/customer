@@ -292,7 +292,7 @@
       });
       linkmanInfo.val(linkmanInfo.val()+temp+"|");
     });
-
+    linkmanInfo.val(encodeURI(linkmanInfo.val()));
     $.ajax({
       cache: true,
       type: "get",

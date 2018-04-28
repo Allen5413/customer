@@ -2,7 +2,9 @@ package com.zs.tools;
 
 import org.apache.commons.lang.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DecimalFormat;
 
 /**
@@ -61,5 +63,25 @@ public class StringTools {
             }
         }
         return "";
+    }
+
+    public static String getDecode(HttpServletRequest request,String name){
+        String result="";
+        try{
+            String query=request.getQueryString();
+            String[] a=query.split("\\&");
+            String val="";
+            for(String b:a){
+                String[] c=b.split("\\=",2);
+                if(c[0].equalsIgnoreCase(name)){
+                    val=c[1];
+                    break;
+                }
+            }
+            result = URLDecoder.decode(val, "UTF-8");
+        }catch(Throwable e){
+            e.printStackTrace();
+        }
+        return result;
     }
 }
